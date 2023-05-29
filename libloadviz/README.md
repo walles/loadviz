@@ -76,3 +76,7 @@ How would you visualize this?
 * Make bars slide into place when metrics are updated. Physics engine!
 * Poll battery charge state as well
 * Visualize battery charge as a blue sky (full) or a starry night (empty)
+
+### Done
+
+* Make the library export some C API that gets called by the Swift app
