@@ -1,5 +1,21 @@
-#[no_mangle] pub extern "C" fn add(left: i32, right: i32) -> i32 {
+#![allow(clippy::needless_return)]
+
+// FIXME: Remove this function
+#[no_mangle]
+pub extern "C" fn add(left: i32, right: i32) -> i32 {
     left + right
+}
+
+#[no_mangle]
+pub extern "C" fn get_image(width: u16, height: u16) -> *const u8 {
+    let image: Vec<u8> = vec![0; (width as usize) * (height as usize) * 3];
+    let boxed_image = image.into_boxed_slice();
+
+    // FIXME: Make sure this memory isn't just leaked!
+
+    // FIXME: How do we know this doesn't just get free()d by Rust before we
+    // even return it?
+    return boxed_image.as_ptr();
 }
 
 #[cfg(test)]
