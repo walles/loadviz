@@ -1,0 +1,4 @@
+# From: https://github.com/github/gitignore/blob/main/Global/Xcode.gitignore
+
+xcuserdata/
+
