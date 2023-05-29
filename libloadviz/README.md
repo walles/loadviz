@@ -1,0 +1,72 @@
+# `libloadviz`
+
+A library providing a visualization of the current system load, covering CPU
+usage and RAM pressure.
+
+Only CPU load is measured. RAM pressure has to be inferred:
+
+* If the user part is high on one CPU, getting CPUs with better single core
+performance might help.
+
+* If the user part is high on lots of CPUs, getting more cores might help.
+
+* If the system part of the CPU load is high, this can mean that your system is swapping, and that getting more RAM might help.
+
+## Input
+
+`libloadviz` reads CPU load numbers. At least system, user and idle for all
+logical cores. Polling is done about once per second.
+
+## Output
+
+`libloadviz` exposes a `getImage()` function. `getImage()` takes `width` and
+`height` as parameters, and returns an image. Exact format TBD.
+
+## Rendering
+
+Initially `libloadviz` will just make a bar chart.
+
+## Why not measure RAM / swap usage?
+
+People commonly think measuring RAM / swap usage will help them decide...
+* When to close apps / tabs
+* When to buy more RAM
+* When to get faster swap
+
+... but the truth is it won't help with any of that. Conclusions drawn from
+those numbers will generally be wrong, and presenting them would just be
+confusing.
+
+### Swapping out unused memory
+
+Let's say you have 8GB RAM, but you're using 25GB. 6GB is resident, 19GB is
+swapped out and 2GB RAM is "free" / used as disk cache. Also, let's say that
+only 4GB of RAM is actually needed right now, and the other 21GB just happen to
+be around but are not going to be used during the near future.
+
+Any RAM / Swap visualization would show this as critical because you're silly
+high over quota.
+
+But in reality, since you aren't using most of the memory, this is fine.
+
+### Cost of swapping
+
+Let's say you have two computers, both doing the same thing and having too little RAM.
+
+One of them is swapping to a (slow) hard drive, and one to a (fast) SSD.
+
+Then, even with the exact same memory numbers, the SSD machine will be in a lot
+better situation than the HD machine.
+
+How would you visualize this?
+
+## TODO
+
+* Make the library return an image, any image
+* Make a macOS app rendering this image in a window
+* Make demo binary update its image at 10 FPS
+* Start getting CPU load from the system
+* Render CPU load
+* Make bars slide into place when metrics are updated. Physics engine!
+* Poll battery charge state as well
+* Visualize battery charge as a blue sky (full) or a starry night (empty)
