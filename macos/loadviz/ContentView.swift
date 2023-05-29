@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        Text("Hello, world!")
-            .padding()
-    }
+  var body: some View {
+    let a = Int32(5)
+    let b = Int32(3)
+    let number = LibLoadViz.add(a, b)
+
+    Text("\(a) + \(b) = \(number)")
+      .padding()
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+  static var previews: some View {
+    ContentView()
+  }
 }

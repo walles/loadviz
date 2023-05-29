@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0401814B2A246937005D9D0D /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
 		0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
+		049C48342A2512DF006A2186 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 049C48332A2512DF006A2186 /* README.md */; };
 		04B614322A2465710027E03A /* loadvizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* loadvizApp.swift */; };
 		04B614342A2465710027E03A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* ContentView.swift */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
@@ -23,11 +24,19 @@
 			remoteGlobalIDString = CA60476BBA0CF7DAC6A6A00E;
 			remoteInfo = "libloadviz-staticlib";
 		};
+		04C5DBB92A250CDF00B36A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 040181442A2468E1005D9D0D /* libloadviz.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = CA60476BBA0CD8C7CAC69D59;
+			remoteInfo = "libloadviz-staticlib";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		04B6142E2A2465710027E03A /* loadviz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = loadviz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* loadvizApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadvizApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -86,6 +95,7 @@
 		04B614302A2465710027E03A /* loadviz */ = {
 			isa = PBXGroup;
 			children = (
+				049C48332A2512DF006A2186 /* README.md */,
 				04B614312A2465710027E03A /* loadvizApp.swift */,
 				04B614332A2465710027E03A /* ContentView.swift */,
 				04B614352A2465730027E03A /* Assets.xcassets */,
@@ -117,6 +127,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				04C5DBBA2A250CDF00B36A49 /* PBXTargetDependency */,
 			);
 			name = loadviz;
 			productName = loadviz;
@@ -177,6 +188,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				049C48342A2512DF006A2186 /* README.md in Resources */,
 				04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */,
 				04B614362A2465730027E03A /* Assets.xcassets in Resources */,
 			);
@@ -195,6 +207,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04C5DBBA2A250CDF00B36A49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libloadviz-staticlib";
+			targetProxy = 04C5DBB92A250CDF00B36A49 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		04B6143B2A2465730027E03A /* Debug */ = {
@@ -335,6 +355,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.loadviz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = ../libloadviz/include/loadviz.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -362,6 +383,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.loadviz;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = ../libloadviz/include/loadviz.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
