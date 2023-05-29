@@ -7,13 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0401814B2A246937005D9D0D /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
+		0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
 		04B614322A2465710027E03A /* loadvizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* loadvizApp.swift */; };
 		04B614342A2465710027E03A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* ContentView.swift */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		040181482A2468E1005D9D0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 040181442A2468E1005D9D0D /* libloadviz.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA60476BBA0CF7DAC6A6A00E;
+			remoteInfo = "libloadviz-staticlib";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
+		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		04B6142E2A2465710027E03A /* loadviz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = loadviz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* loadvizApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadvizApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -27,17 +41,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */,
+				0401814B2A246937005D9D0D /* liblibloadviz_static.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		040181452A2468E1005D9D0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				040181492A2468E1005D9D0D /* liblibloadviz_static.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0401814A2A246937005D9D0D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0401814C2A246968005D9D0D /* libresolv.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		04B614252A2465710027E03A = {
 			isa = PBXGroup;
 			children = (
+				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* loadviz */,
 				04B6142F2A2465710027E03A /* Products */,
+				0401814A2A246937005D9D0D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,12 +149,28 @@
 			mainGroup = 04B614252A2465710027E03A;
 			productRefGroup = 04B6142F2A2465710027E03A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 040181452A2468E1005D9D0D /* Products */;
+					ProjectRef = 040181442A2468E1005D9D0D /* libloadviz.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				04B6142D2A2465710027E03A /* loadviz */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		040181492A2468E1005D9D0D /* liblibloadviz_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = liblibloadviz_static.a;
+			remoteRef = 040181482A2468E1005D9D0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		04B6142C2A2465710027E03A /* Resources */ = {
