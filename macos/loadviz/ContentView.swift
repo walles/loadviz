@@ -10,32 +10,32 @@ import SwiftUI
 // From: https://stackoverflow.com/a/38596649/473672
 func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NSImage {
   let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-  
-  // FIXME: We want RGB only, not RGBA, replace rawValue with something else
-  let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-  
+
+  // FIXME: Verify this gets us the correct colors
+  let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
+
   let bitsPerComponent = 8 //number of bits in UInt8
   let bitsPerPixel = 3 * bitsPerComponent //RGB uses 3 components
   let bytesPerRow = bitsPerPixel * width / 8
   let providerRef = CGDataProvider(
     data:         NSData(bytes: pixels, length: height * bytesPerRow)
   )
-  
-  let cgim = CGImageCreate(
-    width,
-    height,
-    bitsPerComponent,
-    bitsPerPixel,
-    bytesPerRow,
-    rgbColorSpace,
-    bitmapInfo,
-    providerRef!,
-    nil,
-    true,
-    .RenderingIntentDefault
+
+  let cgim = CGImage(
+    width: width,
+    height: height,
+    bitsPerComponent: bitsPerComponent,
+    bitsPerPixel: bitsPerPixel,
+    bytesPerRow: bytesPerRow,
+    space: rgbColorSpace,
+    bitmapInfo: bitmapInfo,
+    provider: providerRef!,
+    decode: nil,
+    shouldInterpolate: true,
+    intent: .defaultIntent
   )
-  
-  return NSImage(CGImage: cgim!, size: NSSize(width: width, height: height))
+
+  return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
 }
 
 struct ContentView: View {
@@ -43,7 +43,7 @@ struct ContentView: View {
     let width: UInt = 100
     let height: UInt = 100
     let imageBytes = LibLoadViz.get_image(width, height)!
-    
+
     Image(nsImage: imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height)))
   }
 }
