@@ -10,3 +10,6 @@ edition = "2021"
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode
 crate-type = ["lib", "staticlib"]
+
+[build-dependencies]
+cbindgen = "0.24.3"
