@@ -62,6 +62,8 @@ How would you visualize this?
 * Start getting CPU load from the system
 * Render CPU load
 * Make bars slide into place when metrics are updated. Physics engine!
+* Make a menu bar visualization
+* Make a Dock icon visualization
 * Poll battery charge state as well
 * Visualize battery charge as a blue sky (full) or a starry night (empty)
 

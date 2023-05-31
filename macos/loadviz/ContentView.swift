@@ -39,14 +39,13 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NS
 }
 
 struct ContentView: View {
+  var loadviz = LibLoadViz.new_loadviz()
+
   var body: some View {
     let width: UInt = 100
     let height: UInt = 100
 
-    // FIXME: We should do this once at startup and then reuse the same loadviz for all get_image() calls
-    let fixme = LibLoadViz.new_loadviz()
-
-    let imageBytes = LibLoadViz.get_image(fixme, width, height)!
+    let imageBytes = LibLoadViz.get_image(loadviz, width, height)!
 
     Image(nsImage: imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height)))
   }
