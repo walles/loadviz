@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+opaque-pointer = "0.8.8"
 
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode

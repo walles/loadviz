@@ -1,35 +1,47 @@
 #![allow(clippy::needless_return)]
 
-// FIXME: Remove this function
-#[no_mangle]
-pub extern "C" fn add(left: i32, right: i32) -> i32 {
-    left + right
+pub struct LoadViz {
+    width: usize,
+    height: usize,
+
+    // Size: 3* width * height. Format: RGBRGBRGB...
+    pixels: Vec<u8>,
+}
+
+impl LoadViz {
+    pub fn get_image(&mut self, width: usize, height: usize) -> *const u8 {
+        if width != self.width || height != self.height {
+            self.width = width;
+            self.height = height;
+            self.pixels = vec![0; width * height * 3];
+        }
+
+        // Set every third byte to 255 to make the image red
+        for i in (0..self.pixels.len()).step_by(3) {
+            self.pixels[i] = 255;
+        }
+
+        return &self.pixels[0]
+    }
 }
 
 #[no_mangle]
-pub extern "C" fn get_image(width: usize, height: usize) -> *const u8 {
-    let mut image: Vec<u8> = vec![0; width * height * 3];
-
-    // Set every third byte to 255 to make the image red
-    for i in (0..image.len()).step_by(3) {
-        image[i] = 255;
-    }
-
-    // FIXME: Make sure this memory isn't just leaked!
-
-    // FIXME: How do we know this doesn't just get free()d by Rust before we
-    // even return it?
-    let boxed_image = image.into_boxed_slice();
-    return boxed_image.as_ptr();
+pub extern "C" fn loadviz_new() -> *mut LoadViz {
+    return opaque_pointer::raw(LoadViz {
+        width: 0,
+        height: 0,
+        pixels: vec![0],
+    });
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+/// # Safety
+///
+/// This function is unsafe because it dereferences the incoming load_viz
+/// pointer. But as long as you get that from `loadviz_new()` you should be
+/// fine.
+#[no_mangle]
+pub unsafe extern "C" fn get_image(load_viz: *mut LoadViz, width: usize, height: usize) -> *const u8 {
+    let load_viz = unsafe { opaque_pointer::mut_object(load_viz) };
+    let load_viz = load_viz.unwrap();
+    return load_viz.get_image(width, height);
 }
