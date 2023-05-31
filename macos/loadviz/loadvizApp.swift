@@ -11,7 +11,7 @@ import SwiftUI
 struct loadvizApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          ContentView(nsImage: NSImage())
         }
     }
 }

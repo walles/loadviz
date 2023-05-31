@@ -20,7 +20,7 @@ impl LoadViz {
         }
 
         // Change color every time so we can see when it updates
-        self.value += 57;
+        self.value = self.value.wrapping_add(57);
         for i in 0..self.pixels.len() {
             self.pixels[i] = self.value;
         }

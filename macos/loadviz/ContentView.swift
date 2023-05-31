@@ -39,20 +39,25 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NS
 }
 
 struct ContentView: View {
+  @State var nsImage: NSImage
   var loadviz = LibLoadViz.new_loadviz()
+  let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
 
   var body: some View {
     let width: UInt = 100
     let height: UInt = 100
 
-    let imageBytes = LibLoadViz.get_image(loadviz, width, height)!
-
-    Image(nsImage: imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height)))
+    Image(
+      nsImage: nsImage
+    ).onReceive(timer, perform: { _ in
+      let imageBytes = LibLoadViz.get_image(loadviz, width, height)!
+      nsImage = imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height))
+    })
   }
 }
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView()
+    ContentView(nsImage: NSImage())
   }
 }

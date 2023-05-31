@@ -58,9 +58,9 @@ How would you visualize this?
 ## TODO
 
 * Add `cargo build` of our library to the Xcode project's build process
-* Make demo binary update its image at 10 FPS
 * Start getting CPU load from the system
 * Render CPU load
+* Make demo binary update its image at 10 FPS
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
 * Make a Dock icon visualization
@@ -74,3 +74,4 @@ How would you visualize this?
 * Make a macOS app rendering this image in a window
 * Make the demo app not just show black all the time even though the image from
   Rust is red
+* Make demo binary update its image at 3 FPS
