@@ -120,6 +120,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz" */;
 			buildPhases = (
+				0420FAF72A27D965002528DD /* cargo build libloadviz */,
 				04B6142A2A2465710027E03A /* Sources */,
 				04B6142B2A2465710027E03A /* Frameworks */,
 				04B6142C2A2465710027E03A /* Resources */,
@@ -195,6 +196,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0420FAF72A27D965002528DD /* cargo build libloadviz */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "cargo build libloadviz";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SWIFT_OBJC_BRIDGING_HEADER)",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\ncd ../libloadviz\n\nif [ $CONFIGURATION = Release ] ; then\n  cargo build --release\nelse\n  cargo build\nfi\n\n# FIXME: This step can also update the library we're linking with,\n# should be added in the Output Files section below.\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04B6142A2A2465710027E03A /* Sources */ = {

@@ -57,15 +57,19 @@ How would you visualize this?
 
 ## TODO
 
-* Add `cargo build` of our library to the Xcode project's build process
 * Start getting CPU load from the system
 * Render CPU load
-* Make demo binary update its image at 10 FPS
+* Make demo binary update its image at 10 FPS. Previous attempt led to no window
+  being shown, maybe updating is too slow?
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
 * Make a Dock icon visualization
 * Poll battery charge state as well
 * Visualize battery charge as a blue sky (full) or a starry night (empty)
+* Figure out whether `cargo build` should be done in the `libloadviz` project
+  instead. What we want is for the Rust build to run every time we press the
+  Play button in Xcode, and for Xcode to understand whether either the bridging
+  header or the static library have changed.
 
 ### Done
 
@@ -75,3 +79,4 @@ How would you visualize this?
 * Make the demo app not just show black all the time even though the image from
   Rust is red
 * Make demo binary update its image at 3 FPS
+* Add `cargo build` of our library to the Xcode project's build process
