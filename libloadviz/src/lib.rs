@@ -4,6 +4,9 @@ pub struct LoadViz {
     width: usize,
     height: usize,
 
+    // FIXME: Remove this, used only for early development
+    value: u8,
+
     // Size: 3* width * height. Format: RGBRGBRGB...
     pixels: Vec<u8>,
 }
@@ -16,9 +19,10 @@ impl LoadViz {
             self.pixels = vec![0; width * height * 3];
         }
 
-        // Set every third byte to 255 to make the image red
-        for i in (0..self.pixels.len()).step_by(3) {
-            self.pixels[i] = 255;
+        // Change color every time so we can see when it updates
+        self.value += 57;
+        for i in 0..self.pixels.len() {
+            self.pixels[i] = self.value;
         }
 
         return &self.pixels[0]
@@ -31,6 +35,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         width: 0,
         height: 0,
         pixels: vec![0],
+        value: 0,
     });
 }
 
