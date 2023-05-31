@@ -26,7 +26,7 @@ impl LoadViz {
 }
 
 #[no_mangle]
-pub extern "C" fn loadviz_new() -> *mut LoadViz {
+pub extern "C" fn new_loadviz() -> *mut LoadViz {
     return opaque_pointer::raw(LoadViz {
         width: 0,
         height: 0,
@@ -36,12 +36,12 @@ pub extern "C" fn loadviz_new() -> *mut LoadViz {
 
 /// # Safety
 ///
-/// This function is unsafe because it dereferences the incoming load_viz
-/// pointer. But as long as you get that from `loadviz_new()` you should be
-/// fine.
+/// This function is unsafe because it dereferences the incoming `loadviz`
+/// pointer. But as long as you get that from [`new_loadviz()`](new_loadviz) you
+/// should be fine.
 #[no_mangle]
-pub unsafe extern "C" fn get_image(load_viz: *mut LoadViz, width: usize, height: usize) -> *const u8 {
-    let load_viz = unsafe { opaque_pointer::mut_object(load_viz) };
-    let load_viz = load_viz.unwrap();
-    return load_viz.get_image(width, height);
+pub unsafe extern "C" fn get_image(loadviz: *mut LoadViz, width: usize, height: usize) -> *const u8 {
+    let loadviz = unsafe { opaque_pointer::mut_object(loadviz) };
+    let loadviz = loadviz.unwrap();
+    return loadviz.get_image(width, height);
 }

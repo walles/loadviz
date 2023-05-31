@@ -57,8 +57,7 @@ How would you visualize this?
 
 ## TODO
 
-* Make the demo app not just show black all the time even though the image from
-  Rust is red
+* Add `cargo build` of our library to the Xcode project's build process
 * Make demo binary update its image at 10 FPS
 * Start getting CPU load from the system
 * Render CPU load
@@ -71,3 +70,5 @@ How would you visualize this?
 * Make the library export some C API that gets called by the Swift app
 * Make the library return an image, any image
 * Make a macOS app rendering this image in a window
+* Make the demo app not just show black all the time even though the image from
+  Rust is red

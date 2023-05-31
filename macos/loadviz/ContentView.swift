@@ -42,7 +42,11 @@ struct ContentView: View {
   var body: some View {
     let width: UInt = 100
     let height: UInt = 100
-    let imageBytes = LibLoadViz.get_image(width, height)!
+
+    // FIXME: We should do this once at startup and then reuse the same loadviz for all get_image() calls
+    let fixme = LibLoadViz.new_loadviz()
+
+    let imageBytes = LibLoadViz.get_image(fixme, width, height)!
 
     Image(nsImage: imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height)))
   }
