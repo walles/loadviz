@@ -57,10 +57,10 @@ How would you visualize this?
 
 ## TODO
 
-* Start getting CPU load from the system
-* Render CPU load
 * Make demo binary update its image at 10 FPS. Previous attempt led to no window
   being shown, maybe updating is too slow?
+* Start getting CPU load from the system
+* Render CPU load
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
 * Make a Dock icon visualization

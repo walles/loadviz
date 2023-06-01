@@ -41,6 +41,8 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NS
 struct ContentView: View {
   @State var nsImage: NSImage
   var loadviz = LibLoadViz.new_loadviz()
+
+  // FIXME: If we se this to 0.1 then the app window never appears
   let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
 
   var body: some View {
