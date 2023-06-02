@@ -57,13 +57,13 @@ How would you visualize this?
 
 ## TODO
 
-* Make demo binary update its image at 10 FPS. Previous attempt led to no window
-  being shown, maybe updating is too slow?
-* Start getting CPU load from the system
-* Render CPU load
+* Draw some sort of bar chart based on fake data
+* Make sure that data looks like CPU load
+* Replace the data with actual CPU load
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
 * Make a Dock icon visualization
+* Find a *good* way of getting the demo image to update at 10 FPS
 * Poll battery charge state as well
 * Visualize battery charge as a blue sky (full) or a starry night (empty)
 * Figure out whether `cargo build` should be done in the `libloadviz` project
@@ -80,3 +80,4 @@ How would you visualize this?
   Rust is red
 * Make demo binary update its image at 3 FPS
 * Add `cargo build` of our library to the Xcode project's build process
+* Make demo binary update its image at 10 FPS

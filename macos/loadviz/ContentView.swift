@@ -43,7 +43,7 @@ struct ContentView: View {
   var loadviz = LibLoadViz.new_loadviz()
 
   // FIXME: If we se this to 0.1 then the app window never appears
-  let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
+  let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
 
   var body: some View {
     let width: UInt = 100
