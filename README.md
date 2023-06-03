@@ -57,6 +57,7 @@ How would you visualize this?
 
 ## TODO
 
+* Make sure `mirror_sort()` doesn't fail when two values are equal
 * Base bar chart on fake data for one CPU
 * Try with fake data for more CPUs than the image width
 * Make sure that data looks like CPU load (user / system / idle) and that the
