@@ -57,8 +57,7 @@ How would you visualize this?
 
 ## TODO
 
-* Draw some sort of bar chart based on fake data
-* Try with fake data for one CPU
+* Base bar chart on fake data for one CPU
 * Try with fake data for more CPUs than the image width
 * Make sure that data looks like CPU load (user / system / idle) and that the
   bars are based on that
@@ -68,6 +67,8 @@ How would you visualize this?
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
 * Make a Dock icon visualization
+* Enable resizing the demo app. Resizing should scale the image so we can see it
+  pixel by pixel. Nearest-neighbor scaling preferred.
 * Find a *good* way of getting the demo image to update at 10 FPS
 * Poll battery charge state as well
 * Visualize battery charge as a blue sky (full) or a starry night (empty)
@@ -86,3 +87,4 @@ How would you visualize this?
 * Make demo binary update its image at 3 FPS
 * Add `cargo build` of our library to the Xcode project's build process
 * Make demo binary update its image at 10 FPS
+* Draw some sort of bar chart

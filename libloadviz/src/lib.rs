@@ -1,11 +1,10 @@
 #![allow(clippy::needless_return)]
 
+mod renderer;
+
 pub struct LoadViz {
     width: usize,
     height: usize,
-
-    // FIXME: Remove this, used only for early development
-    value: u8,
 
     // Size: 3* width * height. Format: RGBRGBRGB...
     pixels: Vec<u8>,
@@ -19,11 +18,7 @@ impl LoadViz {
             self.pixels = vec![0; width * height * 3];
         }
 
-        // Change color every time so we can see when it updates
-        self.value = self.value.wrapping_add(57);
-        for i in 0..self.pixels.len() {
-            self.pixels[i] = self.value;
-        }
+        renderer::render_image(0.7, width, height, &mut self.pixels);
 
         return &self.pixels[0]
     }
@@ -35,7 +30,6 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         width: 0,
         height: 0,
         pixels: vec![0],
-        value: 0,
     });
 }
 
