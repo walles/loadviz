@@ -58,7 +58,12 @@ How would you visualize this?
 ## TODO
 
 * Draw some sort of bar chart based on fake data
-* Make sure that data looks like CPU load
+* Try with fake data for one CPU
+* Try with fake data for more CPUs than the image width
+* Make sure that data looks like CPU load (user / system / idle) and that the
+  bars are based on that
+* Make sure we can render everything from one CPU to more CPUs than the width of
+  the display
 * Replace the data with actual CPU load
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
