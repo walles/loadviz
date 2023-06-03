@@ -18,7 +18,8 @@ impl LoadViz {
             self.pixels = vec![0; width * height * 3];
         }
 
-        renderer::render_image(0.7, width, height, &mut self.pixels);
+        let heights_0_to_1 = vec![0.5, 0.7];
+        renderer::render_image(&heights_0_to_1, width, height, &mut self.pixels);
 
         return &self.pixels[0]
     }
