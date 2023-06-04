@@ -51,3 +51,50 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
 
     return result
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::cpuload::CpuLoad;
+
+    use super::mirror_sort;
+
+    #[test]
+    fn test_mirror_sort_empty() {
+        assert_eq!(0, mirror_sort(&Vec::new()).len());
+    }
+
+    #[test]
+    fn test_mirror_sort_same() {
+        let mirror_sorted = mirror_sort(&vec![
+            // This one is identical to...
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+            // ...this one.
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+        ]);
+
+        assert_eq!(mirror_sorted, vec![
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+            CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+        ]);
+    }
+}

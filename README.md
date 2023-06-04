@@ -57,15 +57,20 @@ How would you visualize this?
 
 ## TODO
 
-* Add test making sure `mirror_sort()` doesn't fail when two values are equal
-* Add test making sure that if we have more cores than the image width, at least
-  the most loaded core is rendered in the middle of the image
-* Add micro benchmarks for the rendering code, with both few and many CPUs
-* Profile the micro benchmarks and make the code faster
 * Replace the data with actual CPU load
 * Make a menu bar visualization
+* Add micro benchmarks for the rendering code, with both few and many CPUs
+* Profile the micro benchmarks and make the code faster
 * Run by default on Johan's desktop
+* Add test making sure that if we have more cores than the image width, at least
+  the most loaded core is rendered in the middle of the image
+  * For 100% system load, with the system load color at the top
+  * For 100% user load, with the user load color at the top
 * Stop doing anything when the menu bar isn't visible
+* Test visualization with a very wide image
+* Test visualization with a very high image
+* Test visualization with silly many cores
+* Test visualization with one core only
 * Make each box in the visualization have one single color. With or without
   antialiasing.
 * Make bars slide into place when metrics are updated. Physics engine!
@@ -97,3 +102,4 @@ How would you visualize this?
 * Make sure we can render everything from one CPU to more CPUs than the width of
   the display
 * Make the bars look like sound visualizations
+* Add test making sure `mirror_sort()` doesn't fail when two values are equal
