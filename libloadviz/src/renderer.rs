@@ -1,23 +1,33 @@
 use crate::cpuload::CpuLoad;
 
-static AIR_COLOR_RGB: &[u8] = &[0xc0, 0xc0, 0xff];
-static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xc0, 0x00];
-static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0x80, 0x00, 0x00];
+static BG_COLOR_RGB: &[u8] = &[0x00, 0x00, 0x00];
+static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
+static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
 
 /// `heights_0_to_1` is a list of heights between 0 and 1 in no particular order
 pub(crate) fn render_image(cpu_loads: &Vec<CpuLoad>, width: usize, height: usize, pixels: &mut Vec<u8>) {
     let cpu_loads = mirror_sort(cpu_loads);
 
+    // Make square boxes
+    let divider_distance = (width as f32 / cpu_loads.len() as f32) as usize;
+
     for i in (0..pixels.len()).step_by(3) {
         let x = (i / 3) % width;
         let y = height - (i / 3) / width - 1;
+
+        if y % divider_distance == 0 || x % divider_distance == 0 {
+            pixels[i] = BG_COLOR_RGB[0];
+            pixels[i + 1] = BG_COLOR_RGB[1];
+            pixels[i + 2] = BG_COLOR_RGB[2];
+            continue;
+        }
 
         let cpu_load = &cpu_loads[(x * cpu_loads.len()) / width ];
 
         let y_height = y as f32 / height as f32;
         let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
         let color = if y_height > user_plus_system_height {
-            AIR_COLOR_RGB
+            BG_COLOR_RGB
         } else if y_height > cpu_load.system_0_to_1 {
             USER_LOAD_COLOR_RGB
         } else {
