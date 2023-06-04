@@ -57,13 +57,11 @@ How would you visualize this?
 
 ## TODO
 
-* Make sure `mirror_sort()` doesn't fail when two values are equal
-* Base bar chart on fake data for one CPU
-* Try with fake data for more CPUs than the image width
-* Make sure that data looks like CPU load (user / system / idle) and that the
-  bars are based on that
-* Make sure we can render everything from one CPU to more CPUs than the width of
-  the display
+* Add test making sure `mirror_sort()` doesn't fail when two values are equal
+* Add test making sure that if we have more cores than the image width, at least
+  the most loaded core is rendered in the middle of the image
+* Add micro benchmarks for the rendering code, with both few and many CPUs
+* Profile the micro benchmarks and make the code faster
 * Replace the data with actual CPU load
 * Make bars slide into place when metrics are updated. Physics engine!
 * Make a menu bar visualization
@@ -89,3 +87,8 @@ How would you visualize this?
 * Add `cargo build` of our library to the Xcode project's build process
 * Make demo binary update its image at 10 FPS
 * Draw some sort of bar chart
+* Base bar chart on fake data for one CPU
+* Make sure that data looks like CPU load (user / system / idle) and that the
+  bars are based on that
+* Make sure we can render everything from one CPU to more CPUs than the width of
+  the display

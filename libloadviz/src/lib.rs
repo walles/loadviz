@@ -1,5 +1,6 @@
 #![allow(clippy::needless_return)]
 
+mod cpuload;
 mod renderer;
 
 pub struct LoadViz {
@@ -11,15 +12,24 @@ pub struct LoadViz {
 }
 
 impl LoadViz {
-    pub fn get_image(&mut self, width: usize, height: usize) -> *const u8 {
+    pub (crate) fn get_image(&mut self, width: usize, height: usize) -> *const u8 {
         if width != self.width || height != self.height {
             self.width = width;
             self.height = height;
             self.pixels = vec![0; width * height * 3];
         }
 
-        let heights_0_to_1 = vec![0.5, 0.7];
-        renderer::render_image(&heights_0_to_1, width, height, &mut self.pixels);
+        let cpu_loads = vec![
+            cpuload::CpuLoad {
+                user_0_to_1: 0.1,
+                system_0_to_1: 0.2,
+            },
+            cpuload::CpuLoad {
+                user_0_to_1: 0.3,
+                system_0_to_1: 0.4,
+            }
+            ];
+        renderer::render_image(&cpu_loads, width, height, &mut self.pixels);
 
         return &self.pixels[0]
     }
