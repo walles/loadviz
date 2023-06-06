@@ -2,6 +2,7 @@
 
 mod cpuload;
 mod renderer;
+pub mod system_load_macos;
 
 pub struct LoadViz {
     width: usize,

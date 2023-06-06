@@ -58,6 +58,7 @@ How would you visualize this?
 ## TODO
 
 * Replace the data with actual CPU load
+* Test that we can render a zero-length CPU-loads array without crashing
 * Make a menu bar visualization
 * Add micro benchmarks for the rendering code, with both few and many CPUs
 * Profile the micro benchmarks and make the code faster
