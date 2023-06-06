@@ -1,6 +1,6 @@
 #![allow(clippy::needless_return)]
 
-mod cpuload;
+pub mod cpuload;
 mod renderer;
 pub mod system_load_macos;
 
@@ -13,7 +13,7 @@ pub struct LoadViz {
 }
 
 impl LoadViz {
-    pub (crate) fn get_image(&mut self, width: usize, height: usize) -> *const u8 {
+    pub(crate) fn get_image(&mut self, width: usize, height: usize) -> *const u8 {
         if width != self.width || height != self.height {
             self.width = width;
             self.height = height;
@@ -28,11 +28,11 @@ impl LoadViz {
             cpuload::CpuLoad {
                 user_0_to_1: 0.3,
                 system_0_to_1: 0.4,
-            }
-            ];
+            },
+        ];
         renderer::render_image(&cpu_loads, width, height, &mut self.pixels);
 
-        return &self.pixels[0]
+        return &self.pixels[0];
     }
 }
 
@@ -51,7 +51,11 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
 /// pointer. But as long as you get that from [`new_loadviz()`](new_loadviz) you
 /// should be fine.
 #[no_mangle]
-pub unsafe extern "C" fn get_image(loadviz: *mut LoadViz, width: usize, height: usize) -> *const u8 {
+pub unsafe extern "C" fn get_image(
+    loadviz: *mut LoadViz,
+    width: usize,
+    height: usize,
+) -> *const u8 {
     let loadviz = unsafe { opaque_pointer::mut_object(loadviz) };
     let loadviz = loadviz.unwrap();
     return loadviz.get_image(width, height);

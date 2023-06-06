@@ -22,3 +22,23 @@ impl PartialOrd for CpuLoad {
             .partial_cmp(&(other.user_0_to_1 + other.system_0_to_1));
     }
 }
+
+/// Based on two CPU counter snapshots, compute the load for each CPU
+pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
+    if older.len() != newer.len() {
+        return vec![];
+    }
+
+    let mut result: Vec<CpuLoad> = vec![];
+    for (older, newer) in older.iter().zip(newer.iter()) {
+        let user = newer.user - older.user;
+        let system = newer.system - older.system;
+        let idle = newer.idle - older.idle;
+        let total = user + system + idle;
+        result.push(CpuLoad {
+            user_0_to_1: user as f32 / total as f32,
+            system_0_to_1: system as f32 / total as f32,
+        });
+    }
+    return result;
+}
