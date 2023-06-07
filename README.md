@@ -58,9 +58,8 @@ How would you visualize this?
 
 ## TODO
 
-- Replace the data with actual CPU load
-- Test that `diff()` handles wrapping CPU counters correctly
 - Test that we can render a zero-length CPU-loads array without crashing
+- Test that `diff()` handles wrapping CPU counters correctly
 - Make a menu bar visualization
 - Add micro benchmarks for the rendering code, with both few and many CPUs
 - Profile the micro benchmarks and make the code faster
@@ -106,3 +105,4 @@ How would you visualize this?
   the display
 - Make the bars look like sound visualizations
 - Add test making sure `mirror_sort()` doesn't fail when two values are equal
+- Replace the data with actual CPU load

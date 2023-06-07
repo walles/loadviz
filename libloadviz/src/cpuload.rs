@@ -2,12 +2,12 @@ use std::cmp::Ordering;
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub struct CpuLoad {
-    // NOTE: Maybe we should do "idle" here as well?
+    // NOTE: Maybe we should do "nice" here as well?
     pub user_0_to_1: f32,
     pub system_0_to_1: f32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LoadCounters {
     pub user: usize,
     pub system: usize,

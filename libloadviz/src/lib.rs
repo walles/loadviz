@@ -1,6 +1,7 @@
 #![allow(clippy::needless_return)]
 
 pub mod cpuload;
+mod load_reader;
 mod renderer;
 pub mod system_load_macos;
 
@@ -10,6 +11,8 @@ pub struct LoadViz {
 
     // Size: 3* width * height. Format: RGBRGBRGB...
     pixels: Vec<u8>,
+
+    load_reader: load_reader::LoadReader,
 }
 
 impl LoadViz {
@@ -20,17 +23,12 @@ impl LoadViz {
             self.pixels = vec![0; width * height * 3];
         }
 
-        let cpu_loads = vec![
-            cpuload::CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.2,
-            },
-            cpuload::CpuLoad {
-                user_0_to_1: 0.3,
-                system_0_to_1: 0.4,
-            },
-        ];
-        renderer::render_image(&cpu_loads, width, height, &mut self.pixels);
+        renderer::render_image(
+            &self.load_reader.get_loads(),
+            width,
+            height,
+            &mut self.pixels,
+        );
 
         return &self.pixels[0];
     }
@@ -42,6 +40,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         width: 0,
         height: 0,
         pixels: vec![0],
+        load_reader: load_reader::LoadReader::new(),
     });
 }
 
