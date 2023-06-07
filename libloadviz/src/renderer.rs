@@ -11,7 +11,7 @@ pub(crate) fn render_image(
     height: usize,
     pixels: &mut Vec<u8>,
 ) {
-    if cpu_loads.len() == 0 {
+    if cpu_loads.is_empty() {
         // FIXME: Draw something nice?
         return;
     }
