@@ -5,7 +5,17 @@ static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
 static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
 
 /// `heights_0_to_1` is a list of heights between 0 and 1 in no particular order
-pub(crate) fn render_image(cpu_loads: &Vec<CpuLoad>, width: usize, height: usize, pixels: &mut Vec<u8>) {
+pub(crate) fn render_image(
+    cpu_loads: &Vec<CpuLoad>,
+    width: usize,
+    height: usize,
+    pixels: &mut Vec<u8>,
+) {
+    if cpu_loads.len() == 0 {
+        // FIXME: Draw something nice?
+        return;
+    }
+
     let cpu_loads = mirror_sort(cpu_loads);
 
     // Make square boxes
@@ -22,7 +32,7 @@ pub(crate) fn render_image(cpu_loads: &Vec<CpuLoad>, width: usize, height: usize
             continue;
         }
 
-        let cpu_load = &cpu_loads[(x * cpu_loads.len()) / width ];
+        let cpu_load = &cpu_loads[(x * cpu_loads.len()) / width];
 
         let y_height = y as f32 / height as f32;
         let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
@@ -49,14 +59,26 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
         result.push(result[i]);
     }
 
-    return result
+    return result;
 }
 
 #[cfg(test)]
 mod tests {
     use crate::cpuload::CpuLoad;
 
-    use super::mirror_sort;
+    use super::{mirror_sort, render_image};
+
+    #[test]
+    fn test_render_nothing() {
+        // Test rendering an empty list of loads. The point is just that we
+        // shouldn't crash.
+        let empty_loads = vec![];
+
+        let width = 10;
+        let height = 10;
+        let mut pixels = vec![0; width * height * 3];
+        render_image(&empty_loads, width, height, &mut pixels);
+    }
 
     #[test]
     fn test_mirror_sort_empty() {
@@ -78,23 +100,26 @@ mod tests {
             },
         ]);
 
-        assert_eq!(mirror_sorted, vec![
-            CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.2,
-            },
-            CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.2,
-            },
-            CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.2,
-            },
-            CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.2,
-            },
-        ]);
+        assert_eq!(
+            mirror_sorted,
+            vec![
+                CpuLoad {
+                    user_0_to_1: 0.1,
+                    system_0_to_1: 0.2,
+                },
+                CpuLoad {
+                    user_0_to_1: 0.1,
+                    system_0_to_1: 0.2,
+                },
+                CpuLoad {
+                    user_0_to_1: 0.1,
+                    system_0_to_1: 0.2,
+                },
+                CpuLoad {
+                    user_0_to_1: 0.1,
+                    system_0_to_1: 0.2,
+                },
+            ]
+        );
     }
 }

@@ -58,12 +58,11 @@ How would you visualize this?
 
 ## TODO
 
-- Test that we can render a zero-length CPU-loads array without crashing
-- Test that `diff()` handles wrapping CPU counters correctly
-- Make a menu bar visualization
 - Add micro benchmarks for the rendering code, with both few and many CPUs
 - Profile the micro benchmarks and make the code faster
-- Run by default on Johan's desktop
+- Make a menu bar visualization
+- Run (a release build!) by default on Johan's desktop
+- Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
   - For 100% system load, with the system load color at the top
@@ -106,3 +105,4 @@ How would you visualize this?
 - Make the bars look like sound visualizations
 - Add test making sure `mirror_sort()` doesn't fail when two values are equal
 - Replace the data with actual CPU load
+- Test that we can render a zero-length CPU-loads array without crashing
