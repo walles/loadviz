@@ -4,7 +4,9 @@ use crate::LoadViz;
 
 // Maybe keep this higher than SECONDS_BETWEEN_MEASUREMENTS in load_reader.rs?
 // By moving both values around until we're happy!
-static SECONDS_TO_100_PERCENT: f32 = 40.0;
+//
+// FIXME: I think the maths is wrong, I don't think it takes 40 seconds.
+static SECONDS_0_TO_100: f32 = 40.0;
 
 impl LoadViz {
     pub(crate) fn update_currently_displayed_loads(&mut self) {
@@ -38,10 +40,26 @@ impl LoadViz {
 ///
 /// `dt` is the time since the last update
 fn compute_step(dt: Duration, current: f32, goal: f32) -> f32 {
-    let max_step = dt.as_secs_f32() / SECONDS_TO_100_PERCENT;
+    let how_far_we_can_go = dt.as_secs_f32() / SECONDS_0_TO_100;
 
-    let max_diff = (goal - current).abs();
+    let how_far_we_are_allowed_to_go = (goal - current).abs();
     let direction = if goal > current { 1.0 } else { -1.0 };
 
-    return max_step.min(max_diff) * direction;
+    return how_far_we_can_go.min(how_far_we_are_allowed_to_go) * direction;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_compute_step() {
+        let dt = Duration::from_secs_f32(SECONDS_0_TO_100 / 2.0);
+
+        assert_eq!(compute_step(dt, 0.0, 1.0), 0.5);
+        assert_eq!(compute_step(dt, 0.0, 0.1), 0.1);
+
+        assert_eq!(compute_step(dt, 1.0, 0.0), -0.5);
+        assert_eq!(compute_step(dt, 1.0, 0.7), -0.3);
+    }
 }
