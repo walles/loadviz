@@ -4,6 +4,7 @@ use system_load_macos::get_macos_load_counters;
 
 pub mod cpuload;
 mod load_reader;
+mod physics;
 mod renderer;
 pub mod system_load_macos;
 
@@ -11,8 +12,13 @@ pub struct LoadViz {
     width: usize,
     height: usize,
 
-    // Size: 3* width * height. Format: RGBRGBRGB...
+    /// Size: 3 * width * height. Format: RGBRGBRGB...
     pixels: Vec<u8>,
+
+    /// What we're currently displaying. This will constantly be animated
+    /// towards the current system load.
+    currently_displayed_loads: Vec<cpuload::CpuLoad>,
+    currently_displayed_loads_updated: std::time::Instant,
 
     load_reader: load_reader::LoadReader,
 }
@@ -37,6 +43,8 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         width: 0,
         height: 0,
         pixels: vec![0],
+        currently_displayed_loads: Vec::new(),
+        currently_displayed_loads_updated: std::time::Instant::now(),
         load_reader: load_reader::LoadReader::new(get_macos_load_counters),
     });
 }

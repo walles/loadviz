@@ -42,7 +42,7 @@ struct ContentView: View {
   @State var nsImage: NSImage
   var loadviz = LibLoadViz.new_loadviz()
 
-  // FIXME: If we se this to 0.1 then the app window never appears
+  // FIXME: If we se this to 0.1 then the app window never appears. 0.3 works.
   let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
 
   var body: some View {

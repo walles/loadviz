@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use crate::{cpuload::CpuLoad, LoadViz};
 
 static BG_COLOR_RGB: &[u8] = &[0x00, 0x00, 0x00];
@@ -11,10 +13,15 @@ impl LoadViz {
             return;
         }
 
-        let cpu_loads = mirror_sort(&self.load_reader.get_loads());
+        self.update_currently_displayed_loads();
+
+        // FIXME: Use scopeguard to do this inside of update_currently_displayed_loads()
+        self.currently_displayed_loads_updated = Instant::now();
+
+        let viz_loads = mirror_sort(&self.currently_displayed_loads);
 
         // Make square boxes
-        let divider_distance = (self.width as f32 / cpu_loads.len() as f32) as usize;
+        let divider_distance = (self.width as f32 / viz_loads.len() as f32) as usize;
 
         for i in (0..self.pixels.len()).step_by(3) {
             let x = (i / 3) % self.width;
@@ -27,7 +34,7 @@ impl LoadViz {
                 continue;
             }
 
-            let cpu_load = &cpu_loads[(x * cpu_loads.len()) / self.width];
+            let cpu_load = &viz_loads[(x * viz_loads.len()) / self.width];
 
             let y_height = y as f32 / self.height as f32;
             let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
@@ -49,6 +56,8 @@ impl LoadViz {
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
 fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
     let mut result = cpu_loads.clone();
+
+    // Sort criteria is same as in `LoadViz::update_currently_displayed_loads()`
     result.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     for i in (0..cpu_loads.len()).rev() {
@@ -60,6 +69,8 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
 
 #[cfg(test)]
 mod tests {
+    use std::time::Instant;
+
     use crate::cpuload::CpuLoad;
 
     use super::mirror_sort;
@@ -76,6 +87,8 @@ mod tests {
             width,
             height,
             pixels,
+            currently_displayed_loads: Vec::new(),
+            currently_displayed_loads_updated: Instant::now(),
 
             // Create a load reader that always says there are no cores
             load_reader: crate::load_reader::LoadReader::new(std::vec::Vec::new),

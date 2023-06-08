@@ -58,7 +58,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make bars slide into place when metrics are updated.
 - Add micro benchmarks for the rendering code, with both few and many CPUs
 - Profile the micro benchmarks and make the code faster
 - Make a menu bar visualization
@@ -106,3 +105,4 @@ How would you visualize this?
 - Add test making sure `mirror_sort()` doesn't fail when two values are equal
 - Replace the data with actual CPU load
 - Test that we can render a zero-length CPU-loads array without crashing
+- Make bars slide into place when metrics are updated
