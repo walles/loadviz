@@ -58,6 +58,7 @@ How would you visualize this?
 
 ## TODO
 
+- Make bars slide into place when metrics are updated.
 - Add micro benchmarks for the rendering code, with both few and many CPUs
 - Profile the micro benchmarks and make the code faster
 - Make a menu bar visualization
@@ -74,7 +75,6 @@ How would you visualize this?
 - Test visualization with one core only
 - Make each box in the visualization have one single color. With or without
   antialiasing.
-- Make bars slide into place when metrics are updated. Physics engine!
 - Make a Dock icon visualization
 - Enable resizing the demo app. Resizing should scale the image so we can see it
   pixel by pixel. Nearest-neighbor scaling preferred.
