@@ -2,12 +2,12 @@
 
 use std::thread;
 
-use libloadviz::system_load_macos::get_load_counters;
+use libloadviz::system_load_macos::get_macos_load_counters;
 
 fn main() {
-    let first = get_load_counters();
+    let first = get_macos_load_counters();
     thread::sleep(std::time::Duration::from_secs(1));
-    let second = get_load_counters();
+    let second = get_macos_load_counters();
 
     let diff = libloadviz::cpuload::diff(&first, &second);
     println!("{:#?}", diff);
