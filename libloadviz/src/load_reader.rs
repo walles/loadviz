@@ -2,7 +2,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::cpuload::{diff, CpuLoad, LoadCounters};
 
-static SECONDS_BETWEEN_MEASUREMENTS: u64 = 2;
+static SECONDS_BETWEEN_MEASUREMENTS: u64 = 1;
 
 struct LoadState {
     last_update_done: SystemTime,

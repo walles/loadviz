@@ -6,7 +6,7 @@ use crate::LoadViz;
 // By moving both values around until we're happy!
 //
 // FIXME: I think the maths is wrong, I don't think it takes 40 seconds.
-static SECONDS_0_TO_100: f32 = 40.0;
+static SECONDS_0_TO_100: f32 = 20.0;
 
 impl LoadViz {
     pub(crate) fn update_currently_displayed_loads(&mut self) {
