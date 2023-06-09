@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use crate::{cpuload::CpuLoad, LoadViz};
 
 static BG_COLOR_RGB: &[u8] = &[0x00, 0x00, 0x00];
@@ -14,9 +12,6 @@ impl LoadViz {
         }
 
         self.update_currently_displayed_loads();
-
-        // FIXME: Use scopeguard to do this inside of update_currently_displayed_loads()
-        self.currently_displayed_loads_updated = Instant::now();
 
         let viz_loads = mirror_sort(&self.currently_displayed_loads);
 

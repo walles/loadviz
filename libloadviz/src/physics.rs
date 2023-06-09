@@ -5,11 +5,16 @@ use crate::LoadViz;
 // Maybe keep this higher than SECONDS_BETWEEN_MEASUREMENTS in load_reader.rs?
 // By moving both values around until we're happy!
 //
-// FIXME: I think the maths is wrong, I don't think it takes 40 seconds.
+// FIXME: I think the maths is wrong, I don't think it takes 20 seconds.
 static SECONDS_0_TO_100: f32 = 20.0;
 
 impl LoadViz {
     pub(crate) fn update_currently_displayed_loads(&mut self) {
+        self.update_currently_displayed_loads_internal();
+        self.currently_displayed_loads_updated = Instant::now();
+    }
+
+    fn update_currently_displayed_loads_internal(&mut self) {
         if self.currently_displayed_loads.len() != self.load_reader.get_loads().len() {
             self.currently_displayed_loads = self.load_reader.get_loads();
             return;
