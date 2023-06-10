@@ -13,38 +13,55 @@ impl LoadViz {
 
         self.update_currently_displayed_loads();
 
-        let viz_loads = mirror_sort(&self.currently_displayed_loads);
+        render_image_raw(
+            &self.currently_displayed_loads,
+            self.width,
+            self.height,
+            &mut self.pixels,
+        );
+    }
+}
 
-        // Make square boxes
-        let divider_distance = (self.width as f32 / viz_loads.len() as f32) as usize;
+/// Don't call this! It's public for benchmarking purposes only.
+///
+/// You should call `LoadViz::render_image()` instead.
+pub fn render_image_raw(
+    currently_displayed_loads: &Vec<CpuLoad>,
+    width: usize,
+    height: usize,
+    pixels: &mut Vec<u8>,
+) {
+    let viz_loads = mirror_sort(currently_displayed_loads);
 
-        for i in (0..self.pixels.len()).step_by(3) {
-            let x = (i / 3) % self.width;
-            let y = self.height - (i / 3) / self.width - 1;
+    // Make square boxes
+    let divider_distance = (width as f32 / viz_loads.len() as f32) as usize;
 
-            if y % divider_distance == 0 || x % divider_distance == 0 {
-                self.pixels[i] = BG_COLOR_RGB[0];
-                self.pixels[i + 1] = BG_COLOR_RGB[1];
-                self.pixels[i + 2] = BG_COLOR_RGB[2];
-                continue;
-            }
+    for i in (0..pixels.len()).step_by(3) {
+        let x = (i / 3) % width;
+        let y = height - (i / 3) / width - 1;
 
-            let cpu_load = &viz_loads[(x * viz_loads.len()) / self.width];
-
-            let y_height = y as f32 / self.height as f32;
-            let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
-            let color = if y_height > user_plus_system_height {
-                BG_COLOR_RGB
-            } else if y_height > cpu_load.system_0_to_1 {
-                USER_LOAD_COLOR_RGB
-            } else {
-                SYSTEM_LOAD_COLOR_RGB
-            };
-
-            self.pixels[i] = color[0];
-            self.pixels[i + 1] = color[1];
-            self.pixels[i + 2] = color[2];
+        if y % divider_distance == 0 || x % divider_distance == 0 {
+            pixels[i] = BG_COLOR_RGB[0];
+            pixels[i + 1] = BG_COLOR_RGB[1];
+            pixels[i + 2] = BG_COLOR_RGB[2];
+            continue;
         }
+
+        let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
+
+        let y_height = y as f32 / height as f32;
+        let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
+        let color = if y_height > user_plus_system_height {
+            BG_COLOR_RGB
+        } else if y_height > cpu_load.system_0_to_1 {
+            USER_LOAD_COLOR_RGB
+        } else {
+            SYSTEM_LOAD_COLOR_RGB
+        };
+
+        pixels[i] = color[0];
+        pixels[i + 1] = color[1];
+        pixels[i + 2] = color[2];
     }
 }
 

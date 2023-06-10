@@ -5,8 +5,10 @@ use system_load_macos::get_macos_load_counters;
 pub mod cpuload;
 mod load_reader;
 mod physics;
-mod renderer;
 pub mod system_load_macos;
+
+// Public for benchmarking purposes only
+pub mod renderer;
 
 pub struct LoadViz {
     width: usize,

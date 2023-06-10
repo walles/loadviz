@@ -58,8 +58,6 @@ How would you visualize this?
 
 ## TODO
 
-- Add micro benchmarks for the rendering code, with both few and many CPUs
-- Profile the micro benchmarks and make the code faster
 - Make a menu bar visualization
 - Run (a release build!) by default on Johan's desktop
 - Test that `diff()` handles wrapping CPU counters correctly
@@ -106,3 +104,5 @@ How would you visualize this?
 - Replace the data with actual CPU load
 - Test that we can render a zero-length CPU-loads array without crashing
 - Make bars slide into place when metrics are updated
+- Add micro benchmarks for the rendering code
+- Profile the micro benchmarks and make the code faster
