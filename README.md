@@ -58,26 +58,32 @@ How would you visualize this?
 
 ## TODO
 
-- Make a menu bar visualization
+- Make a desktop app
+- Make the desktop app show a menu bar icon
+- Update the menu bar icon at 10Hz with the system load
+- Make clicking the menu bar icon bring up a menu
+- Add a "Quit" menu item
+- Hide the desktop app icon from the Dock
+- Hide the desktop app from cmd-tab
+- Make the desktop app start automatically on login
 - Run (a release build!) by default on Johan's desktop
 - Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
   - For 100% system load, with the system load color at the top
   - For 100% user load, with the user load color at the top
-- Stop doing anything when the menu bar isn't visible
-- Test visualization with a very wide image
-- Test visualization with a very high image
-- Test visualization with silly many cores
+- Add an "About" menu item doing something helpful. At least link to the GitHub
+  project and show some version number.
+- Release the first public version on GitHub
+- Stop using CPU when the menu bar isn't visible
+- Test visualization with more cores than the image width
 - Test visualization with one core only
-- Make each box in the visualization have one single color. With or without
-  antialiasing.
 - Make a Dock icon visualization
+- Poll battery charge state as well
+- Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Enable resizing the demo app. Resizing should scale the image so we can see it
   pixel by pixel. Nearest-neighbor scaling preferred.
 - Find a _good_ way of getting the demo image to update at 10 FPS
-- Poll battery charge state as well
-- Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Figure out whether `cargo build` should be done in the `libloadviz` project
   instead. What we want is for the Rust build to run every time we press the
   Play button in Xcode, and for Xcode to understand whether either the bridging

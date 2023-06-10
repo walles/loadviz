@@ -10,7 +10,7 @@
 		0401814B2A246937005D9D0D /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
 		0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
 		049C48342A2512DF006A2186 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 049C48332A2512DF006A2186 /* README.md */; };
-		04B614322A2465710027E03A /* loadvizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* loadvizApp.swift */; };
+		04B614322A2465710027E03A /* demoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* demoApp.swift */; };
 		04B614342A2465710027E03A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* ContentView.swift */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
@@ -37,8 +37,8 @@
 		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		04B6142E2A2465710027E03A /* loadviz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = loadviz.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		04B614312A2465710027E03A /* loadvizApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadvizApp.swift; sourceTree = "<group>"; };
+		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 		04B6142F2A2465710027E03A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04B6142E2A2465710027E03A /* loadviz.app */,
+				04B6142E2A2465710027E03A /* loadviz-demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,7 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				049C48332A2512DF006A2186 /* README.md */,
-				04B614312A2465710027E03A /* loadvizApp.swift */,
+				04B614312A2465710027E03A /* demoApp.swift */,
 				04B614332A2465710027E03A /* ContentView.swift */,
 				04B614352A2465730027E03A /* Assets.xcassets */,
 				04B6143A2A2465730027E03A /* loadviz.entitlements */,
@@ -116,9 +116,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04B6142D2A2465710027E03A /* loadviz */ = {
+		04B6142D2A2465710027E03A /* loadviz-demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz" */;
+			buildConfigurationList = 04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz-demo" */;
 			buildPhases = (
 				0420FAF72A27D965002528DD /* cargo build libloadviz */,
 				04B6142A2A2465710027E03A /* Sources */,
@@ -130,9 +130,9 @@
 			dependencies = (
 				04C5DBBA2A250CDF00B36A49 /* PBXTargetDependency */,
 			);
-			name = loadviz;
+			name = "loadviz-demo";
 			productName = loadviz;
-			productReference = 04B6142E2A2465710027E03A /* loadviz.app */;
+			productReference = 04B6142E2A2465710027E03A /* loadviz-demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -169,7 +169,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				04B6142D2A2465710027E03A /* loadviz */,
+				04B6142D2A2465710027E03A /* loadviz-demo */,
 			);
 		};
 /* End PBXProject section */
@@ -226,7 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B614342A2465710027E03A /* ContentView.swift in Sources */,
-				04B614322A2465710027E03A /* loadvizApp.swift in Sources */,
+				04B614322A2465710027E03A /* demoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +424,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz" */ = {
+		04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz-demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04B6143E2A2465730027E03A /* Debug */,

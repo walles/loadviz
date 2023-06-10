@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  loadviz
-//
-//  Created by Johan Walles on 2023-05-29.
-//
-
 import SwiftUI
 
 // From: https://stackoverflow.com/a/38596649/473672
