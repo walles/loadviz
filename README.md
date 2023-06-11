@@ -58,7 +58,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make the desktop app show a menu bar icon
 - Update the menu bar icon at 10Hz with the system load
 - Make clicking the menu bar icon bring up a menu
 - Add a "Quit" menu item
@@ -112,3 +111,4 @@ How would you visualize this?
 - Add micro benchmarks for the rendering code
 - Profile the micro benchmarks and make the code faster
 - Make a desktop app
+- Make the desktop app show a menu bar icon
