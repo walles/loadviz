@@ -9,9 +9,9 @@ import SwiftUI
 
 @main
 struct LoadVizApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+  }
 }

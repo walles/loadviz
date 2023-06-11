@@ -1,17 +1,17 @@
 import SwiftUI
 
 // From: https://stackoverflow.com/a/38596649/473672
-func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NSImage {
+func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> NSImage {
   let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 
   // FIXME: Verify this gets us the correct colors
-  let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
+  let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
 
-  let bitsPerComponent = 8 //number of bits in UInt8
-  let bitsPerPixel = 3 * bitsPerComponent //RGB uses 3 components
+  let bitsPerComponent = 8 // number of bits in UInt8
+  let bitsPerPixel = 3 * bitsPerComponent // RGB uses 3 components
   let bytesPerRow = bitsPerPixel * width / 8
   let providerRef = CGDataProvider(
-    data:         NSData(bytes: pixels, length: height * bytesPerRow)
+    data: NSData(bytes: pixels, length: height * bytesPerRow)
   )
 
   let cgim = CGImage(
