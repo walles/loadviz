@@ -31,7 +31,7 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int)-> NS
   return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
 }
 
-struct ContentView: View {
+struct LoadVizView: View {
   @State var nsImage: NSImage
   var loadviz = LibLoadViz.new_loadviz()
 
@@ -51,8 +51,8 @@ struct ContentView: View {
   }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct LoadVizView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView(nsImage: NSImage())
+    LoadVizView(nsImage: NSImage())
   }
 }

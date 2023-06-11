@@ -4,7 +4,7 @@ import SwiftUI
 struct demoApp: App {
     var body: some Scene {
         WindowGroup {
-          ContentView(nsImage: NSImage())
+          LoadVizView(nsImage: NSImage())
         }
     }
 }
