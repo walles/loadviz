@@ -58,7 +58,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make clicking the menu bar icon bring up a menu
 - Add a "Quit" menu item
 - Hide the desktop app icon from the Dock
 - Hide the desktop app from cmd-tab
@@ -113,3 +112,4 @@ How would you visualize this?
 - Make the desktop app show a menu bar icon
 - Update the menu bar icon at 10Hz with the system load
 - Don't hard code the dimensions in LoadVizView
+- Make clicking the menu bar icon bring up a menu
