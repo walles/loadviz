@@ -34,7 +34,7 @@ pub fn render_image_raw(
     let viz_loads = mirror_sort(currently_displayed_loads);
 
     // Make square boxes
-    let divider_distance = (width as f32 / viz_loads.len() as f32) as usize;
+    let divider_distance = (height.min(width) as f32 / 4.0) as usize;
 
     for i in (0..pixels.len()).step_by(3) {
         let x = (i / 3) % width;
