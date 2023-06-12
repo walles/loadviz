@@ -1,6 +1,7 @@
 use crate::{cpuload::CpuLoad, LoadViz};
 
-static BG_COLOR_RGB: &[u8] = &[0x00, 0x00, 0x00];
+static BG_COLOR_RGB: &[u8] = &[0x30, 0x30, 0x90];
+static BG_COLOR_RGB_DARK: &[u8] = &[0x20, 0x20, 0x60];
 static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
 static USER_LOAD_COLOR_RGB_DARK: &[u8] = &[0x00, 0xb0, 0x00];
 static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
@@ -49,7 +50,11 @@ pub fn render_image_raw(
         let y_height = y as f32 / height as f32;
         let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
         let color = if y_height > user_plus_system_height {
-            BG_COLOR_RGB
+            if dark {
+                BG_COLOR_RGB_DARK
+            } else {
+                BG_COLOR_RGB
+            }
         } else if y_height > cpu_load.system_0_to_1 {
             if dark {
                 USER_LOAD_COLOR_RGB_DARK
