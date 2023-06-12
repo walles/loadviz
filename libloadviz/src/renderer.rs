@@ -2,7 +2,9 @@ use crate::{cpuload::CpuLoad, LoadViz};
 
 static BG_COLOR_RGB: &[u8] = &[0x00, 0x00, 0x00];
 static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
+static USER_LOAD_COLOR_RGB_DARK: &[u8] = &[0x00, 0xb0, 0x00];
 static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
+static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8] = &[0xb0, 0x00, 0x00];
 
 impl LoadViz {
     pub(crate) fn render_image(&mut self) {
@@ -34,18 +36,13 @@ pub fn render_image_raw(
     let viz_loads = mirror_sort(currently_displayed_loads);
 
     // Make square boxes
-    let divider_distance = (height.min(width) as f32 / 4.0) as usize;
+    let divider_distance = (width as f32 / viz_loads.len() as f32) as usize;
 
     for i in (0..pixels.len()).step_by(3) {
         let x = (i / 3) % width;
         let y = height - (i / 3) / width - 1;
 
-        if y % divider_distance == 0 || x % divider_distance == 0 {
-            pixels[i] = BG_COLOR_RGB[0];
-            pixels[i + 1] = BG_COLOR_RGB[1];
-            pixels[i + 2] = BG_COLOR_RGB[2];
-            continue;
-        }
+        let dark = y % divider_distance == 0 || x % divider_distance == 0;
 
         let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 
@@ -54,7 +51,13 @@ pub fn render_image_raw(
         let color = if y_height > user_plus_system_height {
             BG_COLOR_RGB
         } else if y_height > cpu_load.system_0_to_1 {
-            USER_LOAD_COLOR_RGB
+            if dark {
+                USER_LOAD_COLOR_RGB_DARK
+            } else {
+                USER_LOAD_COLOR_RGB
+            }
+        } else if dark {
+            SYSTEM_LOAD_COLOR_RGB_DARK
         } else {
             SYSTEM_LOAD_COLOR_RGB
         };
