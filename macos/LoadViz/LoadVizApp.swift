@@ -25,7 +25,7 @@ struct LoadVizApp: App {
     // Status bar icon SwiftUI view & a hosting view.
     // FIXME: Do we need the ZStack? or the NSHostingView?
     let iconSwiftUI = ZStack(alignment: .center) {
-      LoadVizView(nsImage: NSImage())
+      LoadVizView(image: NSImage(size: NSSize(width: 40, height: 22)))
     }
     let iconView = NSHostingView(rootView: iconSwiftUI)
     iconView.frame = NSRect(x: 0, y: 0, width: 40, height: 22)

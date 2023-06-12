@@ -32,27 +32,28 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> N
 }
 
 struct LoadVizView: View {
-  @State var nsImage: NSImage
+  /// Create using NSImage(size:) to get the right size of the output image
+  @State var image: NSImage
+
   var loadviz = LibLoadViz.new_loadviz()
 
-  // FIXME: If we se this to 0.1 then the app window never appears. 0.3 works.
+  // FIXME: If we se this to 0.1 then the demo app window never appears. 0.3 works.
   let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
 
   var body: some View {
-    let width: UInt = 100
-    let height: UInt = 100
-
     Image(
-      nsImage: nsImage
+      nsImage: image
     ).onReceive(timer, perform: { _ in
+      let width = UInt(image.size.width)
+      let height = UInt(image.size.height)
       let imageBytes = LibLoadViz.get_image(loadviz, width, height)!
-      nsImage = imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height))
+      image = imageFromPixels(pixels: imageBytes, width: Int(width), height: Int(height))
     })
   }
 }
 
 struct LoadVizView_Previews: PreviewProvider {
   static var previews: some View {
-    LoadVizView(nsImage: NSImage())
+    LoadVizView(image: NSImage(size: NSSize(width: 100, height: 100)))
   }
 }
