@@ -11,6 +11,10 @@
 		0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
 		0420FB262A35B199002528DD /* LoadVizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* LoadVizView.swift */; };
 		0420FB272A35B1CB002528DD /* demoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* demoApp.swift */; };
+		043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043EEF9A2A382D3200766C43 /* AppDelegate.swift */; };
+		043EEF9D2A382D3200766C43 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043EEF9C2A382D3200766C43 /* ViewController.swift */; };
+		043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 043EEF9E2A382D3300766C43 /* Assets.xcassets */; };
+		043EEFA22A382D3300766C43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 043EEFA02A382D3300766C43 /* Main.storyboard */; };
 		049C48342A2512DF006A2186 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 049C48332A2512DF006A2186 /* README.md */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
@@ -37,6 +41,12 @@
 		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		0420FB232A34D2F8002528DD /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		043EEF982A382D3200766C43 /* LoadViz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadViz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		043EEF9A2A382D3200766C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		043EEF9C2A382D3200766C43 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		043EEF9E2A382D3300766C43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		043EEFA12A382D3300766C43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
 		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
@@ -46,6 +56,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		043EEF952A382D3200766C43 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B6142B2A2465710027E03A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -75,12 +92,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		043EEF992A382D3200766C43 /* LoadViz */ = {
+			isa = PBXGroup;
+			children = (
+				043EEF9A2A382D3200766C43 /* AppDelegate.swift */,
+				043EEF9C2A382D3200766C43 /* ViewController.swift */,
+				043EEF9E2A382D3300766C43 /* Assets.xcassets */,
+				043EEFA02A382D3300766C43 /* Main.storyboard */,
+				043EEFA32A382D3300766C43 /* LoadViz.entitlements */,
+			);
+			path = LoadViz;
+			sourceTree = "<group>";
+		};
 		04B614252A2465710027E03A = {
 			isa = PBXGroup;
 			children = (
 				04B614332A2465710027E03A /* LoadVizView.swift */,
 				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* demoApp */,
+				043EEF992A382D3200766C43 /* LoadViz */,
 				04B6142F2A2465710027E03A /* Products */,
 				0401814A2A246937005D9D0D /* Frameworks */,
 			);
@@ -90,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				04B6142E2A2465710027E03A /* loadviz-demo.app */,
+				043EEF982A382D3200766C43 /* LoadViz.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -116,6 +147,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		043EEF972A382D3200766C43 /* LoadViz */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 043EEFA62A382D3300766C43 /* Build configuration list for PBXNativeTarget "LoadViz" */;
+			buildPhases = (
+				043EEF942A382D3200766C43 /* Sources */,
+				043EEF952A382D3200766C43 /* Frameworks */,
+				043EEF962A382D3200766C43 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoadViz;
+			productName = LoadViz;
+			productReference = 043EEF982A382D3200766C43 /* LoadViz.app */;
+			productType = "com.apple.product-type.application";
+		};
 		04B6142D2A2465710027E03A /* loadviz-demo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04B6143D2A2465730027E03A /* Build configuration list for PBXNativeTarget "loadviz-demo" */;
@@ -145,6 +193,9 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					043EEF972A382D3200766C43 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
 					04B6142D2A2465710027E03A = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -170,6 +221,7 @@
 			projectRoot = "";
 			targets = (
 				04B6142D2A2465710027E03A /* loadviz-demo */,
+				043EEF972A382D3200766C43 /* LoadViz */,
 			);
 		};
 /* End PBXProject section */
@@ -185,6 +237,15 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		043EEF962A382D3200766C43 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */,
+				043EEFA22A382D3300766C43 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B6142C2A2465710027E03A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -221,6 +282,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		043EEF942A382D3200766C43 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				043EEF9D2A382D3200766C43 /* ViewController.swift in Sources */,
+				043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B6142A2A2465710027E03A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,7 +310,72 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		043EEFA02A382D3300766C43 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				043EEFA12A382D3300766C43 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		043EEFA42A382D3300766C43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LoadViz/LoadViz.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2S2W6DSANL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.LoadViz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		043EEFA52A382D3300766C43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LoadViz/LoadViz.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2S2W6DSANL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.LoadViz;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		04B6143B2A2465730027E03A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -415,6 +550,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		043EEFA62A382D3300766C43 /* Build configuration list for PBXNativeTarget "LoadViz" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				043EEFA42A382D3300766C43 /* Debug */,
+				043EEFA52A382D3300766C43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		04B614292A2465710027E03A /* Build configuration list for PBXProject "loadviz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
