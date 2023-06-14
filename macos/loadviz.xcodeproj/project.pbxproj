@@ -9,15 +9,13 @@
 /* Begin PBXBuildFile section */
 		0401814B2A246937005D9D0D /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
 		0401814D2A246968005D9D0D /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
-		0420FB162A34D201002528DD /* LoadVizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FB152A34D201002528DD /* LoadVizApp.swift */; };
-		0420FB1A2A34D205002528DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0420FB192A34D205002528DD /* Assets.xcassets */; };
-		0420FB1D2A34D205002528DD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0420FB1C2A34D205002528DD /* Preview Assets.xcassets */; };
-		0420FB222A34D2E8002528DD /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
-		0420FB242A34D306002528DD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; platformFilter = maccatalyst; };
+		041918742A382ED600B45E9C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041918732A382ED600B45E9C /* main.swift */; };
 		0420FB262A35B199002528DD /* LoadVizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* LoadVizView.swift */; };
 		0420FB272A35B1CB002528DD /* demoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* demoApp.swift */; };
-		0420FB282A35B1D7002528DD /* LoadVizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* LoadVizView.swift */; };
-		049453732A3616E200390157 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FB172A34D201002528DD /* ContentView.swift */; };
+		043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043EEF9A2A382D3200766C43 /* AppDelegate.swift */; };
+		043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 043EEF9E2A382D3300766C43 /* Assets.xcassets */; };
+		0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
+		0447DF412A397CFC0043CEC3 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
 		049C48342A2512DF006A2186 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 049C48332A2512DF006A2186 /* README.md */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
@@ -31,7 +29,7 @@
 			remoteGlobalIDString = CA60476BBA0CF7DAC6A6A00E;
 			remoteInfo = "libloadviz-staticlib";
 		};
-		049453702A35CA1900390157 /* PBXContainerItemProxy */ = {
+		0447DF3E2A397C940043CEC3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 040181442A2468E1005D9D0D /* libloadviz.xcodeproj */;
 			proxyType = 1;
@@ -50,29 +48,27 @@
 /* Begin PBXFileReference section */
 		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		0420FB132A34D201002528DD /* LoadViz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadViz.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0420FB152A34D201002528DD /* LoadVizApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizApp.swift; sourceTree = "<group>"; };
-		0420FB172A34D201002528DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		0420FB192A34D205002528DD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0420FB1C2A34D205002528DD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		0420FB1E2A34D205002528DD /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
+		041918732A382ED600B45E9C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0420FB232A34D2F8002528DD /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		043EEF982A382D3200766C43 /* LoadViz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadViz.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		043EEF9A2A382D3200766C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		043EEF9E2A382D3300766C43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
 		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		04B6143A2A2465730027E03A /* loadviz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = loadviz.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0420FB102A34D201002528DD /* Frameworks */ = {
+		043EEF952A382D3200766C43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0420FB222A34D2E8002528DD /* liblibloadviz_static.a in Frameworks */,
-				0420FB242A34D306002528DD /* libresolv.tbd in Frameworks */,
+				0447DF412A397CFC0043CEC3 /* libresolv.tbd in Frameworks */,
+				0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,24 +101,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0420FB142A34D201002528DD /* LoadViz */ = {
+		043EEF992A382D3200766C43 /* LoadViz */ = {
 			isa = PBXGroup;
 			children = (
-				0420FB152A34D201002528DD /* LoadVizApp.swift */,
-				0420FB172A34D201002528DD /* ContentView.swift */,
-				0420FB192A34D205002528DD /* Assets.xcassets */,
-				0420FB1E2A34D205002528DD /* LoadViz.entitlements */,
-				0420FB1B2A34D205002528DD /* Preview Content */,
+				043EEF9A2A382D3200766C43 /* AppDelegate.swift */,
+				041918732A382ED600B45E9C /* main.swift */,
+				043EEF9E2A382D3300766C43 /* Assets.xcassets */,
+				043EEFA32A382D3300766C43 /* LoadViz.entitlements */,
 			);
 			path = LoadViz;
-			sourceTree = "<group>";
-		};
-		0420FB1B2A34D205002528DD /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				0420FB1C2A34D205002528DD /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		04B614252A2465710027E03A = {
@@ -131,7 +118,7 @@
 				04B614332A2465710027E03A /* LoadVizView.swift */,
 				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* demoApp */,
-				0420FB142A34D201002528DD /* LoadViz */,
+				043EEF992A382D3200766C43 /* LoadViz */,
 				04B6142F2A2465710027E03A /* Products */,
 				0401814A2A246937005D9D0D /* Frameworks */,
 			);
@@ -141,7 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				04B6142E2A2465710027E03A /* loadviz-demo.app */,
-				0420FB132A34D201002528DD /* LoadViz.app */,
+				043EEF982A382D3200766C43 /* LoadViz.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,7 +139,6 @@
 				049C48332A2512DF006A2186 /* README.md */,
 				04B614312A2465710027E03A /* demoApp.swift */,
 				04B614352A2465730027E03A /* Assets.xcassets */,
-				04B6143A2A2465730027E03A /* loadviz.entitlements */,
 				04B614372A2465730027E03A /* Preview Content */,
 			);
 			path = demoApp;
@@ -169,23 +155,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0420FB122A34D201002528DD /* LoadViz */ = {
+		043EEF972A382D3200766C43 /* LoadViz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0420FB1F2A34D205002528DD /* Build configuration list for PBXNativeTarget "LoadViz" */;
+			buildConfigurationList = 043EEFA62A382D3300766C43 /* Build configuration list for PBXNativeTarget "LoadViz" */;
 			buildPhases = (
-				049453722A35CA5C00390157 /* cargo build libloadviz */,
-				0420FB0F2A34D201002528DD /* Sources */,
-				0420FB102A34D201002528DD /* Frameworks */,
-				0420FB112A34D201002528DD /* Resources */,
+				043EEF942A382D3200766C43 /* Sources */,
+				043EEF952A382D3200766C43 /* Frameworks */,
+				043EEF962A382D3200766C43 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				049453712A35CA1900390157 /* PBXTargetDependency */,
+				0447DF3F2A397C940043CEC3 /* PBXTargetDependency */,
 			);
 			name = LoadViz;
 			productName = LoadViz;
-			productReference = 0420FB132A34D201002528DD /* LoadViz.app */;
+			productReference = 043EEF982A382D3200766C43 /* LoadViz.app */;
 			productType = "com.apple.product-type.application";
 		};
 		04B6142D2A2465710027E03A /* loadviz-demo */ = {
@@ -217,7 +202,7 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
-					0420FB122A34D201002528DD = {
+					043EEF972A382D3200766C43 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
 					04B6142D2A2465710027E03A = {
@@ -245,7 +230,7 @@
 			projectRoot = "";
 			targets = (
 				04B6142D2A2465710027E03A /* loadviz-demo */,
-				0420FB122A34D201002528DD /* LoadViz */,
+				043EEF972A382D3200766C43 /* LoadViz */,
 			);
 		};
 /* End PBXProject section */
@@ -261,12 +246,11 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		0420FB112A34D201002528DD /* Resources */ = {
+		043EEF962A382D3200766C43 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0420FB1D2A34D205002528DD /* Preview Assets.xcassets in Resources */,
-				0420FB1A2A34D205002528DD /* Assets.xcassets in Resources */,
+				043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,36 +287,15 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\ncd ../libloadviz\n\nif [ $CONFIGURATION = Release ] ; then\n  cargo build --release\nelse\n  cargo build\nfi\n\n# FIXME: This step can also update the library we're linking with,\n# should be added in the Output Files section below.\n";
 		};
-		049453722A35CA5C00390157 /* cargo build libloadviz */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "cargo build libloadviz";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SWIFT_OBJC_BRIDGING_HEADER)",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\ncd ../libloadviz\n\nif [ $CONFIGURATION = Release ] ; then\n  cargo build --release\nelse\n  cargo build\nfi\n\n# FIXME: This step can also update the library we're linking with,\n# should be added in the Output Files section below.\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		0420FB0F2A34D201002528DD /* Sources */ = {
+		043EEF942A382D3200766C43 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049453732A3616E200390157 /* ContentView.swift in Sources */,
-				0420FB282A35B1D7002528DD /* LoadVizView.swift in Sources */,
-				0420FB162A34D201002528DD /* LoadVizApp.swift in Sources */,
+				043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */,
+				041918742A382ED600B45E9C /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,10 +311,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		049453712A35CA1900390157 /* PBXTargetDependency */ = {
+		0447DF3F2A397C940043CEC3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "libloadviz-staticlib";
-			targetProxy = 049453702A35CA1900390157 /* PBXContainerItemProxy */;
+			targetProxy = 0447DF3E2A397C940043CEC3 /* PBXContainerItemProxy */;
 		};
 		04C5DBBA2A250CDF00B36A49 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -361,7 +324,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0420FB202A34D205002528DD /* Debug */ = {
+		043EEFA42A382D3300766C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -370,12 +333,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LoadViz/Preview Content\"";
 				DEVELOPMENT_TEAM = 2S2W6DSANL;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -389,7 +352,7 @@
 			};
 			name = Debug;
 		};
-		0420FB212A34D205002528DD /* Release */ = {
+		043EEFA52A382D3300766C43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -398,12 +361,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"LoadViz/Preview Content\"";
 				DEVELOPMENT_TEAM = 2S2W6DSANL;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -537,7 +500,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = loadviz/loadviz.entitlements;
+				CODE_SIGN_ENTITLEMENTS = demoApp/demoApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -565,7 +528,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = loadviz/loadviz.entitlements;
+				CODE_SIGN_ENTITLEMENTS = demoApp/demoApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -591,11 +554,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0420FB1F2A34D205002528DD /* Build configuration list for PBXNativeTarget "LoadViz" */ = {
+		043EEFA62A382D3300766C43 /* Build configuration list for PBXNativeTarget "LoadViz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0420FB202A34D205002528DD /* Debug */,
-				0420FB212A34D205002528DD /* Release */,
+				043EEFA42A382D3300766C43 /* Debug */,
+				043EEFA52A382D3300766C43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

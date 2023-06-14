@@ -58,11 +58,11 @@ How would you visualize this?
 
 ## TODO
 
-- Add a "Quit" menu item
 - Hide the desktop app icon from the Dock
 - Hide the desktop app from cmd-tab
 - Make the desktop app start automatically on login
 - Run (a release build!) by default on Johan's desktop
+- Make sure the visualization doesn't start out as all-black
 - Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
@@ -113,3 +113,4 @@ How would you visualize this?
 - Update the menu bar icon at 10Hz with the system load
 - Don't hard code the dimensions in LoadVizView
 - Make clicking the menu bar icon bring up a menu
+- Add a "Quit" menu item
