@@ -54,6 +54,7 @@
 		043EEF9A2A382D3200766C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		043EEF9E2A382D3300766C43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
+		0447DF442A3985BA0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
@@ -104,6 +105,7 @@
 		043EEF992A382D3200766C43 /* LoadViz */ = {
 			isa = PBXGroup;
 			children = (
+				0447DF442A3985BA0043CEC3 /* Info.plist */,
 				043EEF9A2A382D3200766C43 /* AppDelegate.swift */,
 				041918732A382ED600B45E9C /* main.swift */,
 				043EEF9E2A382D3300766C43 /* Assets.xcassets */,
@@ -336,6 +338,7 @@
 				DEVELOPMENT_TEAM = 2S2W6DSANL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LoadViz/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -364,6 +367,7 @@
 				DEVELOPMENT_TEAM = 2S2W6DSANL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LoadViz/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
