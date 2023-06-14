@@ -4,7 +4,6 @@ import Cocoa
 func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> NSImage {
   let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 
-  // FIXME: Verify this gets us the correct colors
   let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
 
   let bitsPerComponent = 8 // number of bits in UInt8
@@ -48,8 +47,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func getNewButtonImage() -> NSImage {
+    // FIXME: These are just some random numbers I got from
+    // the Internet, what dimensions should we really use?
     let width = 40
     let height = 22
+
     return imageFromPixels(
       pixels: LibLoadViz.get_image(libLoadViz, UInt(width), UInt(height)),
       width: width,
@@ -60,7 +62,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   private func setupMenus() {
     let menu = NSMenu()
 
-    menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+    menu.addItem(
+      NSMenuItem(
+        title: "Quit",
+        action: #selector(NSApplication.terminate(_:)),
+        keyEquivalent: ""
+      ))
 
     statusItem.menu = menu
   }
