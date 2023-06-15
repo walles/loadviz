@@ -56,19 +56,27 @@ better situation than the HD machine.
 
 How would you visualize this?
 
+## Releasing a new version of the macOS status bar app
+
+1. In Xcode, at the top of the screen, select "LoadViz"
+1. In the menu bar, select "Product" -> "Archive"
+1. In the new Archives screen, right click your new build and "Show in Finder"
+1. Right click the `.xcarchive` file and select "Show Package Contents"
+1. In the new Finder window, find your release build under "Products" ->
+   "Applications"
+
 ## TODO
 
-- Run (a release build!) by default on Johan's desktop
 - Make the desktop app start automatically on login
+- Run (a release build!) by default on Johan's desktop
+- Add an "About" menu item doing something helpful. At least link to the GitHub
+  project and show some version number.
 - Make sure the visualization doesn't start out as all-black
-- Profile our release build to see if we can make it faster
 - Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
   - For 100% system load, with the system load color at the top
   - For 100% user load, with the user load color at the top
-- Add an "About" menu item doing something helpful. At least link to the GitHub
-  project and show some version number.
 - Release the first public version on GitHub
 - Stop using CPU when the menu bar isn't visible
 - Test visualization with more cores than the image width
@@ -115,3 +123,4 @@ How would you visualize this?
 - Add a "Quit" menu item
 - Hide the desktop app icon from the Dock
 - Hide the desktop app from cmd-tab
+- Profile our release build to see if we can make it faster

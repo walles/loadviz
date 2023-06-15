@@ -16,7 +16,7 @@
 		043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 043EEF9E2A382D3300766C43 /* Assets.xcassets */; };
 		0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
 		0447DF412A397CFC0043CEC3 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
-		049C48342A2512DF006A2186 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 049C48332A2512DF006A2186 /* README.md */; };
+		0447DF462A3B8E4B0043CEC3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0447DF452A3B8E4B0043CEC3 /* README.md */; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -55,7 +55,7 @@
 		043EEF9E2A382D3300766C43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
 		0447DF442A3985BA0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		049C48332A2512DF006A2186 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		0447DF452A3B8E4B0043CEC3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 		04B614302A2465710027E03A /* demoApp */ = {
 			isa = PBXGroup;
 			children = (
-				049C48332A2512DF006A2186 /* README.md */,
+				0447DF452A3B8E4B0043CEC3 /* README.md */,
 				04B614312A2465710027E03A /* demoApp.swift */,
 				04B614352A2465730027E03A /* Assets.xcassets */,
 				04B614372A2465730027E03A /* Preview Content */,
@@ -260,7 +260,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049C48342A2512DF006A2186 /* README.md in Resources */,
+				0447DF462A3B8E4B0043CEC3 /* README.md in Resources */,
 				04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */,
 				04B614362A2465730027E03A /* Assets.xcassets in Resources */,
 			);
@@ -339,6 +339,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LoadViz/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -368,6 +369,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LoadViz/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
