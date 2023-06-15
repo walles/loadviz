@@ -61,6 +61,7 @@ How would you visualize this?
 - Run (a release build!) by default on Johan's desktop
 - Make the desktop app start automatically on login
 - Make sure the visualization doesn't start out as all-black
+- Profile our release build to see if we can make it faster
 - Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
