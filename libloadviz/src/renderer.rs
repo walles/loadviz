@@ -1,11 +1,11 @@
 use crate::{cpuload::CpuLoad, LoadViz};
 
 static BG_COLOR_RGB: &[u8] = &[0x30, 0x30, 0x90];
-static BG_COLOR_RGB_DARK: &[u8] = &[0x20, 0x20, 0x60];
+static BG_COLOR_RGB_DARK: &[u8] = &[0x18, 0x18, 0x48];
 static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
-static USER_LOAD_COLOR_RGB_DARK: &[u8] = &[0x00, 0xb0, 0x00];
+static USER_LOAD_COLOR_RGB_DARK: &[u8] = &[0x00, 0x80, 0x00];
 static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
-static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8] = &[0xb0, 0x00, 0x00];
+static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8] = &[0x80, 0x00, 0x00];
 
 impl LoadViz {
     pub(crate) fn render_image(&mut self) {
@@ -37,13 +37,14 @@ pub fn render_image_raw(
     let viz_loads = mirror_sort(currently_displayed_loads);
 
     // Make square boxes
-    let divider_distance = (width as f32 / viz_loads.len() as f32) as usize;
-
     for i in (0..pixels.len()).step_by(3) {
         let x = (i / 3) % width;
         let y = height - (i / 3) / width - 1;
 
-        let dark = y % divider_distance == 0 || x % divider_distance == 0;
+        // Make blobs 2x2 with a border of 2. Vertically, the bottom row of
+        // pixels should be dark. Horizontally, the two middle pixels should be
+        // bright.
+        let dark = y % 4 < 2 || (x + 4444 - width / 2 - 1) % 4 < 2;
 
         let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 

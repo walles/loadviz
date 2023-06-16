@@ -67,7 +67,8 @@ How would you visualize this?
 
 ## TODO
 
-- Make the desktop app start automatically on login
+- Make the desktop app start automatically on login:
+  <https://jogendra.dev/implementing-launch-at-login-feature-in-macos-apps>
 - Run (a release build!) by default on Johan's desktop
 - Add an "About" menu item doing something helpful. At least link to the GitHub
   project and show some version number.

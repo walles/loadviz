@@ -27,6 +27,12 @@ logical cores. Polling is done about once per second.
 
 Initially `libloadviz` will just make a bar chart.
 
+### Rendering Ideas
+
+- Make green (user) load bars go up from the bottom, and red (system) load bars
+  go down from the top. This would suggest system load as some sort of ceiling
+  for the user load, which isn't all that wrong.
+
 ## Why not measure RAM / swap usage?
 
 People commonly think measuring RAM / swap usage will help them decide...
@@ -49,7 +55,8 @@ be around but are not going to be used during the near future.
 Any RAM / Swap visualization would show this as critical because you're silly
 high over quota.
 
-But in reality, since you aren't using most of the memory, this is fine.
+But in reality, since you aren't using most of the memory, this is fine, no
+action needed.
 
 ### Cost of swapping
 
