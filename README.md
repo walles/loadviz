@@ -3,7 +3,8 @@
 Provide a visualization of the current system load, covering CPU usage and RAM
 pressure.
 
-Only CPU load is measured. RAM pressure has to be inferred:
+System and User CPU load are measured for each logical core of the system. RAM
+pressure has to be inferred:
 
 - If the user part is high on one CPU, getting CPUs with better single core
   performance might help.
@@ -19,7 +20,13 @@ There's one macOS app done in Swift and one library done in Rust.
 
 ## Rendering
 
-Initially `libloadviz` will just make a bar chart.
+Red means system load and green means user load.
+
+The system load comes down from the ceiling, blocking the user load bars from
+getting to the top.
+
+This is a way of visualizing that the system load is in the way of using your
+system fully.
 
 ## Why not measure RAM / swap usage?
 

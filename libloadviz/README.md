@@ -29,9 +29,11 @@ Initially `libloadviz` will just make a bar chart.
 
 ### Rendering Ideas
 
-- Make green (user) load bars go up from the bottom, and red (system) load bars
-  go down from the top. This would suggest system load as some sort of ceiling
-  for the user load, which isn't all that wrong.
+Somehow make it more interesting to watch. Load should lead to some immediate
+movement, and there should be something moving around most of the time.
+Preferrably physics based.
+
+Burning flames for the user load maybe?
 
 ## Why not measure RAM / swap usage?
 

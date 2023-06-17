@@ -49,23 +49,24 @@ pub fn render_image_raw(
         let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 
         let y_height = y as f32 / height as f32;
-        let user_plus_system_height = cpu_load.user_0_to_1 + cpu_load.system_0_to_1;
-        let color = if y_height > user_plus_system_height {
+        let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
+        let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
+        let color = if y_height > user_plus_idle_height {
+            if dark {
+                SYSTEM_LOAD_COLOR_RGB_DARK
+            } else {
+                SYSTEM_LOAD_COLOR_RGB
+            }
+        } else if y_height > cpu_load.user_0_to_1 {
             if dark {
                 BG_COLOR_RGB_DARK
             } else {
                 BG_COLOR_RGB
             }
-        } else if y_height > cpu_load.system_0_to_1 {
-            if dark {
-                USER_LOAD_COLOR_RGB_DARK
-            } else {
-                USER_LOAD_COLOR_RGB
-            }
         } else if dark {
-            SYSTEM_LOAD_COLOR_RGB_DARK
+            USER_LOAD_COLOR_RGB_DARK
         } else {
-            SYSTEM_LOAD_COLOR_RGB
+            USER_LOAD_COLOR_RGB
         };
 
         pixels[i] = color[0];
