@@ -75,14 +75,16 @@ How would you visualize this?
 ## TODO
 
 - Run (a release build!) by default on Johan's desktop
-- Add an "About" menu item doing something helpful. At least link to the GitHub
-  project and show some version number.
-- Make sure the visualization doesn't start out as all-black
+- Replace the whole visualization with red user flames from the bottom and green
+  system flames from the top
 - Test that `diff()` handles wrapping CPU counters correctly
 - Add test making sure that if we have more cores than the image width, at least
   the most loaded core is rendered in the middle of the image
   - For 100% system load, with the system load color at the top
   - For 100% user load, with the user load color at the top
+- Get Git metadata into the release archive
+- Add an "About" menu item doing something helpful. At least link to the GitHub
+  project and show some version number.
 - Release the first public version on GitHub
 - Stop using CPU when the menu bar isn't visible
 - Test visualization with more cores than the image width
@@ -133,3 +135,4 @@ How would you visualize this?
 - Make the desktop app start automatically on login:
   <https://jogendra.dev/implementing-launch-at-login-feature-in-macos-apps>
 - Make sure our auto launcher doesn't pollute the global namespace
+- Make sure the visualization doesn't start out as all-black

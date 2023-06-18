@@ -39,6 +39,9 @@ the top for system load?
 Look into <https://github.com/razaekel/noise-rs>! Maybe use Perlin noise to do
 flames from the bottom and rock / clouds from the top?
 
+Or if that doesn't fly, use a fluid simulation to make the flames? Like
+<https://github.com/dimforge/salva>?
+
 ## Why not measure RAM / swap usage?
 
 People commonly think measuring RAM / swap usage will help them decide...

@@ -23,13 +23,24 @@ impl PartialOrd for CpuLoad {
     }
 }
 
-/// Based on two CPU counter snapshots, compute the load for each CPU
+/// Based on two CPU counter snapshots, compute the load for each CPU.
+///
+/// If the number of cores have changed, return the right number of cores, but
+/// all with a load of 0. This usually happens on startup.
 pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
+    let mut result: Vec<CpuLoad> = vec![];
     if older.len() != newer.len() {
-        return vec![];
+        // Return the correct number of cores, but with zero load. This enables
+        // us to draw a not-empty image on startup.
+        for _ in newer.iter() {
+            result.push(CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            });
+        }
+        return result;
     }
 
-    let mut result: Vec<CpuLoad> = vec![];
     for (older, newer) in older.iter().zip(newer.iter()) {
         let user = newer.user - older.user;
         let system = newer.system - older.system;
