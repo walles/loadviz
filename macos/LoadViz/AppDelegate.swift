@@ -1,4 +1,5 @@
 import Cocoa
+import ServiceManagement
 
 // From: https://stackoverflow.com/a/38596649/473672
 func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> NSImage {
@@ -65,10 +66,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     menu.addItem(
       NSMenuItem(
         title: "Quit",
-        action: #selector(NSApplication.terminate(_:)),
+        action: #selector(quit),
         keyEquivalent: ""
       ))
 
     statusItem.menu = menu
+  }
+
+  @objc private func quit() {
+    let isEnabled = SMLoginItemSetEnabled("com.gmail.walles.johan.AutoLauncher" as CFString, false)
+    if isEnabled {
+      NSLog("Disabling LoadViz failed")
+    }
+
+    // FIXME: Why do we need two parentheses here?
+    NSApplication.shared.terminate(_:)(_:0)
   }
 }

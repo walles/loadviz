@@ -33,7 +33,11 @@ Somehow make it more interesting to watch. Load should lead to some immediate
 movement, and there should be something moving around most of the time.
 Preferrably physics based.
 
-Burning flames for the user load maybe?
+Burning flames from the bottom for the user load maybe? And green flames from
+the top for system load?
+
+Look into <https://github.com/razaekel/noise-rs>! Maybe use Perlin noise to do
+flames from the bottom and rock / clouds from the top?
 
 ## Why not measure RAM / swap usage?
 

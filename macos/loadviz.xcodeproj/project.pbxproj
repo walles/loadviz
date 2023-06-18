@@ -17,6 +17,10 @@
 		0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
 		0447DF412A397CFC0043CEC3 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0401814C2A246968005D9D0D /* libresolv.tbd */; };
 		0447DF462A3B8E4B0043CEC3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0447DF452A3B8E4B0043CEC3 /* README.md */; };
+		0447DF4E2A3D94170043CEC3 /* AutoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */; };
+		0447DF5C2A3D96DF0043CEC3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF5B2A3D96DF0043CEC3 /* main.swift */; };
+		0447DF5E2A3D97AB0043CEC3 /* AutoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0447DF602A3D97D90043CEC3 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0447DF5F2A3D97D90043CEC3 /* ServiceManagement.framework */; platformFilter = maccatalyst; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -45,6 +49,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		0447DF5D2A3D97860043CEC3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				0447DF5E2A3D97AB0043CEC3 /* AutoLauncher.app in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		040181442A2468E1005D9D0D /* libloadviz.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libloadviz.xcodeproj; path = ../libloadviz/libloadviz.xcodeproj; sourceTree = "<group>"; };
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
@@ -56,6 +73,12 @@
 		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
 		0447DF442A3985BA0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0447DF452A3B8E4B0043CEC3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLauncher.swift; sourceTree = "<group>"; };
+		0447DF562A3D941B0043CEC3 /* AutoLauncher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AutoLauncher.entitlements; sourceTree = "<group>"; };
+		0447DF5A2A3D947F0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0447DF5B2A3D96DF0043CEC3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		0447DF5F2A3D97D90043CEC3 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		04B6142E2A2465710027E03A /* loadviz-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "loadviz-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B614312A2465710027E03A /* demoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = demoApp.swift; sourceTree = "<group>"; };
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
@@ -68,8 +91,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0447DF602A3D97D90043CEC3 /* ServiceManagement.framework in Frameworks */,
 				0447DF412A397CFC0043CEC3 /* libresolv.tbd in Frameworks */,
 				0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0447DF482A3D94170043CEC3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +127,7 @@
 		0401814A2A246937005D9D0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0447DF5F2A3D97D90043CEC3 /* ServiceManagement.framework */,
 				0420FB232A34D2F8002528DD /* libresolv.9.tbd */,
 				0401814C2A246968005D9D0D /* libresolv.tbd */,
 			);
@@ -114,6 +146,17 @@
 			path = LoadViz;
 			sourceTree = "<group>";
 		};
+		0447DF4C2A3D94170043CEC3 /* AutoLauncher */ = {
+			isa = PBXGroup;
+			children = (
+				0447DF5A2A3D947F0043CEC3 /* Info.plist */,
+				0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */,
+				0447DF562A3D941B0043CEC3 /* AutoLauncher.entitlements */,
+				0447DF5B2A3D96DF0043CEC3 /* main.swift */,
+			);
+			path = AutoLauncher;
+			sourceTree = "<group>";
+		};
 		04B614252A2465710027E03A = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +164,7 @@
 				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* demoApp */,
 				043EEF992A382D3200766C43 /* LoadViz */,
+				0447DF4C2A3D94170043CEC3 /* AutoLauncher */,
 				04B6142F2A2465710027E03A /* Products */,
 				0401814A2A246937005D9D0D /* Frameworks */,
 			);
@@ -131,6 +175,7 @@
 			children = (
 				04B6142E2A2465710027E03A /* loadviz-demo.app */,
 				043EEF982A382D3200766C43 /* LoadViz.app */,
+				0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,6 +209,7 @@
 				043EEF942A382D3200766C43 /* Sources */,
 				043EEF952A382D3200766C43 /* Frameworks */,
 				043EEF962A382D3200766C43 /* Resources */,
+				0447DF5D2A3D97860043CEC3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -173,6 +219,23 @@
 			name = LoadViz;
 			productName = LoadViz;
 			productReference = 043EEF982A382D3200766C43 /* LoadViz.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0447DF4A2A3D94170043CEC3 /* AutoLauncher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "AutoLauncher" */;
+			buildPhases = (
+				0447DF472A3D94170043CEC3 /* Sources */,
+				0447DF482A3D94170043CEC3 /* Frameworks */,
+				0447DF492A3D94170043CEC3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AutoLauncher;
+			productName = AutoLauncher;
+			productReference = 0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */;
 			productType = "com.apple.product-type.application";
 		};
 		04B6142D2A2465710027E03A /* loadviz-demo */ = {
@@ -207,6 +270,9 @@
 					043EEF972A382D3200766C43 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
+					0447DF4A2A3D94170043CEC3 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
 					04B6142D2A2465710027E03A = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -233,6 +299,7 @@
 			targets = (
 				04B6142D2A2465710027E03A /* loadviz-demo */,
 				043EEF972A382D3200766C43 /* LoadViz */,
+				0447DF4A2A3D94170043CEC3 /* AutoLauncher */,
 			);
 		};
 /* End PBXProject section */
@@ -253,6 +320,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0447DF492A3D94170043CEC3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,6 +372,15 @@
 			files = (
 				043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */,
 				041918742A382ED600B45E9C /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0447DF472A3D94170043CEC3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0447DF5C2A3D96DF0043CEC3 /* main.swift in Sources */,
+				0447DF4E2A3D94170043CEC3 /* AutoLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +465,62 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = ../libloadviz/include/loadviz.h;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		0447DF582A3D941B0043CEC3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AutoLauncher/AutoLauncher.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2S2W6DSANL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoLauncher/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.AutoLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		0447DF592A3D941B0043CEC3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AutoLauncher/AutoLauncher.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2S2W6DSANL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoLauncher/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.AutoLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -565,6 +704,15 @@
 			buildConfigurations = (
 				043EEFA42A382D3300766C43 /* Debug */,
 				043EEFA52A382D3300766C43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "AutoLauncher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0447DF582A3D941B0043CEC3 /* Debug */,
+				0447DF592A3D941B0043CEC3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
