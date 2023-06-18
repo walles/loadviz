@@ -19,7 +19,7 @@
 		0447DF462A3B8E4B0043CEC3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0447DF452A3B8E4B0043CEC3 /* README.md */; };
 		0447DF4E2A3D94170043CEC3 /* AutoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */; };
 		0447DF5C2A3D96DF0043CEC3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF5B2A3D96DF0043CEC3 /* main.swift */; };
-		0447DF5E2A3D97AB0043CEC3 /* AutoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0447DF602A3D97D90043CEC3 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0447DF5F2A3D97D90043CEC3 /* ServiceManagement.framework */; platformFilter = maccatalyst; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
@@ -56,7 +56,7 @@
 			dstPath = Contents/Library/LoginItems;
 			dstSubfolderSpec = 1;
 			files = (
-				0447DF5E2A3D97AB0043CEC3 /* AutoLauncher.app in CopyFiles */,
+				0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +73,7 @@
 		043EEFA32A382D3300766C43 /* LoadViz.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoadViz.entitlements; sourceTree = "<group>"; };
 		0447DF442A3985BA0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0447DF452A3B8E4B0043CEC3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadVizAutoLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLauncher.swift; sourceTree = "<group>"; };
 		0447DF562A3D941B0043CEC3 /* AutoLauncher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AutoLauncher.entitlements; sourceTree = "<group>"; };
 		0447DF5A2A3D947F0043CEC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -175,7 +175,7 @@
 			children = (
 				04B6142E2A2465710027E03A /* loadviz-demo.app */,
 				043EEF982A382D3200766C43 /* LoadViz.app */,
-				0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */,
+				0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,9 +221,9 @@
 			productReference = 043EEF982A382D3200766C43 /* LoadViz.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0447DF4A2A3D94170043CEC3 /* AutoLauncher */ = {
+		0447DF4A2A3D94170043CEC3 /* LoadVizAutoLauncher */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "AutoLauncher" */;
+			buildConfigurationList = 0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "LoadVizAutoLauncher" */;
 			buildPhases = (
 				0447DF472A3D94170043CEC3 /* Sources */,
 				0447DF482A3D94170043CEC3 /* Frameworks */,
@@ -233,9 +233,9 @@
 			);
 			dependencies = (
 			);
-			name = AutoLauncher;
+			name = LoadVizAutoLauncher;
 			productName = AutoLauncher;
-			productReference = 0447DF4B2A3D94170043CEC3 /* AutoLauncher.app */;
+			productReference = 0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */;
 			productType = "com.apple.product-type.application";
 		};
 		04B6142D2A2465710027E03A /* loadviz-demo */ = {
@@ -299,7 +299,7 @@
 			targets = (
 				04B6142D2A2465710027E03A /* loadviz-demo */,
 				043EEF972A382D3200766C43 /* LoadViz */,
-				0447DF4A2A3D94170043CEC3 /* AutoLauncher */,
+				0447DF4A2A3D94170043CEC3 /* LoadVizAutoLauncher */,
 			);
 		};
 /* End PBXProject section */
@@ -489,7 +489,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.AutoLauncher;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.LoadVizAutoLauncher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -517,7 +517,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.AutoLauncher;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.walles.johan.LoadVizAutoLauncher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -708,7 +708,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "AutoLauncher" */ = {
+		0447DF572A3D941B0043CEC3 /* Build configuration list for PBXNativeTarget "LoadVizAutoLauncher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0447DF582A3D941B0043CEC3 /* Debug */,

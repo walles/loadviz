@@ -9,7 +9,7 @@ let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate
 
-let isEnabled = SMLoginItemSetEnabled("com.gmail.walles.johan.AutoLauncher" as CFString, true)
+let isEnabled = SMLoginItemSetEnabled("com.gmail.walles.johan.LoadVizAutoLauncher" as CFString, true)
 if !isEnabled {
   NSLog("Enabling LoadViz failed")
 }

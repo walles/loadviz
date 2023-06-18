@@ -74,7 +74,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @objc private func quit() {
-    let isEnabled = SMLoginItemSetEnabled("com.gmail.walles.johan.AutoLauncher" as CFString, false)
+    let isEnabled = SMLoginItemSetEnabled("com.gmail.walles.johan.LoadVizAutoLauncher" as CFString, false)
     if isEnabled {
       NSLog("Disabling LoadViz failed")
     }

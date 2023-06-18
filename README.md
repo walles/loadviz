@@ -75,8 +75,6 @@ How would you visualize this?
 ## TODO
 
 - Run (a release build!) by default on Johan's desktop
-- Make sure our package name is `com.gmail.walles.johan.loadviz` everywhere in
-  the macOS app so "AutoLauncher" won't clash with that of some other app
 - Add an "About" menu item doing something helpful. At least link to the GitHub
   project and show some version number.
 - Make sure the visualization doesn't start out as all-black
@@ -134,3 +132,4 @@ How would you visualize this?
 - Profile our release build to see if we can make it faster
 - Make the desktop app start automatically on login:
   <https://jogendra.dev/implementing-launch-at-login-feature-in-macos-apps>
+- Make sure our auto launcher doesn't pollute the global namespace

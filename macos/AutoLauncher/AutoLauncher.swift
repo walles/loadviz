@@ -7,7 +7,6 @@ import os.log
 class AutoLauncher: NSObject, NSApplicationDelegate {
 
     struct Constants {
-        // Bundle Identifier of MainApplication target
         static let mainAppBundleID = "com.gmail.walles.johan.LoadViz"
     }
 
@@ -20,11 +19,11 @@ class AutoLauncher: NSObject, NSApplicationDelegate {
         if !isRunning {
             var path = Bundle.main.bundlePath as NSString
 
-            // This AutoLauncher app target is actually embedded inside the MainApplication
-            // bundle under the subdirectory Contents/Library/LoginItems (we are going to do
-            // this later). So including the helper app target name (AutoLauncher.app) there
-            // will be a total of 4 path components to be deleted. That’s why we are running
-            // loop 4 times.
+            // This LoadVizAutoLauncher app target is actually embedded inside the
+            // main application bundle under the subdirectory Contents/Library/LoginItems
+            // (we are going to do this later). So including the helper app target name
+            // (LoadVizAutoLauncher.app) there will be a total of 4 path components to be
+            // deleted. That’s why we are looping 4 times.
             for _ in 1...4 {
                 path = path.deletingLastPathComponent as NSString
             }
