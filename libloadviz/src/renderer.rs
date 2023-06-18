@@ -1,3 +1,5 @@
+use noise::{NoiseFn, Perlin};
+
 use crate::{cpuload::CpuLoad, LoadViz};
 
 static BG_COLOR_RGB: &[u8] = &[0x30, 0x30, 0x90];
@@ -36,15 +38,18 @@ pub fn render_image_raw(
 ) {
     let viz_loads = mirror_sort(currently_displayed_loads);
 
-    // Make square boxes
+    // FIXME: Reuse the same Perlin instance for all calls to this function.
+    let perlin = Perlin::new(Perlin::DEFAULT_SEED);
+
     for i in (0..pixels.len()).step_by(3) {
         let x = (i / 3) % width;
         let y = height - (i / 3) / width - 1;
 
-        // Make blobs 2x2 with a border of 2. Vertically, the bottom row of
-        // pixels should be dark. Horizontally, the two middle pixels should be
-        // bright.
-        let dark = y % 4 < 2 || (x + 4444 - width / 2 - 1) % 4 < 2;
+        // FIXME: Pass a time dimension to the noise function
+        let scale = 20.0 / width as f64;
+
+        // FIXME: Don't just do dark / light, but use a gradient instead
+        let dark = perlin.get([scale * x as f64, scale * y as f64]) <= 0.0;
 
         let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 

@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 libc = "0.2.146"
 opaque-pointer = "0.8.8"
+noise = "0.8"
 
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode
