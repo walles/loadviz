@@ -2,12 +2,12 @@ use noise::{NoiseFn, Perlin};
 
 use crate::{cpuload::CpuLoad, LoadViz};
 
-static BG_COLOR_RGB: &[u8] = &[0x30, 0x30, 0x90];
-static BG_COLOR_RGB_DARK: &[u8] = &[0x18, 0x18, 0x48];
-static USER_LOAD_COLOR_RGB: &[u8] = &[0x00, 0xff, 0x00];
-static USER_LOAD_COLOR_RGB_DARK: &[u8] = &[0x00, 0x80, 0x00];
-static SYSTEM_LOAD_COLOR_RGB: &[u8] = &[0xff, 0x00, 0x00];
-static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8] = &[0x80, 0x00, 0x00];
+static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
+static BG_COLOR_RGB_DARK: &[u8; 3] = &[0x18, 0x18, 0x48];
+static USER_LOAD_COLOR_RGB: &[u8; 3] = &[0x00, 0xff, 0x00];
+static USER_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x00, 0x80, 0x00];
+static SYSTEM_LOAD_COLOR_RGB: &[u8; 3] = &[0xff, 0x00, 0x00];
+static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x80, 0x00, 0x00];
 
 impl LoadViz {
     pub(crate) fn render_image(&mut self) {
@@ -45,11 +45,13 @@ pub fn render_image_raw(
         let x = (i / 3) % width;
         let y = height - (i / 3) / width - 1;
 
-        // FIXME: Pass a time dimension to the noise function
+        // FIXME: Pass a time dimension to the noise function. Higher number =
+        // more details.
         let scale = 20.0 / width as f64;
 
-        // FIXME: Don't just do dark / light, but use a gradient instead
-        let dark = perlin.get([scale * x as f64, scale * y as f64]) <= 0.0;
+        // NOTE: Experiments show that the output here is -1 to 1
+        let number = perlin.get([scale * x as f64, scale * y as f64]);
+        let number = (number + 1.0) / 2.0; // Normalize into 0 to 1
 
         let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 
@@ -57,21 +59,11 @@ pub fn render_image_raw(
         let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
         let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
         let color = if y_height > user_plus_idle_height {
-            if dark {
-                SYSTEM_LOAD_COLOR_RGB_DARK
-            } else {
-                SYSTEM_LOAD_COLOR_RGB
-            }
+            interpolate(number, SYSTEM_LOAD_COLOR_RGB_DARK, SYSTEM_LOAD_COLOR_RGB)
         } else if y_height > cpu_load.user_0_to_1 {
-            if dark {
-                BG_COLOR_RGB_DARK
-            } else {
-                BG_COLOR_RGB
-            }
-        } else if dark {
-            USER_LOAD_COLOR_RGB_DARK
+            interpolate(number, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
         } else {
-            USER_LOAD_COLOR_RGB
+            interpolate(number, USER_LOAD_COLOR_RGB_DARK, USER_LOAD_COLOR_RGB)
         };
 
         pixels[i] = color[0];
@@ -94,6 +86,19 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
     return result;
 }
 
+fn interpolate(factor_0_to_1: f64, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3] {
+    let factor_0_to_1 = factor_0_to_1.clamp(0.0, 1.0);
+
+    let mut result = [0; 3];
+
+    for i in 0..3 {
+        result[i] =
+            (color1[i] as f64 * (1.0 - factor_0_to_1) + color2[i] as f64 * factor_0_to_1) as u8;
+    }
+
+    return result;
+}
+
 #[cfg(test)]
 mod tests {
     use std::time::Instant;
@@ -101,6 +106,15 @@ mod tests {
     use crate::cpuload::CpuLoad;
 
     use super::mirror_sort;
+
+    #[test]
+    fn test_interpolate() {
+        let black: [u8; 3] = [0x00, 0x00, 0x00];
+        let white: [u8; 3] = [0xff, 0xff, 0xff];
+
+        assert_eq!(black, super::interpolate(0.0, &black, &white));
+        assert_eq!(white, super::interpolate(1.0, &black, &white));
+    }
 
     #[test]
     /// Test rendering an empty list of loads. The point is just that we
