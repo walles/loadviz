@@ -20,13 +20,11 @@ There's one macOS app done in Swift and one library done in Rust.
 
 ## Rendering
 
-Red means system load and green means user load.
+Red flames from the bottom indicate user load. Green flames from the top
+indicate system load.
 
-The system load comes down from the ceiling, blocking the user load bars from
-getting to the top.
-
-This is a way of visualizing that the system load is in the way of using your
-system fully.
+The from-the-ceiling flames are in the way of the from-the-floor flames, just
+like the system load is in the way of the user load.
 
 ## Why not measure RAM / swap usage?
 
@@ -75,13 +73,7 @@ How would you visualize this?
 ## TODO
 
 - Run (a release build!) by default on Johan's desktop
-- Replace the whole visualization with red user flames from the bottom and green
-  system flames from the top
 - Test that `diff()` handles wrapping CPU counters correctly
-- Add test making sure that if we have more cores than the image width, at least
-  the most loaded core is rendered in the middle of the image
-  - For 100% system load, with the system load color at the top
-  - For 100% user load, with the user load color at the top
 - Get Git metadata into the release archive
 - Add an "About" menu item doing something helpful. At least link to the GitHub
   project and show some version number.
@@ -136,3 +128,5 @@ How would you visualize this?
   <https://jogendra.dev/implementing-launch-at-login-feature-in-macos-apps>
 - Make sure our auto launcher doesn't pollute the global namespace
 - Make sure the visualization doesn't start out as all-black
+- Replace the whole visualization with red user flames from the bottom and green
+  system flames from the top

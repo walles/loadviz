@@ -1,5 +1,9 @@
 use std::time::Instant;
 
+// FIXME: Maybe check if this library is faster?
+// https://github.com/amethyst/bracket-lib/tree/master/bracket-noise
+//
+// Check both Simplex and Perlin.
 use noise::{NoiseFn, Perlin};
 
 use crate::cpuload::CpuLoad;

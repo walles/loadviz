@@ -27,21 +27,6 @@ logical cores. Polling is done about once per second.
 
 Initially `libloadviz` will just make a bar chart.
 
-### Rendering Ideas
-
-Somehow make it more interesting to watch. Load should lead to some immediate
-movement, and there should be something moving around most of the time.
-Preferrably physics based.
-
-Burning flames from the bottom for the user load maybe? And green flames from
-the top for system load?
-
-Look into <https://github.com/razaekel/noise-rs>! Maybe use Perlin noise to do
-flames from the bottom and rock / clouds from the top?
-
-Or if that doesn't fly, use a fluid simulation to make the flames? Like
-<https://github.com/dimforge/salva>?
-
 ## Why not measure RAM / swap usage?
 
 People commonly think measuring RAM / swap usage will help them decide...
