@@ -1,9 +1,11 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use libloadviz::renderer::Renderer;
 
 fn criterion_benchmark(c: &mut Criterion) {
     let width = 100;
     let height = 100;
     let mut pixels = vec![0; width * height * 3];
+    let renderer: Renderer = Default::default();
 
     let cpu_loads = vec![
         libloadviz::cpuload::CpuLoad {
@@ -15,15 +17,9 @@ fn criterion_benchmark(c: &mut Criterion) {
             system_0_to_1: 0.5,
         },
     ];
+
     c.bench_function("render 100x100 image", |b| {
-        b.iter(|| {
-            libloadviz::renderer::render_image_raw(
-                black_box(&cpu_loads),
-                width,
-                height,
-                &mut pixels,
-            )
-        });
+        b.iter(|| renderer.render_image(black_box(&cpu_loads), width, height, &mut pixels));
     });
 }
 

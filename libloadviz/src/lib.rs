@@ -23,6 +23,8 @@ pub struct LoadViz {
     currently_displayed_loads_updated: std::time::Instant,
 
     load_reader: load_reader::LoadReader,
+
+    renderer: renderer::Renderer,
 }
 
 impl LoadViz {
@@ -33,7 +35,19 @@ impl LoadViz {
             self.pixels = vec![0; width * height * 3];
         }
 
-        self.render_image();
+        if self.load_reader.get_loads().is_empty() {
+            // FIXME: Draw something nice?
+            return &self.pixels[0];
+        }
+
+        self.update_currently_displayed_loads();
+
+        self.renderer.render_image(
+            &self.currently_displayed_loads,
+            self.width,
+            self.height,
+            &mut self.pixels,
+        );
 
         return &self.pixels[0];
     }
@@ -48,6 +62,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         currently_displayed_loads: Vec::new(),
         currently_displayed_loads_updated: std::time::Instant::now(),
         load_reader: load_reader::LoadReader::new(get_macos_load_counters),
+        renderer: Default::default(),
     });
 }
 

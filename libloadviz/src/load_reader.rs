@@ -1,11 +1,11 @@
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::Instant;
 
 use crate::cpuload::{diff, CpuLoad, LoadCounters};
 
 static SECONDS_BETWEEN_MEASUREMENTS: u64 = 1;
 
 struct LoadState {
-    last_update_done: SystemTime,
+    last_update_done: Instant,
     older_sample: Vec<LoadCounters>,
     newer_sample: Vec<LoadCounters>,
 }
@@ -21,7 +21,7 @@ impl LoadReader {
         let mut return_me = LoadReader {
             last_result: vec![],
             state: LoadState {
-                last_update_done: UNIX_EPOCH,
+                last_update_done: Instant::now(),
                 older_sample: vec![],
                 newer_sample: vec![],
             },
@@ -34,12 +34,7 @@ impl LoadReader {
     }
 
     pub(crate) fn get_loads(&mut self) -> Vec<CpuLoad> {
-        if SystemTime::now()
-            .duration_since(self.state.last_update_done)
-            .unwrap()
-            .as_secs()
-            > SECONDS_BETWEEN_MEASUREMENTS
-        {
+        if self.state.last_update_done.elapsed().as_secs() > SECONDS_BETWEEN_MEASUREMENTS {
             self.measure_cpu_loads();
         }
 
@@ -51,6 +46,6 @@ impl LoadReader {
         self.state.newer_sample = (self.get_load_counters)();
 
         self.last_result = diff(&self.state.older_sample, &self.state.newer_sample);
-        self.state.last_update_done = SystemTime::now();
+        self.state.last_update_done = Instant::now();
     }
 }
