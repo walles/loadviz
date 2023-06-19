@@ -41,6 +41,10 @@ impl Renderer {
     ) {
         let distortion_pixel_radius = 3.0;
 
+        if currently_displayed_loads.is_empty() {
+            // FIXME: Draw something nice?
+            return;
+        }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
         for i in (0..pixels.len()).step_by(3) {
