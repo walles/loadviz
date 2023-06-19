@@ -72,8 +72,6 @@ How would you visualize this?
 
 ## TODO
 
-- Run (a release build!) by default on Johan's desktop
-- Test that `diff()` handles wrapping CPU counters correctly
 - Get Git metadata into the release archive
 - Add an "About" menu item doing something helpful. At least link to the GitHub
   project and show some version number.
@@ -130,3 +128,5 @@ How would you visualize this?
 - Make sure the visualization doesn't start out as all-black
 - Replace the whole visualization with red user flames from the bottom and green
   system flames from the top
+- Run (a release build!) by default on Johan's desktop
+- Test that `diff()` handles wrapping CPU counters correctly

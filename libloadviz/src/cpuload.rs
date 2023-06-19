@@ -42,14 +42,38 @@ pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
     }
 
     for (older, newer) in older.iter().zip(newer.iter()) {
-        let user = newer.user - older.user;
-        let system = newer.system - older.system;
-        let idle = newer.idle - older.idle;
+        let user = newer.user.wrapping_sub(older.user);
+        let system = newer.system.wrapping_sub(older.system);
+        let idle = newer.idle.wrapping_sub(older.idle);
         let total = user + system + idle;
         result.push(CpuLoad {
-            user_0_to_1: user as f32 / total as f32,
+            user_0_to_1: (user + idle) as f32 / total as f32,
             system_0_to_1: system as f32 / total as f32,
         });
     }
     return result;
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::cpuload::LoadCounters;
+
+    /// Test that diff() can handle one counter wrapping around to zero
+    #[test]
+    fn test_diff_wrap() {
+        let older = vec![LoadCounters {
+            user: usize::MAX,
+            system: usize::MAX,
+            idle: usize::MAX,
+        }];
+        let newer = vec![LoadCounters {
+            user: 0,   // 1 up since last
+            system: 1, // 2 up since last
+            idle: 2,   // 3 up since last
+        }];
+        let result = super::diff(&older, &newer);
+        assert_eq!(1, result.len());
+        assert_eq!((1.0 + 3.0) / (1.0 + 2.0 + 3.0), result[0].user_0_to_1);
+        assert_eq!(2.0 / (1.0 + 2.0 + 3.0), result[0].system_0_to_1);
+    }
 }
