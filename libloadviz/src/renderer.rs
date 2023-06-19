@@ -6,8 +6,11 @@ use crate::cpuload::CpuLoad;
 
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 static BG_COLOR_RGB_DARK: &[u8; 3] = &[0x18, 0x18, 0x48];
-static USER_LOAD_COLOR_RGB: &[u8; 3] = &[0x00, 0xff, 0x00];
-static USER_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x00, 0x80, 0x00];
+
+// Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
+static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00];
+static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce];
+
 static SYSTEM_LOAD_COLOR_RGB: &[u8; 3] = &[0xff, 0x00, 0x00];
 static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x80, 0x00, 0x00];
 
@@ -34,6 +37,8 @@ impl Renderer {
         height: usize,
         pixels: &mut Vec<u8>,
     ) {
+        let distortion_pixel_radius = 3.0;
+
         let viz_loads = mirror_sort(currently_displayed_loads);
 
         for i in (0..pixels.len()).step_by(3) {
@@ -42,11 +47,15 @@ impl Renderer {
 
             // Higher scale number = more details.
             let scale = 20.0 / width as f64;
-            let time: f64 = self.t0.elapsed().as_secs_f64();
+            let dt: f64 = self.t0.elapsed().as_secs_f64();
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
-            let number = self.perlin.get([scale * x as f64, scale * y as f64, time]);
-            let number = (number + 1.0) / 2.0; // Normalize into 0 to 1
+            let dx =
+                self.perlin.get([scale * x as f64, scale * y as f64, dt]) * distortion_pixel_radius;
+            let dy = self.perlin.get([scale * x as f64, scale * y as f64, -dt])
+                * distortion_pixel_radius;
+            let x: usize = ((x as f64 + dx).clamp(0.0, width as f64 + 1.0) as usize).min(width - 1);
+            let y: f64 = y as f64 + dy;
 
             let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
 
@@ -54,11 +63,16 @@ impl Renderer {
             let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
             let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
             let color = if y_height > user_plus_idle_height {
-                interpolate(number, SYSTEM_LOAD_COLOR_RGB_DARK, SYSTEM_LOAD_COLOR_RGB)
+                interpolate(1.0, SYSTEM_LOAD_COLOR_RGB_DARK, SYSTEM_LOAD_COLOR_RGB)
             } else if y_height > cpu_load.user_0_to_1 {
-                interpolate(number, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
+                interpolate(1.0, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
             } else {
-                interpolate(number, USER_LOAD_COLOR_RGB_DARK, USER_LOAD_COLOR_RGB)
+                let fraction = y_height / cpu_load.user_0_to_1;
+                interpolate(
+                    fraction as f64,
+                    USER_LOAD_COLOR_RGB_WARMER,
+                    USER_LOAD_COLOR_RGB_COOLER,
+                )
             };
 
             pixels[i] = color[0];
