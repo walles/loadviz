@@ -8,11 +8,13 @@ static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 static BG_COLOR_RGB_DARK: &[u8; 3] = &[0x18, 0x18, 0x48];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
-static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00];
-static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce];
+static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
+static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce]; // 5000K
 
-static SYSTEM_LOAD_COLOR_RGB: &[u8; 3] = &[0xff, 0x00, 0x00];
-static SYSTEM_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x80, 0x00, 0x00];
+// Blackbody RGB but with the red and green channels swapped. Supposed to look
+// like green flames.
+static SYSTEM_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0x38, 0xff, 0x00]; // 1000K
+static SYSTEM_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xe4, 0xff, 0xce]; // 5000K
 
 pub struct Renderer {
     perlin: Perlin,
@@ -63,10 +65,18 @@ impl Renderer {
             let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
             let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
             let color = if y_height > user_plus_idle_height {
-                interpolate(1.0, SYSTEM_LOAD_COLOR_RGB_DARK, SYSTEM_LOAD_COLOR_RGB)
+                let fraction = (1.0 - y_height) / cpu_load.system_0_to_1;
+                interpolate(
+                    fraction as f64,
+                    SYSTEM_LOAD_COLOR_RGB_WARMER,
+                    SYSTEM_LOAD_COLOR_RGB_COOLER,
+                )
             } else if y_height > cpu_load.user_0_to_1 {
                 interpolate(1.0, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
             } else {
+                // FIXME: The top 10% (?) of the flames should fade towards the
+                // background color. This should make the flames look more
+                // transparent and less artificial.
                 let fraction = y_height / cpu_load.user_0_to_1;
                 interpolate(
                     fraction as f64,
