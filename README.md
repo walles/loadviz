@@ -82,7 +82,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make sure the visualization doesn't go to 100% after showing the About dialog
 - Make sure we can install a packaged LoadViz on some other machine
 - Release the first public version on GitHub
 - Add a screenshot to the top of the README.md file, close to the explanation of
@@ -146,3 +145,4 @@ How would you visualize this?
   project and show some version number.
 - Run (a release build!) by default on Johan's desktop
 - Add a Help menu item explaining how to read the visualization
+- Make sure the visualization doesn't go to 100% after showing the About dialog

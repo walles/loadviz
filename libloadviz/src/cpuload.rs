@@ -11,6 +11,8 @@ pub struct CpuLoad {
 pub struct LoadCounters {
     pub user: usize,
     pub system: usize,
+
+    /// CPU time not used for anything
     pub idle: usize,
     //
     // NOTE: Maybe track nice in here as well?
@@ -47,7 +49,7 @@ pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
         let idle = newer.idle.wrapping_sub(older.idle);
         let total = user + system + idle;
         result.push(CpuLoad {
-            user_0_to_1: (user + idle) as f32 / total as f32,
+            user_0_to_1: user as f32 / total as f32,
             system_0_to_1: system as f32 / total as f32,
         });
     }
@@ -73,7 +75,7 @@ mod tests {
         }];
         let result = super::diff(&older, &newer);
         assert_eq!(1, result.len());
-        assert_eq!((1.0 + 3.0) / (1.0 + 2.0 + 3.0), result[0].user_0_to_1);
+        assert_eq!(1.0 / (1.0 + 2.0 + 3.0), result[0].user_0_to_1);
         assert_eq!(2.0 / (1.0 + 2.0 + 3.0), result[0].system_0_to_1);
     }
 }
