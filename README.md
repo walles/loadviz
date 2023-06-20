@@ -1,7 +1,17 @@
 # Load Visualizer
 
-Provide a visualization of the current system load, covering CPU usage and RAM
-pressure.
+Flames from the bottom show user load. Flames from the top show system load. The
+most loaded cores burn in the middle.
+
+So if the flames are high in the middle it means that one / a few cores are
+maxed out. If the flames are sort of high everywhere it means that all cores are
+working.
+
+And if you have lots of system load, it can mean that you're short on RAM /
+swapping.
+
+The Load Visualizer provides a visualization of the current system load,
+covering CPU usage and RAM pressure.
 
 System and User CPU load are measured for each logical core of the system. RAM
 pressure has to be inferred:
@@ -72,9 +82,11 @@ How would you visualize this?
 
 ## TODO
 
-- Add a Help menu item explaining how to read the visualization
+- Make sure the visualization doesn't go to 100% after showing the About dialog
+- Make sure we can install a packaged LoadViz on some other machine
 - Release the first public version on GitHub
-- Add a screenshot to the top of the README.md file
+- Add a screenshot to the top of the README.md file, close to the explanation of
+  how to read the display
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
@@ -133,3 +145,4 @@ How would you visualize this?
 - Add an "About" menu item doing something helpful. At least link to the GitHub
   project and show some version number.
 - Run (a release build!) by default on Johan's desktop
+- Add a Help menu item explaining how to read the visualization

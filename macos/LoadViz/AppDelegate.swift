@@ -65,10 +65,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     menu.addItem(
       NSMenuItem(
+        title: "Help",
+        action: #selector(help),
+        keyEquivalent: ""
+      ))
+
+    menu.addItem(
+      NSMenuItem(
         title: "About",
         action: #selector(about),
         keyEquivalent: ""
       ))
+
+    menu.addItem(NSMenuItem.separator())
 
     menu.addItem(
       NSMenuItem(
@@ -77,8 +86,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         keyEquivalent: ""
       ))
 
-
     statusItem.menu = menu
+  }
+
+  @objc private func help() {
+    NSWorkspace.shared.open(URL(string: "https://github.com/walles/loadviz/#readme")!)
   }
 
   @objc private func about() {
