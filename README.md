@@ -72,13 +72,13 @@ How would you visualize this?
 
 ## TODO
 
-- Get Git metadata into the release archive
-- Add an "About" menu item doing something helpful. At least link to the GitHub
-  project and show some version number.
+- Add a Help menu item explaining how to read the visualization
 - Release the first public version on GitHub
+- Add a screenshot to the top of the README.md file
+- Make an icon
+- Make sure the icon is visible in the Finder
+- Make sure the icon is visible in the About dialog
 - Stop using CPU when the menu bar isn't visible
-- Test visualization with more cores than the image width
-- Test visualization with one core only
 - Make a Dock icon visualization
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
@@ -128,5 +128,8 @@ How would you visualize this?
 - Make sure the visualization doesn't start out as all-black
 - Replace the whole visualization with red user flames from the bottom and green
   system flames from the top
-- Run (a release build!) by default on Johan's desktop
 - Test that `diff()` handles wrapping CPU counters correctly
+- Get Git metadata into the release archive
+- Add an "About" menu item doing something helpful. At least link to the GitHub
+  project and show some version number.
+- Run (a release build!) by default on Johan's desktop

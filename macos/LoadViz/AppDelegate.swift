@@ -65,12 +65,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     menu.addItem(
       NSMenuItem(
+        title: "About",
+        action: #selector(about),
+        keyEquivalent: ""
+      ))
+
+    menu.addItem(
+      NSMenuItem(
         title: "Quit",
         action: #selector(quit),
         keyEquivalent: ""
       ))
 
+
     statusItem.menu = menu
+  }
+
+  @objc private func about() {
+    let credits = NSAttributedString(
+      string: "https://github.com/walles/loadviz",
+      attributes: [
+        NSAttributedString.Key.link: "https://github.com/walles/loadviz"
+      ]
+    )
+
+    // The Git hash and version get filled in by a "Run Script" build step
+    let bundle = Bundle(for: AppDelegate.self)
+    let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String
+    let gitHash = bundle.infoDictionary?["GitHash"] as? String
+    // FIXME: let icon = bundle.image(forResource: "icon.png.icns")
+    let aboutOptions: [NSApplication.AboutPanelOptionKey: Any] = [
+      NSApplication.AboutPanelOptionKey.applicationName: "LoadViz",
+      NSApplication.AboutPanelOptionKey.applicationVersion: version!,
+      NSApplication.AboutPanelOptionKey.version: gitHash!,
+      // FIXME: NSApplication.AboutPanelOptionKey.applicationIcon: icon!,
+      NSApplication.AboutPanelOptionKey.credits: credits,
+    ]
+    NSApplication.shared.activate(ignoringOtherApps: true)
+    NSApplication.shared.orderFrontStandardAboutPanel(options: aboutOptions)
   }
 
   @objc private func quit() {

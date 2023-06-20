@@ -19,7 +19,7 @@
 		0447DF462A3B8E4B0043CEC3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0447DF452A3B8E4B0043CEC3 /* README.md */; };
 		0447DF4E2A3D94170043CEC3 /* AutoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF4D2A3D94170043CEC3 /* AutoLauncher.swift */; };
 		0447DF5C2A3D96DF0043CEC3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447DF5B2A3D96DF0043CEC3 /* main.swift */; };
-		0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in Bundle AutoLauncher */ = {isa = PBXBuildFile; fileRef = 0447DF4B2A3D94170043CEC3 /* LoadVizAutoLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0447DF602A3D97D90043CEC3 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0447DF5F2A3D97D90043CEC3 /* ServiceManagement.framework */; platformFilter = maccatalyst; };
 		04B614362A2465730027E03A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614352A2465730027E03A /* Assets.xcassets */; };
 		04B614392A2465730027E03A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B614382A2465730027E03A /* Preview Assets.xcassets */; };
@@ -50,14 +50,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0447DF5D2A3D97860043CEC3 /* CopyFiles */ = {
+		0447DF5D2A3D97860043CEC3 /* Bundle AutoLauncher */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/Library/LoginItems;
 			dstSubfolderSpec = 1;
 			files = (
-				0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in CopyFiles */,
+				0447DF5E2A3D97AB0043CEC3 /* LoadVizAutoLauncher.app in Bundle AutoLauncher */,
 			);
+			name = "Bundle AutoLauncher";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -84,6 +85,7 @@
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		04F487932A42269A00DF8FAE /* set-plist-metadata.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-plist-metadata.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 		04B614252A2465710027E03A = {
 			isa = PBXGroup;
 			children = (
+				04F487932A42269A00DF8FAE /* set-plist-metadata.sh */,
 				04B614332A2465710027E03A /* LoadVizView.swift */,
 				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* demoApp */,
@@ -209,7 +212,8 @@
 				043EEF942A382D3200766C43 /* Sources */,
 				043EEF952A382D3200766C43 /* Frameworks */,
 				043EEF962A382D3200766C43 /* Resources */,
-				0447DF5D2A3D97860043CEC3 /* CopyFiles */,
+				0447DF5D2A3D97860043CEC3 /* Bundle AutoLauncher */,
+				04F487922A4225DE00DF8FAE /* Set Info.plist Metadata */,
 			);
 			buildRules = (
 			);
@@ -362,6 +366,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\ncd ../libloadviz\n\nif [ $CONFIGURATION = Release ] ; then\n  cargo build --release\nelse\n  cargo build\nfi\n\n# FIXME: This step can also update the library we're linking with,\n# should be added in the Output Files section below.\n";
+		};
+		04F487922A4225DE00DF8FAE /* Set Info.plist Metadata */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+			);
+			name = "Set Info.plist Metadata";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/set-plist-metadata.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
