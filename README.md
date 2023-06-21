@@ -24,6 +24,12 @@ pressure has to be inferred:
 - If the system part of the CPU load is high, this can mean that your system is
   swapping, and that getting more RAM might help.
 
+## Installation
+
+```
+brew install walles/johan/loadviz
+```
+
 ## Parts
 
 There's one macOS app done in Swift and one library done in Rust.
@@ -88,10 +94,11 @@ How would you visualize this?
 1. `git push --tags`
 1. [Create a new release on GitHub][create new release]. Attach the
    `.tar.bz2` file from the previous step.
+1. Then somehow update the HomeBrew packaging:
+   <https://github.com/walles/homebrew-johan/blob/main/Casks/loadviz.rb>
 
 ## TODO
 
-- Package using HomeBrew
 - Stop using CPU when the menu bar isn't visible
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
@@ -157,5 +164,6 @@ How would you visualize this?
 - Make sure we can install a packaged LoadViz on some other machine
 - Add a license
 - Release the first public version on GitHub
+- Package using HomeBrew
 
 [create new release]: https://github.com/walles/loadviz/releases/new
