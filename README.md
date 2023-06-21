@@ -73,16 +73,24 @@ How would you visualize this?
 
 ## Releasing a new version of the macOS status bar app
 
-1. In Xcode, at the top of the screen, select "LoadViz"
+1. `git tag macos-1.2.3`, where `1.2.3` is the new version number. For
+   version number inspiration, do just `git tag | cat` first.
+1. In Xcode, at the top of the screen, select "LoadViz -> Any Mac"
 1. In the menu bar, select "Product" -> "Archive"
-1. In the new Archives screen, right click your new build and "Show in Finder"
-1. Right click the `.xcarchive` file and select "Show Package Contents"
+1. In the new Archives screen, right click the icon of your new build and "Show
+   in Finder"
+1. In the Finder, right click the `.xcarchive` file and select "Show Package
+   Contents"
 1. In the new Finder window, find your release build under "Products" ->
-   "Applications"
+   "Applications". Drag LoadViz.app to the desktop.
+1. `tar cjf LoadViz-1.2.3.tar.bz2 LoadViz.app`, make sure to get the version
+   number right
+1. `git push --tags`
+1. [Create a new release on GitHub][create new release]. Attach the
+   `.tar.bz2` file from the previous step.
 
 ## TODO
 
-- Release the first public version on GitHub
 - Package using HomeBrew
 - Stop using CPU when the menu bar isn't visible
 - Add a screenshot to the top of the README.md file, close to the explanation of
@@ -148,3 +156,6 @@ How would you visualize this?
 - Make sure the visualization doesn't go to 100% after showing the About dialog
 - Make sure we can install a packaged LoadViz on some other machine
 - Add a license
+- Release the first public version on GitHub
+
+[create new release]: https://github.com/walles/loadviz/releases/new
