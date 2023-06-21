@@ -82,14 +82,14 @@ How would you visualize this?
 
 ## TODO
 
-- Make sure we can install a packaged LoadViz on some other machine
 - Release the first public version on GitHub
+- Package using HomeBrew
+- Stop using CPU when the menu bar isn't visible
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
-- Stop using CPU when the menu bar isn't visible
 - Make a Dock icon visualization
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
@@ -146,3 +146,5 @@ How would you visualize this?
 - Run (a release build!) by default on Johan's desktop
 - Add a Help menu item explaining how to read the visualization
 - Make sure the visualization doesn't go to 100% after showing the About dialog
+- Make sure we can install a packaged LoadViz on some other machine
+- Add a license
