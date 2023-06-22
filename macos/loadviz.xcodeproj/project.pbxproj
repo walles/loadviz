@@ -47,6 +47,13 @@
 			remoteGlobalIDString = CA60476BBA0CD8C7CAC69D59;
 			remoteInfo = "libloadviz-staticlib";
 		};
+		04F4879A2A43F40400DF8FAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04B614262A2465710027E03A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0447DF4A2A3D94170043CEC3;
+			remoteInfo = LoadVizAutoLauncher;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,6 +93,8 @@
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		04F487932A42269A00DF8FAE /* set-plist-metadata.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-plist-metadata.sh"; sourceTree = "<group>"; };
+		04F487992A43F0D800DF8FAE /* install.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
+		04F4879C2A43F4CE00DF8FAE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				04F487932A42269A00DF8FAE /* set-plist-metadata.sh */,
+				04F487992A43F0D800DF8FAE /* install.sh */,
+				04F4879C2A43F4CE00DF8FAE /* README.md */,
 				04B614332A2465710027E03A /* LoadVizView.swift */,
 				040181442A2468E1005D9D0D /* libloadviz.xcodeproj */,
 				04B614302A2465710027E03A /* demoApp */,
@@ -218,6 +229,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				04F4879B2A43F40400DF8FAE /* PBXTargetDependency */,
 				0447DF3F2A397C940043CEC3 /* PBXTargetDependency */,
 			);
 			name = LoadViz;
@@ -428,6 +440,11 @@
 			isa = PBXTargetDependency;
 			name = "libloadviz-staticlib";
 			targetProxy = 04C5DBB92A250CDF00B36A49 /* PBXContainerItemProxy */;
+		};
+		04F4879B2A43F40400DF8FAE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0447DF4A2A3D94170043CEC3 /* LoadVizAutoLauncher */;
+			targetProxy = 04F4879A2A43F40400DF8FAE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
