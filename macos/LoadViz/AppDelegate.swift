@@ -39,6 +39,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     if let button = statusItem.button {
       Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [self] _ in
+        if !(button.window?.occlusionState.contains(.visible))! {
+          // Menu bar is hidden
+          // Ref: https://developer.apple.com/forums/thread/71171
+          return
+        }
+
+        let sessionInfo: NSDictionary? = CGSessionCopyCurrentDictionary()
+        let onConsole = sessionInfo?[kCGSessionOnConsoleKey] as? Bool ?? false
+        if !onConsole {
+          // Screen is locked or somebody else is logged in instead of us:
+          // https://stackoverflow.com/a/8790102/473672
+          // https://github.com/sqcubes/EyeDrop/blob/01daf39eb/EyeDrop/EyeDropController.swift#L154
+          return
+        }
+
         button.image = getNewButtonImage()
       }
       button.image = getNewButtonImage()
