@@ -28,6 +28,9 @@ VERSION=$(git log -1 --format='%cd' --date=format:'%Y.%m.%d')
 
 # Example: aaf83526
 GITHASH=$(git rev-parse --verify --short=8 HEAD)
+if [[ $(git diff --stat) != '' ]]; then
+  GITHASH="$GITHASH-dirty"
+fi
 /usr/libexec/PlistBuddy -c "Add :GitHash string $GITHASH" "$INFO_PLIST" ||
   /usr/libexec/PlistBuddy -c "Set :GitHash $GITHASH" "$INFO_PLIST"
 
