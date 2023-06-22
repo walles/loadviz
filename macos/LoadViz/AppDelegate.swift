@@ -24,7 +24,7 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> N
     bitmapInfo: bitmapInfo,
     provider: providerRef!,
     decode: nil,
-    shouldInterpolate: true,
+    shouldInterpolate: false,
     intent: .defaultIntent
   )
 

@@ -99,7 +99,6 @@ How would you visualize this?
 
 ## TODO
 
-- Stop using CPU when the menu bar isn't visible
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
 - Make an icon
@@ -165,5 +164,6 @@ How would you visualize this?
 - Add a license
 - Release the first public version on GitHub
 - Package using HomeBrew
+- Stop using CPU when the menu bar isn't visible
 
 [create new release]: https://github.com/walles/loadviz/releases/new
