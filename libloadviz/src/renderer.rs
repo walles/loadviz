@@ -54,24 +54,30 @@ impl Renderer {
         let viz_loads = mirror_sort(currently_displayed_loads);
 
         for i in (0..pixels.len()).step_by(3) {
-            let x = (i / 3) % width;
-            let y = height - (i / 3) / width - 1;
+            let base_x = (i / 3) % width;
+            let base_y = height - (i / 3) / width - 1;
 
             // Higher scale number = more details.
             let scale = 20.0 / width as f64;
             let dt: f64 = self.t0.elapsed().as_secs_f64();
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
-            let dx =
-                self.perlin.get([scale * x as f64, scale * y as f64, dt]) * distortion_pixel_radius;
-            let dy = self.perlin.get([scale * x as f64, scale * y as f64, -dt])
-                * distortion_pixel_radius;
-            let x: usize = ((x as f64 + dx).clamp(0.0, width as f64 + 1.0) as usize).min(width - 1);
-            let y: f64 = y as f64 + dy;
+            let dx_m1_to_1 = self
+                .perlin
+                .get([scale * base_x as f64, scale * base_y as f64, dt]);
+            let dx_pixels = dx_m1_to_1 * distortion_pixel_radius;
+            let dy_m1_to_1 =
+                self.perlin
+                    .get([scale * base_x as f64, scale * base_y as f64, -dt - 1.0]);
+            let dy_pixels = dy_m1_to_1 * distortion_pixel_radius;
+            let distorted_x: usize = ((base_x as f64 + dx_pixels).clamp(0.0, width as f64 + 1.0)
+                as usize)
+                .min(width - 1);
+            let distorted_y: f64 = base_y as f64 + dy_pixels;
 
-            let cpu_load = &viz_loads[(x * viz_loads.len()) / width];
+            let cpu_load = &viz_loads[(distorted_x * viz_loads.len()) / width];
 
-            let y_height = y as f32 / height as f32;
+            let y_height = distorted_y as f32 / height as f32;
             let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
             let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
             let color = if y_height > user_plus_idle_height {
