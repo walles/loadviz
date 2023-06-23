@@ -25,14 +25,16 @@ pub struct Renderer {
     t0: Instant,
 }
 
-impl Renderer {
-    pub fn new() -> Self {
+impl Default for Renderer {
+    fn default() -> Self {
         Self {
             perlin: Perlin::new(Perlin::DEFAULT_SEED),
             t0: Instant::now(),
         }
     }
+}
 
+impl Renderer {
     /// Don't call this! It's public for benchmarking purposes only.
     ///
     /// You should call `LoadViz::render_image()` instead.
@@ -100,12 +102,6 @@ impl Renderer {
     }
 }
 
-impl Default for Renderer {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
 fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
     let mut result = cpu_loads.clone();
@@ -137,7 +133,7 @@ fn interpolate(factor_0_to_1: f64, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3
 mod tests {
     use crate::cpuload::CpuLoad;
 
-    use super::mirror_sort;
+    use super::{mirror_sort, Renderer};
 
     #[test]
     fn test_interpolate() {
@@ -155,7 +151,7 @@ mod tests {
         let width = 10;
         let height = 10;
         let mut pixels = vec![0; width * height * 3];
-        let renderer = super::Renderer::new();
+        let renderer: Renderer = Default::default();
 
         renderer.render_image(&Vec::new(), width, height, &mut pixels);
     }

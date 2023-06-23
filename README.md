@@ -101,6 +101,10 @@ How would you visualize this?
 
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
+- Draw system load as a cloud rather than an upside down fire
+- Try with lots of load in the middle and none on the sides. How can we make
+  this look good? How to break up the square shape? Or make it look like a
+  burning square shape?
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
