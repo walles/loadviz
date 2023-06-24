@@ -1,7 +1,7 @@
 # Load Visualizer
 
-Flames from the bottom show user load. Flames from the top show system load. The
-most loaded cores burn in the middle.
+Flames from the bottom show user load. Clouds descending from the top show
+system load. The most loaded cores show in the middle.
 
 So if the flames are high in the middle it means that one / a few cores are
 maxed out. If the flames are sort of high everywhere it means that all cores are
@@ -10,8 +10,8 @@ working.
 And if you have lots of system load, it can mean that you're short on RAM /
 swapping.
 
-The Load Visualizer provides a visualization of the current system load,
-covering CPU usage and RAM pressure.
+This provides you with a visualization of the current system load, covering CPU
+usage _and RAM pressure_.
 
 System and User CPU load are measured for each logical core of the system. RAM
 pressure has to be inferred:
@@ -36,11 +36,11 @@ There's one macOS app done in Swift and one library done in Rust.
 
 ## Rendering
 
-Red flames from the bottom indicate user load. Green flames from the top
-indicate system load.
+Red flames from the bottom indicate user load. Clouds at the top indicate system
+load.
 
-The from-the-ceiling flames are in the way of the from-the-floor flames, just
-like the system load is in the way of the user load.
+The clouds are in the way of the from-the-floor flames, just like the system
+load is in the way of the user load.
 
 ## Why not measure RAM / swap usage?
 
@@ -101,10 +101,8 @@ How would you visualize this?
 
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
-- Draw system load as a cloud rather than an upside down fire
-- Try with lots of load in the middle and none on the sides. How can we make
-  this look good? How to break up the square shape? Or make it look like a
-  burning square shape?
+- Try with lots of system load in the middle and none on the sides. How can we
+  make the vertical cloud edges look good?
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
@@ -169,5 +167,6 @@ How would you visualize this?
 - Release the first public version on GitHub
 - Package using HomeBrew
 - Stop using CPU when the menu bar isn't visible
+- Draw system load as a cloud rather than an upside down fire
 
 [create new release]: https://github.com/walles/loadviz/releases/new

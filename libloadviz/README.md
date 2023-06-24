@@ -23,10 +23,6 @@ logical cores. Polling is done about once per second.
 `libloadviz` exposes a `getImage()` function. `getImage()` takes `width` and
 `height` as parameters, and returns an image. Exact format TBD.
 
-## Rendering
-
-Initially `libloadviz` will just make a bar chart.
-
 ## Why not measure RAM / swap usage?
 
 People commonly think measuring RAM / swap usage will help them decide...
