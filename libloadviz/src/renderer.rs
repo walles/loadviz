@@ -15,10 +15,8 @@ static BG_COLOR_RGB_DARK: &[u8; 3] = &[0x18, 0x18, 0x48];
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce]; // 5000K
 
-// Blackbody RGB but with the red and green channels swapped. Supposed to look
-// like green flames.
-static SYSTEM_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0x38, 0xff, 0x00]; // 1000K
-static SYSTEM_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xe4, 0xff, 0xce]; // 5000K
+static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
+static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
 
 pub struct Renderer {
     perlin: Perlin,
@@ -124,8 +122,8 @@ fn get_cloud_pixel(
     let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
     return Some(interpolate(
         noise_0_to_1,
-        SYSTEM_LOAD_COLOR_RGB_COOLER,
-        SYSTEM_LOAD_COLOR_RGB_WARMER,
+        CLOUD_COLOR_DARK,
+        CLOUD_COLOR_BRIGHT,
     ));
 }
 
