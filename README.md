@@ -81,8 +81,6 @@ How would you visualize this?
 
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
-- Try with lots of system load in the middle and none on the sides. How can we
-  make the vertical cloud edges look good?
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
@@ -148,5 +146,6 @@ How would you visualize this?
 - Package using HomeBrew
 - Stop using CPU when the menu bar isn't visible
 - Draw system load as a cloud rather than an upside down fire
+- Anti-alias cloud horizontally to avoid sharp vertical edges
 
 [create new release]: https://github.com/walles/loadviz/releases/new

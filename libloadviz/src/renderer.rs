@@ -116,8 +116,8 @@ fn get_cloud_pixel(
     height: usize,
     noise_m1_to_1: f64,
 ) -> Option<[u8; 3]> {
-    // Use the x coordinate to decide which load to use
-    let load = &viz_loads[(pixel_x * viz_loads.len()) / width];
+    let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
+    let load = get_load(viz_loads, x_fraction_0_to_1);
     if load.system_0_to_1 < 0.01 {
         // Prevent a division by zero below
         return None;
@@ -142,6 +142,24 @@ fn get_cloud_pixel(
     let alpha =
         ((pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels) as f64;
     return Some(interpolate(alpha, &color, BG_COLOR_RGB));
+}
+
+fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
+    let flen = viz_loads.len() as f32;
+    let float_part_index = (flen * x_fraction_0_to_1 - 0.5).clamp(0.0, flen - 1.0);
+    let i0 = float_part_index.floor() as usize;
+    let i1 = float_part_index.ceil() as usize;
+    if i0 == i1 {
+        return viz_loads[i0];
+    }
+
+    let weight1 = 1.0 - (float_part_index - i0 as f32);
+    let weight2 = 1.0 - (i1 as f32 - float_part_index);
+    return CpuLoad {
+        user_0_to_1: viz_loads[i0].user_0_to_1 * weight1 + viz_loads[i1].user_0_to_1 * weight2,
+        system_0_to_1: viz_loads[i0].system_0_to_1 * weight1
+            + viz_loads[i1].system_0_to_1 * weight2,
+    };
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
@@ -175,7 +193,7 @@ fn interpolate(factor_0_to_1: f64, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3
 mod tests {
     use crate::cpuload::CpuLoad;
 
-    use super::{mirror_sort, Renderer};
+    use super::*;
 
     #[test]
     fn test_interpolate() {
@@ -238,6 +256,59 @@ mod tests {
                     system_0_to_1: 0.2,
                 },
             ]
+        );
+    }
+
+    /// Verify that with two loads:
+    /// 0.00-0.25 Gives you load #1
+    /// 0.25-0.75 Gives you points between load #1 and load #2
+    /// 0.75-1.00 Gives you load #2
+    #[test]
+    fn test_get_load_2() {
+        let example_loads = vec![
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.8,
+            },
+        ];
+        assert_eq!(
+            get_load(&example_loads, 0.0),
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            }
+        );
+        assert_eq!(
+            get_load(&example_loads, 0.25),
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            }
+        );
+        assert_eq!(
+            get_load(&example_loads, 0.5),
+            CpuLoad {
+                user_0_to_1: 0.5,
+                system_0_to_1: 0.4,
+            }
+        );
+        assert_eq!(
+            get_load(&example_loads, 0.75),
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.8,
+            }
+        );
+        assert_eq!(
+            get_load(&example_loads, 1.0),
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.8,
+            }
         );
     }
 }

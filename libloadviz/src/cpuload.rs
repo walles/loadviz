@@ -60,10 +60,16 @@ pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
 /// Hard code load in debug builds to simplify testing the visualization
 #[cfg(debug_assertions)]
 pub fn diff(_: &[LoadCounters], _: &[LoadCounters]) -> Vec<CpuLoad> {
-    return vec![CpuLoad {
-        user_0_to_1: 0.3,
-        system_0_to_1: 0.3,
-    }];
+    return vec![
+        CpuLoad {
+            user_0_to_1: 0.2,
+            system_0_to_1: 0.7,
+        },
+        CpuLoad {
+            user_0_to_1: 0.1,
+            system_0_to_1: 0.0,
+        },
+    ];
 }
 
 #[cfg(test)]
