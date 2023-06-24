@@ -55,38 +55,33 @@ impl Renderer {
 
         for i in (0..pixels.len()).step_by(3) {
             let base_x = (i / 3) % width;
-            let base_y = height - (i / 3) / width - 1;
+            let y_from_top = (i / 3) / width;
 
             // Higher scale number = more details.
             let scale = 20.0 / width as f64;
             let dt: f64 = self.t0.elapsed().as_secs_f64();
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
-            let dx_m1_to_1 = self
-                .perlin
-                .get([scale * base_x as f64, scale * base_y as f64, dt]);
+            let dx_m1_to_1 =
+                self.perlin
+                    .get([scale * base_x as f64, scale * y_from_top as f64, dt]);
             let dx_pixels = dx_m1_to_1 * distortion_pixel_radius;
             let dy_m1_to_1 =
                 self.perlin
-                    .get([scale * base_x as f64, scale * base_y as f64, -dt - 1.0]);
+                    .get([scale * base_x as f64, scale * y_from_top as f64, -dt - 1.0]);
             let dy_pixels = dy_m1_to_1 * distortion_pixel_radius;
             let distorted_x: usize = ((base_x as f64 + dx_pixels).clamp(0.0, width as f64 + 1.0)
                 as usize)
                 .min(width - 1);
-            let distorted_y: f64 = base_y as f64 + dy_pixels;
+            let distorted_y: f64 = (height - y_from_top - 1) as f64 + dy_pixels;
 
             let cpu_load = &viz_loads[(distorted_x * viz_loads.len()) / width];
 
             let y_height = distorted_y as f32 / height as f32;
-            let idle_0_to_1 = 1.0 - (cpu_load.user_0_to_1 + cpu_load.system_0_to_1);
-            let user_plus_idle_height = cpu_load.user_0_to_1 + idle_0_to_1;
-            let color = if y_height > user_plus_idle_height {
-                let fraction = (1.0 - y_height) / cpu_load.system_0_to_1;
-                interpolate(
-                    fraction as f64,
-                    SYSTEM_LOAD_COLOR_RGB_WARMER,
-                    SYSTEM_LOAD_COLOR_RGB_COOLER,
-                )
+            let color = if let Some(cloud_color) =
+                get_cloud_pixel(&viz_loads, base_x, y_from_top, width, height, dx_m1_to_1)
+            {
+                cloud_color
             } else if y_height > cpu_load.user_0_to_1 {
                 interpolate(1.0, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
             } else {
@@ -106,6 +101,32 @@ impl Renderer {
             pixels[i + 2] = color[2];
         }
     }
+}
+
+fn get_cloud_pixel(
+    viz_loads: &Vec<CpuLoad>,
+    pixel_x: usize,
+    pixel_y_from_top: usize,
+    width: usize,
+    height: usize,
+    noise_m1_to_1: f64,
+) -> Option<[u8; 3]> {
+    // Use the x coordinate to decide which load to use
+    let load = &viz_loads[(pixel_x * viz_loads.len()) / width];
+
+    // Compute the sysload height for this load
+    let height = load.system_0_to_1 * height as f32;
+
+    if pixel_y_from_top as f32 > height {
+        return None;
+    }
+
+    let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
+    return Some(interpolate(
+        noise_0_to_1,
+        SYSTEM_LOAD_COLOR_RGB_COOLER,
+        SYSTEM_LOAD_COLOR_RGB_WARMER,
+    ));
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
