@@ -9,7 +9,6 @@ use noise::{NoiseFn, Perlin};
 use crate::cpuload::CpuLoad;
 
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
-static BG_COLOR_RGB_DARK: &[u8; 3] = &[0x18, 0x18, 0x48];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
@@ -17,6 +16,10 @@ static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce]; // 5000K
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
+
+/// How much of the cloud should fade towards transparent? Higher is more
+/// transparency, 0 means no transparency = a sharp edge to the cloud.
+static CLOUD_TRANSPARENT_FRACTION: f32 = 0.5;
 
 pub struct Renderer {
     perlin: Perlin,
@@ -81,7 +84,7 @@ impl Renderer {
             {
                 cloud_color
             } else if y_height > cpu_load.user_0_to_1 {
-                interpolate(1.0, BG_COLOR_RGB_DARK, BG_COLOR_RGB)
+                *BG_COLOR_RGB
             } else {
                 // FIXME: The top 10% (?) of the flames should fade towards the
                 // background color. This should make the flames look more
@@ -111,20 +114,34 @@ fn get_cloud_pixel(
 ) -> Option<[u8; 3]> {
     // Use the x coordinate to decide which load to use
     let load = &viz_loads[(pixel_x * viz_loads.len()) / width];
+    if load.system_0_to_1 < 0.01 {
+        // Prevent a division by zero below
+        return None;
+    }
 
     // Compute the sysload height for this load
-    let height = load.system_0_to_1 * height as f32;
+    let height_pixels = load.system_0_to_1 * height as f32;
 
-    if pixel_y_from_top as f32 > height {
+    if pixel_y_from_top as f32 > height_pixels {
         return None;
     }
 
     let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
-    return Some(interpolate(
-        noise_0_to_1,
-        CLOUD_COLOR_DARK,
-        CLOUD_COLOR_BRIGHT,
-    ));
+    let color = interpolate(noise_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
+
+    // 0-1, higher is closer to the edge of the cloud
+    let fraction_of_cloud_height = pixel_y_from_top as f32 / height_pixels;
+
+    let opaque_fraction = 1.0 - CLOUD_TRANSPARENT_FRACTION;
+
+    if fraction_of_cloud_height < opaque_fraction {
+        // We're in the not-transparent part of the cloud
+        return Some(color);
+    }
+
+    // 0-1, higher is more transparent
+    let transparent_factor = (fraction_of_cloud_height - opaque_fraction) / (1.0 - opaque_fraction);
+    return Some(interpolate(transparent_factor as f64, &color, BG_COLOR_RGB));
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
