@@ -32,7 +32,10 @@ fi
 # Ensure we don't release broken things
 ./install.sh
 
-# FIXME: List changes since last release
+echo "=="
+
+# List changes since last release
+git tag | cat
 
 echo
 echo "=="
