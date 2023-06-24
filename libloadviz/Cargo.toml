@@ -20,6 +20,14 @@ cbindgen = "0.24.3"
 [dev-dependencies]
 criterion = "0.5"
 
+# See: https://doc.rust-lang.org/cargo/reference/profiles.html
+[profile.release]
+debug = 1  # 1 = Line number information only
+
+# Ref:
+# https://github.com/walles/riff/blob/432c0b08523818e461eded0407a009db2e795996/Cargo.toml#L48-L54
+lto = "thin"
+
 [[bench]]
 name = "rendering"
 harness = false
