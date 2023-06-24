@@ -17,9 +17,13 @@ static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce]; // 5000K
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
 
-/// How much of the cloud should fade towards transparent? Higher is more
-/// transparency, 0 means no transparency = a sharp edge to the cloud.
-static CLOUD_TRANSPARENT_FRACTION: f32 = 0.5;
+/// How much of the cloud should fade towards transparent?
+///
+/// This is a fraction of the height of the whole image, not a fraction of the
+/// height of the cloud.
+///
+/// Lower values make the cloud edge sharper.
+static CLOUD_TRANSPARENT_FRACTION: f32 = 0.25;
 
 pub struct Renderer {
     perlin: Perlin,
@@ -120,28 +124,24 @@ fn get_cloud_pixel(
     }
 
     // Compute the sysload height for this load
-    let height_pixels = load.system_0_to_1 * height as f32;
-
-    if pixel_y_from_top as f32 > height_pixels {
+    let cloud_height_pixels = load.system_0_to_1 * height as f32;
+    if pixel_y_from_top as f32 > cloud_height_pixels {
         return None;
     }
 
     let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
     let color = interpolate(noise_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
 
-    // 0-1, higher is closer to the edge of the cloud
-    let fraction_of_cloud_height = pixel_y_from_top as f32 / height_pixels;
-
-    let opaque_fraction = 1.0 - CLOUD_TRANSPARENT_FRACTION;
-
-    if fraction_of_cloud_height < opaque_fraction {
-        // We're in the not-transparent part of the cloud
+    let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * height as f32;
+    let opaque_height_pixels = cloud_height_pixels - transparency_height_pixels;
+    if (pixel_y_from_top as f32) < opaque_height_pixels {
         return Some(color);
     }
 
-    // 0-1, higher is more transparent
-    let transparent_factor = (fraction_of_cloud_height - opaque_fraction) / (1.0 - opaque_fraction);
-    return Some(interpolate(transparent_factor as f64, &color, BG_COLOR_RGB));
+    // 0-1, higher means more transparent
+    let alpha =
+        ((pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels) as f64;
+    return Some(interpolate(alpha, &color, BG_COLOR_RGB));
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
