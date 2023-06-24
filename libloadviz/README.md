@@ -65,6 +65,10 @@ How would you visualize this?
   and is here only to enable calling this code from the macOS Swift app
 - `cargo run --bin=printload` will print the current CPU load
 
+## Releasing a new version
+
+Run `./release.sh` and follow instructions.
+
 ### Performance
 
 Run benchmarks with `cargo bench`. Benchmarking docs here:

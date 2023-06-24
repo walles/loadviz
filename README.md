@@ -77,26 +77,6 @@ better situation than the HD machine.
 
 How would you visualize this?
 
-## Releasing a new version of the macOS status bar app
-
-1. `git tag macos-1.2.3`, where `1.2.3` is the new version number. For
-   version number inspiration, do just `git tag | cat` first.
-1. In Xcode, at the top of the screen, select "LoadViz -> Any Mac"
-1. In the menu bar, select "Product" -> "Archive"
-1. In the new Archives screen, right click the icon of your new build and "Show
-   in Finder"
-1. In the Finder, right click the `.xcarchive` file and select "Show Package
-   Contents"
-1. In the new Finder window, find your release build under "Products" ->
-   "Applications". Drag LoadViz.app to the desktop.
-1. `tar cjf LoadViz-1.2.3.tar.bz2 LoadViz.app`, make sure to get the version
-   number right
-1. `git push --tags`
-1. [Create a new release on GitHub][create new release]. Attach the
-   `.tar.bz2` file from the previous step.
-1. Then somehow update the HomeBrew packaging:
-   <https://github.com/walles/homebrew-johan/blob/main/Casks/loadviz.rb>
-
 ## TODO
 
 - Add a screenshot to the top of the README.md file, close to the explanation of
