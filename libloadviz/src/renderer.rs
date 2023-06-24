@@ -12,7 +12,7 @@ static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
-static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xe4, 0xce]; // 5000K
+static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
