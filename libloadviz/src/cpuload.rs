@@ -29,6 +29,7 @@ impl PartialOrd for CpuLoad {
 ///
 /// If the number of cores have changed, return the right number of cores, but
 /// all with a load of 0. This usually happens on startup.
+#[cfg(not(debug_assertions))]
 pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
     let mut result: Vec<CpuLoad> = vec![];
     if older.len() != newer.len() {
@@ -54,6 +55,15 @@ pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
         });
     }
     return result;
+}
+
+/// Hard code load in debug builds to simplify testing the visualization
+#[cfg(debug_assertions)]
+pub fn diff(_: &[LoadCounters], _: &[LoadCounters]) -> Vec<CpuLoad> {
+    return vec![CpuLoad {
+        user_0_to_1: 0.3,
+        system_0_to_1: 0.3,
+    }];
 }
 
 #[cfg(test)]
