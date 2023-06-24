@@ -1,6 +1,7 @@
 use crate::cpuload::LoadCounters;
 
-pub fn get_macos_load_counters() -> Vec<LoadCounters> {
+#[cfg(target_os = "macos")]
+pub fn get_load_counters() -> Vec<LoadCounters> {
     let port = unsafe { libc::mach_host_self() };
 
     let mut num_cpu_u = 0u32;

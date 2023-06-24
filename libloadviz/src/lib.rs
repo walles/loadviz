@@ -1,6 +1,6 @@
 #![allow(clippy::needless_return)]
 
-use system_load_macos::get_macos_load_counters;
+use system_load_macos::get_load_counters;
 
 pub mod cpuload;
 mod load_reader;
@@ -61,7 +61,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         pixels: vec![0],
         currently_displayed_loads: Vec::new(),
         currently_displayed_loads_updated: std::time::Instant::now(),
-        load_reader: load_reader::LoadReader::new(get_macos_load_counters),
+        load_reader: load_reader::LoadReader::new(get_load_counters),
         renderer: Default::default(),
     });
 }
