@@ -50,8 +50,6 @@ impl Renderer {
         height: usize,
         pixels: &mut Vec<u8>,
     ) {
-        let distortion_pixel_radius = 3.0;
-
         if currently_displayed_loads.is_empty() {
             // FIXME: Draw something nice?
             return;
@@ -60,34 +58,41 @@ impl Renderer {
 
         let dt: f64 = self.t0.elapsed().as_secs_f64();
         for i in (0..pixels.len()).step_by(3) {
-            let base_x = (i / 3) % width;
-            let y_from_top = (i / 3) / width;
+            let pixel_x = (i / 3) % width;
+            let pixel_y_from_top = (i / 3) / width;
+            let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
             // Higher scale number = more details.
             let scale = 20.0 / width as f64;
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
-            let dx_m1_to_1 =
+            let noise1_m1_to_1 =
                 self.perlin
-                    .get([scale * base_x as f64, scale * y_from_top as f64, dt]);
-            let dx_pixels = dx_m1_to_1 * distortion_pixel_radius;
-            let dy_m1_to_1 =
-                self.perlin
-                    .get([scale * base_x as f64, scale * y_from_top as f64, -dt - 1.0]);
-            let dy_pixels = dy_m1_to_1 * distortion_pixel_radius;
-            let distorted_x: usize = ((base_x as f64 + dx_pixels).clamp(0.0, width as f64 + 1.0)
-                as usize)
-                .min(width - 1);
-            let distorted_y: f64 = (height - y_from_top - 1) as f64 + dy_pixels;
+                    .get([scale * pixel_x as f64, scale * pixel_y_from_top as f64, dt]);
+            let noise2_m1_to_1 = self.perlin.get([
+                scale * pixel_x as f64,
+                scale * pixel_y_from_top as f64,
+                -dt - 1.0,
+            ]);
 
-            let cpu_load = &viz_loads[(distorted_x * viz_loads.len()) / width];
-
-            let y_height_0_to_1 = distorted_y as f32 / height as f32;
-            let color = if let Some(cloud_color) =
-                get_cloud_pixel(&viz_loads, base_x, y_from_top, width, height, dx_m1_to_1)
-            {
+            let color = if let Some(cloud_color) = get_cloud_pixel(
+                &viz_loads,
+                pixel_x,
+                pixel_y_from_top,
+                width,
+                height,
+                noise1_m1_to_1,
+            ) {
                 cloud_color
-            } else if let Some(flame_color) = get_flame_pixel(y_height_0_to_1, cpu_load) {
+            } else if let Some(flame_color) = get_flame_pixel(
+                &viz_loads,
+                pixel_x,
+                pixel_y_from_bottom,
+                width,
+                height,
+                noise1_m1_to_1,
+                noise2_m1_to_1,
+            ) {
                 flame_color
             } else {
                 *BG_COLOR_RGB
@@ -100,7 +105,26 @@ impl Renderer {
     }
 }
 
-fn get_flame_pixel(y_height_0_to_1: f32, cpu_load: &CpuLoad) -> Option<[u8; 3]> {
+fn get_flame_pixel(
+    viz_loads: &Vec<CpuLoad>,
+    pixel_x: usize,
+    pixel_y_from_bottom: usize,
+    width: usize,
+    height: usize,
+    noise1_m1_to_1: f64,
+    noise2_m1_to_1: f64,
+) -> Option<[u8; 3]> {
+    let distortion_pixel_radius = 3.0;
+
+    let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
+    let distorted_x: usize =
+        ((pixel_x as f64 + dx_pixels).clamp(0.0, width as f64 + 1.0) as usize).min(width - 1);
+    let cpu_load = &viz_loads[(distorted_x * viz_loads.len()) / width];
+
+    let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
+    let distorted_y: f64 = pixel_y_from_bottom as f64 + dy_pixels;
+
+    let y_height_0_to_1 = distorted_y as f32 / height as f32;
     if y_height_0_to_1 > cpu_load.user_0_to_1 {
         return None;
     }
