@@ -87,9 +87,7 @@ impl Renderer {
                 get_cloud_pixel(&viz_loads, base_x, y_from_top, width, height, dx_m1_to_1)
             {
                 cloud_color
-            } else if y_height > cpu_load.user_0_to_1 {
-                *BG_COLOR_RGB
-            } else {
+            } else if y_height <= cpu_load.user_0_to_1 {
                 // FIXME: The top 10% (?) of the flames should fade towards the
                 // background color. This should make the flames look more
                 // transparent and less artificial.
@@ -99,6 +97,8 @@ impl Renderer {
                     USER_LOAD_COLOR_RGB_WARMER,
                     USER_LOAD_COLOR_RGB_COOLER,
                 )
+            } else {
+                *BG_COLOR_RGB
             };
 
             pixels[i] = color[0];
