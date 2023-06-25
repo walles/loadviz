@@ -58,13 +58,13 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
+        let dt: f64 = self.t0.elapsed().as_secs_f64();
         for i in (0..pixels.len()).step_by(3) {
             let base_x = (i / 3) % width;
             let y_from_top = (i / 3) / width;
 
             // Higher scale number = more details.
             let scale = 20.0 / width as f64;
-            let dt: f64 = self.t0.elapsed().as_secs_f64();
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
             let dx_m1_to_1 =
