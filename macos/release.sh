@@ -67,6 +67,7 @@ tar cjf "${RELEASE_TAR}" --strip-components=2 /Applications/LoadViz.app
 
 git push --tags
 
+RELEASE_SUM="$(sha256sum "${RELEASE_TAR}")"
 cat <<EOF
 Release packaged and tagged.
 
@@ -78,4 +79,6 @@ ${RELEASE_TAR}
 
 Then, please update the Homebrew formula as well:
 https://github.com/walles/homebrew-johan/blob/main/Casks/loadviz.rb
+- Version: ${NEW_VERSION_NUMBER}
+- SHA256:  ${RELEASE_SUM}
 EOF
