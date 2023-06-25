@@ -117,9 +117,9 @@ fn get_flame_pixel(
     let distortion_pixel_radius = 3.0;
 
     let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
-    let distorted_x: usize =
-        ((pixel_x as f64 + dx_pixels).clamp(0.0, width as f64 + 1.0) as usize).min(width - 1);
-    let cpu_load = &viz_loads[(distorted_x * viz_loads.len()) / width];
+    let distorted_x = pixel_x as f64 + dx_pixels;
+    let x_fraction_0_to_1 = distorted_x as f32 / (width as f32 - 1.0);
+    let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
     let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
     let distorted_y: f64 = pixel_y_from_bottom as f64 + dy_pixels;
@@ -149,14 +149,14 @@ fn get_cloud_pixel(
     noise_m1_to_1: f64,
 ) -> Option<[u8; 3]> {
     let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
-    let load = get_load(viz_loads, x_fraction_0_to_1);
-    if load.system_0_to_1 < 0.01 {
+    let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+    if cpu_load.system_0_to_1 < 0.01 {
         // Prevent a division by zero below
         return None;
     }
 
     // Compute the sysload height for this load
-    let cloud_height_pixels = load.system_0_to_1 * height as f32;
+    let cloud_height_pixels = cpu_load.system_0_to_1 * height as f32;
     if pixel_y_from_top as f32 > cloud_height_pixels {
         return None;
     }
