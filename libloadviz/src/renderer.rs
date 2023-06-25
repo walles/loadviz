@@ -116,6 +116,10 @@ fn get_flame_pixel(
 ) -> Option<[u8; 3]> {
     let distortion_pixel_radius = 3.0;
 
+    /// Starting at this fraction of each flame pillar's height, the color will
+    /// start fading towards the background color.
+    let fadeout_fraction = 0.8;
+
     let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
     let distorted_x = pixel_x as f64 + dx_pixels;
     let x_fraction_0_to_1 = distorted_x as f32 / (width as f32 - 1.0);
@@ -133,10 +137,21 @@ fn get_flame_pixel(
     // background color. This should make the flames look more
     // transparent and less artificial.
     let fraction = y_height_0_to_1 / cpu_load.user_0_to_1;
-    return Some(interpolate(
+
+    let color = interpolate(
         fraction as f64,
         USER_LOAD_COLOR_RGB_WARMER,
         USER_LOAD_COLOR_RGB_COOLER,
+    );
+
+    if fraction < fadeout_fraction {
+        return Some(color);
+    }
+
+    return Some(interpolate(
+        ((fraction - fadeout_fraction) / (1.0 - fadeout_fraction)) as f64,
+        &color,
+        BG_COLOR_RGB,
     ));
 }
 
