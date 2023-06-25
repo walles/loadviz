@@ -79,6 +79,7 @@ How would you visualize this?
 
 ## TODO
 
+- Make the macOS About dialog show the version number rather than a date
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
 - Make an icon
