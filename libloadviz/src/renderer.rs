@@ -120,24 +120,22 @@ fn get_flame_pixel(
     // start fading towards the background color.
     let fadeout_fraction = 0.8;
 
+    // Pick the load to show
     let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
     let distorted_x = pixel_x as f64 + dx_pixels;
     let x_fraction_0_to_1 = distorted_x as f32 / (width as f32 - 1.0);
     let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
+    // Figure out how to color the current pixel
     let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
     let distorted_y = pixel_y_from_bottom as f64 + dy_pixels;
-
     let y_height_0_to_1 = distorted_y as f32 / height as f32;
     if y_height_0_to_1 > cpu_load.user_0_to_1 {
         return None;
     }
 
-    // FIXME: The top 10% (?) of the flames should fade towards the
-    // background color. This should make the flames look more
-    // transparent and less artificial.
+    // Get the base color
     let fraction = y_height_0_to_1 / cpu_load.user_0_to_1;
-
     let color = interpolate(
         fraction as f64,
         USER_LOAD_COLOR_RGB_WARMER,
@@ -145,9 +143,11 @@ fn get_flame_pixel(
     );
 
     if fraction < fadeout_fraction {
+        // Too far from the tip, don't fade
         return Some(color);
     }
 
+    // Fade out
     return Some(interpolate(
         ((fraction - fadeout_fraction) / (1.0 - fadeout_fraction)) as f64,
         &color,
