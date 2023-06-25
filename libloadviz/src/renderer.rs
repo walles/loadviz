@@ -56,7 +56,7 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        let dt: f64 = self.t0.elapsed().as_secs_f64();
+        let dt = self.t0.elapsed().as_secs_f64();
         for i in (0..pixels.len()).step_by(3) {
             let pixel_x = (i / 3) % width;
             let pixel_y_from_top = (i / 3) / width;
@@ -126,7 +126,7 @@ fn get_flame_pixel(
     let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
     let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
-    let distorted_y: f64 = pixel_y_from_bottom as f64 + dy_pixels;
+    let distorted_y = pixel_y_from_bottom as f64 + dy_pixels;
 
     let y_height_0_to_1 = distorted_y as f32 / height as f32;
     if y_height_0_to_1 > cpu_load.user_0_to_1 {
