@@ -25,7 +25,7 @@ fn main() {
     ];
 
     let width = 100;
-    let height = 100;
+    let height = 75;
     let mut pixels = vec![0u8; width * height * 3];
     let renderer: Renderer = Default::default();
     renderer.render_image(&loads, width, height, &mut pixels);
@@ -40,7 +40,7 @@ fn main() {
             width as i32,
             height as i32,
             stride,
-            100.0,
+            50.0,
             &mut out_buf,
         );
         encoded = std::slice::from_raw_parts(out_buf, encoded_length).into();

@@ -1,5 +1,8 @@
 # Load Visualizer
 
+![Still-image screenshot generated using "cargo run --bin=screenshot" in the
+"libloadviz" folder](libloadviz/screenshot.webp)
+
 Flames from the bottom show user load. Clouds descending from the top show
 system load. The most loaded cores show in the middle.
 
@@ -33,14 +36,6 @@ brew install walles/johan/loadviz
 ## Parts
 
 There's one macOS app done in Swift and one library done in Rust.
-
-## Rendering
-
-Red flames from the bottom indicate user load. Clouds at the top indicate system
-load.
-
-The clouds are in the way of the from-the-floor flames, just like the system
-load is in the way of the user load.
 
 ## Why not measure RAM / swap usage?
 
@@ -79,13 +74,13 @@ How would you visualize this?
 
 ## TODO
 
-- Add a screenshot to the top of the README.md file, close to the explanation of
-  how to read the display
 - Make the macOS About dialog show the latest `macos-` version number rather
   than a date
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
+- Animate the screenshot in a cross faded loop. Try 10s first and see if that's
+  enough.
 - Make a Dock icon visualization
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
@@ -149,5 +144,7 @@ How would you visualize this?
 - Stop using CPU when the menu bar isn't visible
 - Draw system load as a cloud rather than an upside down fire
 - Anti-alias cloud horizontally to avoid sharp vertical edges
+- Add a screenshot to the top of the README.md file, close to the explanation of
+  how to read the display
 
 [create new release]: https://github.com/walles/loadviz/releases/new

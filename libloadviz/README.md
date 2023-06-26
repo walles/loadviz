@@ -20,8 +20,11 @@ logical cores. Polling is done about once per second.
 
 ## Output
 
+![Still-image screenshot generated using "cargo run --bin=screenshot" in the
+"libloadviz" folder](screenshot.webp)
+
 `libloadviz` exposes a `getImage()` function. `getImage()` takes `width` and
-`height` as parameters, and returns an image. Exact format TBD.
+`height` as parameters, and returns an image.
 
 ## Why not measure RAM / swap usage?
 

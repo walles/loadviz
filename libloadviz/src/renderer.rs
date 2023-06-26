@@ -114,7 +114,7 @@ fn get_flame_pixel(
     noise1_m1_to_1: f64,
     noise2_m1_to_1: f64,
 ) -> Option<[u8; 3]> {
-    let distortion_pixel_radius = 3.0;
+    let distortion_pixel_radius = width.min(height) as f64 / 7.0;
 
     // Starting at this fraction of each flame pillar's height, the color will
     // start fading towards the background color.
