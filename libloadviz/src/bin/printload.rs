@@ -1,5 +1,4 @@
-// Prints a snapshot of the current load of each CPU
-
+/// Prints a snapshot of the current load of each CPU
 use std::thread;
 
 use libloadviz::system_load_macos::get_load_counters;
