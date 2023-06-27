@@ -1,7 +1,7 @@
 /// Prints a snapshot of the current load of each CPU
 use std::thread;
 
-use libloadviz::system_load_macos::get_load_counters;
+use libloadviz::system_load::get_load_counters;
 
 fn main() {
     let first = get_load_counters();

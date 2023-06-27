@@ -37,3 +37,8 @@ pub fn get_load_counters() -> Vec<LoadCounters> {
 
     return load_counters;
 }
+
+#[cfg(target_os = "linux")]
+pub fn get_load_counters() -> Vec<LoadCounters> {
+    todo!();
+}
