@@ -9,6 +9,10 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+defaults:
+  run:
+    working-directory: libloadviz
+
 jobs:
   build:
 
@@ -16,5 +20,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - run: cd libloadviz && cargo build --verbose
-    - run: cd libloadviz && cargo test --verbose
+
+    # From: https://github.com/actions/cache/blob/main/examples.md#rust---cargo
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          libloadviz/target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - run: cargo build --verbose
+    - run: cargo test --verbose
