@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 // FIXME: Maybe check if this library is faster?
 // https://github.com/amethyst/bracket-lib/tree/master/bracket-noise
 //
@@ -27,14 +25,12 @@ static CLOUD_TRANSPARENT_FRACTION: f32 = 0.25;
 
 pub struct Renderer {
     perlin: Perlin,
-    t0: Instant,
 }
 
 impl Default for Renderer {
     fn default() -> Self {
         Self {
             perlin: Perlin::new(Perlin::DEFAULT_SEED),
-            t0: Instant::now(),
         }
     }
 }
@@ -48,6 +44,7 @@ impl Renderer {
         currently_displayed_loads: &Vec<CpuLoad>,
         width: usize,
         height: usize,
+        dt_seconds: f64,
         pixels: &mut Vec<u8>,
     ) {
         if currently_displayed_loads.is_empty() {
@@ -56,7 +53,6 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        let dt = self.t0.elapsed().as_secs_f64();
         for i in (0..pixels.len()).step_by(3) {
             let pixel_x = (i / 3) % width;
             let pixel_y_from_top = (i / 3) / width;
@@ -66,13 +62,15 @@ impl Renderer {
             let scale = 20.0 / width as f64;
 
             // NOTE: Experiments show that the Perlin output is -1 to 1
-            let noise1_m1_to_1 =
-                self.perlin
-                    .get([scale * pixel_x as f64, scale * pixel_y_from_top as f64, dt]);
+            let noise1_m1_to_1 = self.perlin.get([
+                scale * pixel_x as f64,
+                scale * pixel_y_from_top as f64,
+                dt_seconds,
+            ]);
             let noise2_m1_to_1 = self.perlin.get([
                 scale * pixel_x as f64,
                 scale * pixel_y_from_top as f64,
-                -dt - 1.0,
+                -dt_seconds - 1.0,
             ]);
 
             let color = if let Some(cloud_color) = get_cloud_pixel(
@@ -260,7 +258,7 @@ mod tests {
         let mut pixels = vec![0; width * height * 3];
         let renderer: Renderer = Default::default();
 
-        renderer.render_image(&Vec::new(), width, height, &mut pixels);
+        renderer.render_image(&Vec::new(), width, height, 42.0, &mut pixels);
     }
 
     #[test]

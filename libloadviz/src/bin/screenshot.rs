@@ -1,9 +1,8 @@
+/// Writes a screenshot to a file
 use std::fs;
 
 use libloadviz::renderer::Renderer;
 use libwebp_sys::WebPEncodeRGB;
-
-/// Writes a screenshot to a file
 
 fn main() {
     // FIXME: Put this file in the same directory as Cargo.toml
@@ -28,7 +27,7 @@ fn main() {
     let height = 75;
     let mut pixels = vec![0u8; width * height * 3];
     let renderer: Renderer = Default::default();
-    renderer.render_image(&loads, width, height, &mut pixels);
+    renderer.render_image(&loads, width, height, 0.0, &mut pixels);
 
     // Ref: https://crates.io/crates/libwebp-sys
     let encoded: Vec<u8>;

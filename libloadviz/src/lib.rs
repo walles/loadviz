@@ -1,5 +1,7 @@
 #![allow(clippy::needless_return)]
 
+use std::time::Instant;
+
 use system_load::get_load_counters;
 
 pub mod cpuload;
@@ -22,6 +24,9 @@ pub struct LoadViz {
     /// towards the current system load.
     currently_displayed_loads: Vec<cpuload::CpuLoad>,
     currently_displayed_loads_updated: std::time::Instant,
+
+    /// When this object was created
+    t0: std::time::Instant,
 
     load_reader: load_reader::LoadReader,
 
@@ -47,6 +52,7 @@ impl LoadViz {
             &self.currently_displayed_loads,
             self.width,
             self.height,
+            self.t0.elapsed().as_secs_f64(),
             &mut self.pixels,
         );
 
@@ -62,6 +68,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         pixels: vec![0],
         currently_displayed_loads: Vec::new(),
         currently_displayed_loads_updated: std::time::Instant::now(),
+        t0: Instant::now(),
         load_reader: load_reader::LoadReader::new(get_load_counters),
         renderer: Default::default(),
     });
