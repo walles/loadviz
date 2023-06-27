@@ -5,6 +5,8 @@ use system_load_macos::get_load_counters;
 pub mod cpuload;
 mod load_reader;
 mod physics;
+
+pub mod system_load_linux;
 pub mod system_load_macos;
 
 // Public for benchmarking purposes only
