@@ -9,7 +9,10 @@ edition = "2021"
 libc = "0.2.146"
 opaque-pointer = "0.8.8"
 noise = "0.8"
-webp-animation = "0.7"
+
+[dependencies.libwebp-sys2]
+version = "0.1.7"
+features = ["0_5", "mux"]
 
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode

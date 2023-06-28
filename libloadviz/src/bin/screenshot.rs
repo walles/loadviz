@@ -1,16 +1,17 @@
 #![allow(clippy::needless_return)]
 
 /// Writes a screenshot to a file
-use std::fs;
+use std::{fs, mem, slice};
 
 use libloadviz::renderer::Renderer;
-use webp_animation::prelude::*;
+use libwebp_sys::*;
 
 fn main() {
     let width = 100;
     let height = 75;
     let frames_per_second = 10;
     let seconds = 10;
+    let quality = 100.0; // 0-100, pick a number...
 
     // FIXME: Put this file in the same directory as Cargo.toml
     let filename = "screenshot.webp";
@@ -33,47 +34,54 @@ fn main() {
     let mut pixels = vec![0u8; width * height * 3];
     let renderer: Renderer = Default::default();
 
-    // FIXME: Add something about looping the animation
-    let mut encoder = Encoder::new_with_options(
-        (width as u32, height as u32),
-        EncoderOptions {
-            minimize_size: false, // FIXME: True?
-            kmin: 0,
-            kmax: 0, // FIXME: Up this to get keyframes
-            allow_mixed: true,
-            verbose: true,
-            color_mode: ColorMode::Rgba,
-            encoding_config: Some(EncodingConfig {
-                encoding_type: EncodingType::Lossy(Default::default()),
-                quality: 80.0,
-                method: 6,
-            }),
-        },
-    )
-    .unwrap();
+    let anim_params = WebPMuxAnimParams {
+        bgcolor: 0,
+        loop_count: 0, // 0 == infinite
+    };
+    // Ref: https://github.com/webmproject/libwebp/blob/08d60d60066eb30ab8e0e3ccfa0cd0b68f8cccc6/src/webp/mux.h#L423-L442
+    let enc_options = WebPAnimEncoderOptions {
+        anim_params,
+        minimize_size: false as i32,
+        kmin: 0,
+        kmax: 0,                   // Up this number to get keyframes
+        allow_mixed: false as i32, // "true" here gets us lossy frames all the time and they are ugly
+        verbose: true as i32,
+        padding: [0, 0, 0, 0],
+    };
+    let encoder = unsafe { WebPAnimEncoderNew(width as i32, height as i32, &enc_options) };
 
-    for i in 0..(frames_per_second * seconds - 1) {
+    // Ref: https://github.com/webmproject/libwebp/blob/08d60d60066eb30ab8e0e3ccfa0cd0b68f8cccc6/src/webp/encode.h#L94-L153
+    let mut config = unsafe { mem::zeroed::<WebPConfig>() };
+    assert!(0 != unsafe { WebPConfigPreset(&mut config, WEBP_PRESET_DEFAULT, quality) });
+    config.lossless = true as i32; // All my attempts at lossy have been really bad
+
+    for i in 0..(frames_per_second * seconds) {
         let dt_seconds = i as f64 / frames_per_second as f64;
 
         renderer.render_image(&loads, width, height, dt_seconds, &mut pixels);
 
         let dt_milliseconds = (dt_seconds * 1000.0) as i32;
-        encoder
-            .add_frame(&rgb_to_rgba(&pixels), dt_milliseconds)
-            .unwrap();
+
+        unsafe {
+            let mut frame = mem::zeroed();
+            assert!(0 != WebPPictureInit(&mut frame));
+            frame.width = width as i32;
+            frame.height = height as i32;
+            assert!(0 != WebPPictureImportRGB(&mut frame, pixels.as_ptr(), 3 * width as i32));
+            assert!(0 != WebPAnimEncoderAdd(encoder, &mut frame, dt_milliseconds, &config));
+            WebPPictureFree(&mut frame);
+        }
     }
 
-    let final_milliseconds = frames_per_second * seconds * 1000;
-    let webp_data = encoder.finalize(final_milliseconds).unwrap();
-    fs::write(filename, webp_data).expect("Unable to write file");
-}
+    unsafe {
+        // Encode!
+        let mut data;
+        data = mem::zeroed();
+        WebPDataInit(&mut data);
+        assert!(0 != WebPAnimEncoderAssemble(encoder, &mut data));
 
-// Workaround for: https://github.com/blaind/webp-animation/issues/11
-fn rgb_to_rgba(pixels: &[u8]) -> Vec<u8> {
-    let mut rgba = Vec::with_capacity(pixels.len() * 4 / 3);
-    for pixel in pixels.chunks_exact(3) {
-        rgba.extend_from_slice(pixel);
-        rgba.push(255);
+        // Output the result
+        fs::write(filename, slice::from_raw_parts(data.bytes, data.size))
+            .expect("Unable to write file");
     }
-    return rgba;
 }
