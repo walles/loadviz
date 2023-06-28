@@ -19,7 +19,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     ];
 
     c.bench_function("render 100x100 image", |b| {
-        b.iter(|| renderer.render_image(black_box(&cpu_loads), width, height, &mut pixels));
+        b.iter(|| renderer.render_image(black_box(&cpu_loads), width, height, 0.0, &mut pixels));
     });
 }
 
