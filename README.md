@@ -1,7 +1,7 @@
 # Load Visualizer
 
-![Still-image screenshot generated using "cargo run --bin=screenshot" in the
-"libloadviz" folder](libloadviz/screenshot.webp)
+![Screenshot generated using "cargo run --bin=screenshot" in the "libloadviz"
+folder](libloadviz/screenshot.webp)
 
 Flames from the bottom show user load. Clouds descending from the top show
 system load. The most loaded cores show in the middle.
@@ -79,6 +79,12 @@ How would you visualize this?
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
+- Make the clouds look more realistic:
+  - Fade between one cloud color and the background color
+  - Have less details in the clouds
+  - Animate the clouds slower
+- Improve performance by only trying to render clouds where they could be, and
+  the same thing for fire.
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
   enough.
 - Make a Dock icon visualization
