@@ -11,7 +11,7 @@ fn main() {
     let height = 75;
     let frames_per_second = 10;
     let seconds = 10;
-    let quality = 100.0; // 0-100, pick a number...
+    let quality = 80.0; // 0-100, pick a number...
 
     // FIXME: Put this file in the same directory as Cargo.toml
     let filename = "screenshot.webp";
@@ -43,9 +43,9 @@ fn main() {
         anim_params,
         minimize_size: false as i32,
         kmin: 0,
-        kmax: 0,                   // Up this number to get keyframes
-        allow_mixed: false as i32, // "true" here gets us lossy frames all the time and they are ugly
-        verbose: true as i32,
+        kmax: 0, // Up this number if you want keyframes
+        allow_mixed: true as i32,
+        verbose: false as i32,
         padding: [0, 0, 0, 0],
     };
     let encoder = unsafe { WebPAnimEncoderNew(width as i32, height as i32, &enc_options) };
@@ -53,7 +53,6 @@ fn main() {
     // Ref: https://github.com/webmproject/libwebp/blob/08d60d60066eb30ab8e0e3ccfa0cd0b68f8cccc6/src/webp/encode.h#L94-L153
     let mut config = unsafe { mem::zeroed::<WebPConfig>() };
     assert!(0 != unsafe { WebPConfigPreset(&mut config, WEBP_PRESET_DEFAULT, quality) });
-    config.lossless = true as i32; // All my attempts at lossy have been really bad
 
     for i in 0..(frames_per_second * seconds) {
         let dt_seconds = i as f64 / frames_per_second as f64;

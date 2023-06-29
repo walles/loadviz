@@ -12,7 +12,7 @@ noise = "0.8"
 
 [dependencies.libwebp-sys2]
 version = "0.1.7"
-features = ["0_5", "mux"]
+features = ["1_2", "mux"]
 
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode
