@@ -1,8 +1,4 @@
-// FIXME: Maybe check if this library is faster?
-// https://github.com/amethyst/bracket-lib/tree/master/bracket-noise
-//
-// Check both Simplex and Perlin.
-use noise::{NoiseFn, Perlin};
+use bracket_noise::prelude::FastNoise;
 
 use crate::cpuload::CpuLoad;
 
@@ -24,14 +20,14 @@ static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
 static CLOUD_TRANSPARENT_FRACTION: f32 = 0.25;
 
 pub struct Renderer {
-    perlin: Perlin,
+    noise: FastNoise,
 }
 
 impl Default for Renderer {
     fn default() -> Self {
-        Self {
-            perlin: Perlin::new(Perlin::DEFAULT_SEED),
-        }
+        return Self {
+            noise: FastNoise::new(),
+        };
     }
 }
 
@@ -44,7 +40,7 @@ impl Renderer {
         currently_displayed_loads: &Vec<CpuLoad>,
         width: usize,
         height: usize,
-        dt_seconds: f64,
+        dt_seconds: f32,
         pixels: &mut Vec<u8>,
     ) {
         if currently_displayed_loads.is_empty() {
@@ -59,19 +55,20 @@ impl Renderer {
             let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
             // Higher scale number = more details.
-            let scale = 20.0 / width as f64;
+            let scale = 10.0 / width as f32;
 
-            // NOTE: Experiments show that the Perlin output is -1 to 1
-            let noise1_m1_to_1 = self.perlin.get([
-                scale * pixel_x as f64,
-                scale * pixel_y_from_top as f64,
+            // Noise output is -1 to 1, deciphered from here:
+            // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
+            let noise1_m1_to_1 = self.noise.get_noise3d(
+                scale * pixel_x as f32,
+                scale * pixel_y_from_top as f32,
                 dt_seconds,
-            ]);
-            let noise2_m1_to_1 = self.perlin.get([
-                scale * pixel_x as f64,
-                scale * pixel_y_from_top as f64,
+            );
+            let noise2_m1_to_1 = self.noise.get_noise3d(
+                scale * pixel_x as f32,
+                scale * pixel_y_from_top as f32,
                 -dt_seconds - 1.0,
-            ]);
+            );
 
             let color = if let Some(cloud_color) = get_cloud_pixel(
                 &viz_loads,
@@ -109,10 +106,10 @@ fn get_flame_pixel(
     pixel_y_from_bottom: usize,
     width: usize,
     height: usize,
-    noise1_m1_to_1: f64,
-    noise2_m1_to_1: f64,
+    noise1_m1_to_1: f32,
+    noise2_m1_to_1: f32,
 ) -> Option<[u8; 3]> {
-    let distortion_pixel_radius = width.min(height) as f64 / 7.0;
+    let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
     // Starting at this fraction of each flame pillar's height, the color will
     // start fading towards the background color.
@@ -120,14 +117,14 @@ fn get_flame_pixel(
 
     // Pick the load to show
     let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
-    let distorted_x = pixel_x as f64 + dx_pixels;
-    let x_fraction_0_to_1 = distorted_x as f32 / (width as f32 - 1.0);
+    let distorted_x = pixel_x as f32 + dx_pixels;
+    let x_fraction_0_to_1 = distorted_x / (width as f32 - 1.0);
     let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
     // Figure out how to color the current pixel
     let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
-    let distorted_y = pixel_y_from_bottom as f64 + dy_pixels;
-    let y_height_0_to_1 = distorted_y as f32 / height as f32;
+    let distorted_y = pixel_y_from_bottom as f32 + dy_pixels;
+    let y_height_0_to_1 = distorted_y / height as f32;
     if y_height_0_to_1 > cpu_load.user_0_to_1 {
         return None;
     }
@@ -135,7 +132,7 @@ fn get_flame_pixel(
     // Get the base color
     let fraction = y_height_0_to_1 / cpu_load.user_0_to_1;
     let color = interpolate(
-        fraction as f64,
+        fraction,
         USER_LOAD_COLOR_RGB_WARMER,
         USER_LOAD_COLOR_RGB_COOLER,
     );
@@ -147,7 +144,7 @@ fn get_flame_pixel(
 
     // Fade out
     return Some(interpolate(
-        ((fraction - fadeout_fraction) / (1.0 - fadeout_fraction)) as f64,
+        (fraction - fadeout_fraction) / (1.0 - fadeout_fraction),
         &color,
         BG_COLOR_RGB,
     ));
@@ -159,7 +156,7 @@ fn get_cloud_pixel(
     pixel_y_from_top: usize,
     width: usize,
     height: usize,
-    noise_m1_to_1: f64,
+    noise_m1_to_1: f32,
 ) -> Option<[u8; 3]> {
     let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
     let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
@@ -184,8 +181,7 @@ fn get_cloud_pixel(
     }
 
     // 0-1, higher means more transparent
-    let alpha =
-        ((pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels) as f64;
+    let alpha = (pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels;
     return Some(interpolate(alpha, &color, BG_COLOR_RGB));
 }
 
@@ -221,14 +217,14 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
     return result;
 }
 
-fn interpolate(factor_0_to_1: f64, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3] {
+fn interpolate(factor_0_to_1: f32, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3] {
     let factor_0_to_1 = factor_0_to_1.clamp(0.0, 1.0);
 
     let mut result = [0; 3];
 
     for i in 0..3 {
         result[i] =
-            (color1[i] as f64 * (1.0 - factor_0_to_1) + color2[i] as f64 * factor_0_to_1) as u8;
+            (color1[i] as f32 * (1.0 - factor_0_to_1) + color2[i] as f32 * factor_0_to_1) as u8;
     }
 
     return result;

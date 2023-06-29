@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 libc = "0.2.146"
 opaque-pointer = "0.8.8"
-noise = "0.8"
+bracket-noise = "~0.8"
 
 [dependencies.libwebp-sys2]
 version = "0.1.7"

@@ -52,7 +52,7 @@ impl LoadViz {
             &self.currently_displayed_loads,
             self.width,
             self.height,
-            self.t0.elapsed().as_secs_f64(),
+            self.t0.elapsed().as_secs_f32(),
             &mut self.pixels,
         );
 

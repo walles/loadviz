@@ -55,7 +55,7 @@ fn main() {
     assert!(0 != unsafe { WebPConfigPreset(&mut config, WEBP_PRESET_DEFAULT, quality) });
 
     for i in 0..(frames_per_second * seconds) {
-        let dt_seconds = i as f64 / frames_per_second as f64;
+        let dt_seconds = i as f32 / frames_per_second as f32;
 
         renderer.render_image(&loads, width, height, dt_seconds, &mut pixels);
 
