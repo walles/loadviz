@@ -92,7 +92,10 @@ impl Renderer {
         height: usize,
     ) -> Option<[u8; 3]> {
         // Higher scale number = more details.
-        let scale = 10.0 / width as f32;
+        let scale = 5.0 / width as f32;
+
+        // Higher speed number = faster cloud turbulence.
+        let speed = 0.3;
 
         let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
@@ -112,7 +115,7 @@ impl Renderer {
         let noise_m1_to_1 = self.noise.get_noise3d(
             scale * pixel_x as f32,
             scale * pixel_y_from_top as f32,
-            dt_seconds,
+            speed * dt_seconds,
         );
 
         let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;

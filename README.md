@@ -74,9 +74,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make the clouds look more realistic:
-  - Have less details in the clouds
-  - Animate the clouds slower
 - Improve idle-system performance by only trying to render clouds where they
   could be, and the same thing for fire.
 - Make the macOS About dialog show the latest `macos-` version number rather
@@ -153,5 +150,8 @@ How would you visualize this?
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
 - Make the cloud outline look cloudier
+- Make the clouds look more realistic:
+  - Have less details in the clouds
+  - Animate the clouds slower
 
 [create new release]: https://github.com/walles/loadviz/releases/new
