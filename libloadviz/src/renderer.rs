@@ -114,8 +114,8 @@ impl Renderer {
             speed * dt_seconds,
         );
 
-        let noise_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
-        let color = interpolate(noise_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
+        let brightness_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
+        let color = interpolate(brightness_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
 
         let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * height as f32;
         let opaque_height_pixels = cloud_height_pixels - transparency_height_pixels;
@@ -132,7 +132,7 @@ impl Renderer {
         // Replace dark with transparent. Towards the edge of the cloud, we won't
         // see as many dark colors since the sun won't be blocked by thick cloud
         // parts.
-        let color = interpolate(noise_0_to_1, BG_COLOR_RGB, CLOUD_COLOR_BRIGHT);
+        let color = interpolate(alpha * (1.0 - brightness_0_to_1), &color, BG_COLOR_RGB);
 
         return Some(interpolate(alpha, &color, BG_COLOR_RGB));
     }
