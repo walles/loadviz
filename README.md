@@ -74,16 +74,16 @@ How would you visualize this?
 
 ## TODO
 
-- Make the macOS About dialog show the latest `macos-` version number rather
-  than a date
-- Make an icon
-- Make sure the icon is visible in the Finder
-- Make sure the icon is visible in the About dialog
 - Make the clouds look more realistic:
   - Have less details in the clouds
   - Animate the clouds slower
 - Improve idle-system performance by only trying to render clouds where they
   could be, and the same thing for fire.
+- Make the macOS About dialog show the latest `macos-` version number rather
+  than a date
+- Make an icon
+- Make sure the icon is visible in the Finder
+- Make sure the icon is visible in the About dialog
 - Try increasing the fire distortion radius when flames are higher
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
   enough.
