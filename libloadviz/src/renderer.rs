@@ -177,11 +177,20 @@ fn get_cloud_pixel(
     let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * height as f32;
     let opaque_height_pixels = cloud_height_pixels - transparency_height_pixels;
     if (pixel_y_from_top as f32) < opaque_height_pixels {
+        // Cloud interior
         return Some(color);
     }
 
+    // When we get here, we're closer to the edge of the cloud
+
     // 0-1, higher means more transparent
     let alpha = (pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels;
+
+    // Replace dark with transparent. Towards the edge of the cloud, we won't
+    // see as many dark colors since the sun won't be blocked by thick cloud
+    // parts.
+    let color = interpolate(noise_0_to_1, BG_COLOR_RGB, CLOUD_COLOR_BRIGHT);
+
     return Some(interpolate(alpha, &color, BG_COLOR_RGB));
 }
 

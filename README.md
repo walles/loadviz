@@ -80,11 +80,11 @@ How would you visualize this?
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
 - Make the clouds look more realistic:
-  - Fade between one cloud color and the background color
   - Have less details in the clouds
   - Animate the clouds slower
-- Improve performance by only trying to render clouds where they could be, and
-  the same thing for fire.
+- Improve idle-system performance by only trying to render clouds where they
+  could be, and the same thing for fire.
+- Try increasing the fire distortion radius when flames are higher
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
   enough.
 - Make a Dock icon visualization
@@ -152,5 +152,6 @@ How would you visualize this?
 - Anti-alias cloud horizontally to avoid sharp vertical edges
 - Add a screenshot to the top of the README.md file, close to the explanation of
   how to read the display
+- Make the cloud outline look cloudier
 
 [create new release]: https://github.com/walles/loadviz/releases/new
