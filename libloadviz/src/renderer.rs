@@ -99,10 +99,6 @@ impl Renderer {
 
         let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
-        if cpu_load.system_0_to_1 < 0.01 {
-            // Prevent a division by zero below
-            return None;
-        }
 
         // Compute the sysload height for this load
         let cloud_height_pixels = cpu_load.system_0_to_1 * height as f32;
