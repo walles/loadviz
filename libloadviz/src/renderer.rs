@@ -91,8 +91,8 @@ impl Renderer {
         width: usize,
         height: usize,
     ) -> Option<[u8; 3]> {
-        // Higher scale number = more details.
-        let scale = 5.0 / width as f32;
+        // Higher number = more details.
+        let detail = 5.0 / width as f32;
 
         // Higher speed number = faster cloud turbulence.
         let speed = 0.3;
@@ -109,8 +109,8 @@ impl Renderer {
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
         let noise_m1_to_1 = self.noise.get_noise3d(
-            scale * pixel_x as f32,
-            scale * pixel_y_from_top as f32,
+            detail * pixel_x as f32,
+            detail * pixel_y_from_top as f32,
             speed * dt_seconds,
         );
 
@@ -146,10 +146,24 @@ impl Renderer {
         width: usize,
         height: usize,
     ) -> Option<[u8; 3]> {
-        // Higher scale number = more details.
-        let scale = 10.0 / width as f32;
+        // Higher number = more details.
+        let detail = 10.0 / width as f32;
 
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
+
+        // Check whether we should even try to do flames maths. This improves
+        // our idle-system benchmark by 63%.
+        let highest_load_0_to_1 = viz_loads
+            .iter()
+            .map(|load| load.user_0_to_1)
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
+            .unwrap();
+        let highest_possible_flame_height_pixels =
+            highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
+        if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
+            // We're above the flames, no need for any (costly) noise maths
+            return None;
+        }
 
         // Starting at this fraction of each flame pillar's height, the color will
         // start fading towards the background color.
@@ -158,13 +172,13 @@ impl Renderer {
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
         let noise1_m1_to_1 = self.noise.get_noise3d(
-            scale * pixel_x as f32,
-            scale * pixel_y_from_bottom as f32,
+            detail * pixel_x as f32,
+            detail * pixel_y_from_bottom as f32,
             dt_seconds,
         );
         let noise2_m1_to_1 = self.noise.get_noise3d(
-            scale * pixel_x as f32,
-            scale * pixel_y_from_bottom as f32,
+            detail * pixel_x as f32,
+            detail * pixel_y_from_bottom as f32,
             -dt_seconds - 1.0,
         );
 

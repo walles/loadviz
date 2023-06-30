@@ -74,14 +74,13 @@ How would you visualize this?
 
 ## TODO
 
-- Improve idle-system performance by only trying to render clouds where they
-  could be, and the same thing for fire.
 - Make the macOS About dialog show the latest `macos-` version number rather
   than a date
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
 - Try increasing the fire distortion radius when flames are higher
+- Try distorting the fire more vertically than horizontally
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
   enough.
 - Make a Dock icon visualization
@@ -153,5 +152,7 @@ How would you visualize this?
 - Make the clouds look more realistic:
   - Have less details in the clouds
   - Animate the clouds slower
+- Improve idle-system performance by only trying to render clouds where they
+  could be, and the same thing for the flames.
 
 [create new release]: https://github.com/walles/loadviz/releases/new
