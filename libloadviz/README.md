@@ -68,6 +68,8 @@ How would you visualize this?
   and is here only to enable calling this code from the macOS Swift app
 - `cargo run --bin=printload` will print the current CPU load
 - `cargo run --bin=screenshot` will write a screenshot into `screenshot.webp`
+- `cargo run --bin=stillimage still.webp` will write a 1024x1024 still image
+  into `still.webp`, can be used for icon generation
 
 ## Releasing a new version
 

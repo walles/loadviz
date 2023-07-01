@@ -75,6 +75,7 @@ How would you visualize this?
 ## TODO
 
 - Make an icon
+- Make Activity Monitor show "LoadViz" as a name, now it's empty
 - Try increasing the fire distortion radius when flames are higher
 - Try distorting the fire more vertically than horizontally
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
