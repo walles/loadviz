@@ -92,6 +92,7 @@
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		04BBF66D2A4FFE38008770BC /* screenshot-to-icon.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshot-to-icon.sh"; sourceTree = "<group>"; };
 		04F487932A42269A00DF8FAE /* set-plist-metadata.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-plist-metadata.sh"; sourceTree = "<group>"; };
 		04F487992A43F0D800DF8FAE /* install.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
 		04F4879C2A43F4CE00DF8FAE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -172,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				04F487932A42269A00DF8FAE /* set-plist-metadata.sh */,
+				04BBF66D2A4FFE38008770BC /* screenshot-to-icon.sh */,
 				04F487992A43F0D800DF8FAE /* install.sh */,
 				04F4879C2A43F4CE00DF8FAE /* README.md */,
 				04B614332A2465710027E03A /* LoadVizView.swift */,
