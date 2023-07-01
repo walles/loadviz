@@ -7,11 +7,11 @@ set -euf -o pipefail
 # This script is mostly from here:
 # https://stackoverflow.com/a/20703594/473672
 
-# Corner rounding from here:
-# https://stackoverflow.com/a/1916256/473672
+# Corner rounding from here: https://stackoverflow.com/a/1916256/473672
 #
-# "128" is a made up number.
-CORNER_RADIUS=128
+# Experiments show that "256" seems to be what the Safari icon is using, so that
+# should be good for us as well.
+CORNER_RADIUS=256
 
 ICONSET="$(gmktemp -d -t 'loadviz-XXXXXXXX.iconset')"
 
@@ -30,16 +30,21 @@ convert -size 1024x1024 xc:none -draw "roundrectangle 0,0,1024,1024,${CORNER_RAD
 ICON1024=/tmp/loadviz-icon.webp
 convert "${RAWIMAGE}" -matte "${MASK}" -compose DstIn -composite "${ICON1024}"
 
-sips -s format png -z 16 16 "${ICON1024}" --out "${ICONSET}"/icon_16x16.png
-sips -s format png -z 32 32 "${ICON1024}" --out "${ICONSET}"/icon_16x16@2x.png
-sips -s format png -z 32 32 "${ICON1024}" --out "${ICONSET}"/icon_32x32.png
-sips -s format png -z 64 64 "${ICON1024}" --out "${ICONSET}"/icon_32x32@2x.png
-sips -s format png -z 128 128 "${ICON1024}" --out "${ICONSET}"/icon_128x128.png
-sips -s format png -z 256 256 "${ICON1024}" --out "${ICONSET}"/icon_128x128@2x.png
-sips -s format png -z 256 256 "${ICON1024}" --out "${ICONSET}"/icon_256x256.png
-sips -s format png -z 512 512 "${ICON1024}" --out "${ICONSET}"/icon_256x256@2x.png
-sips -s format png -z 512 512 "${ICON1024}" --out "${ICONSET}"/icon_512x512.png
-cp "${ICON1024}" "${ICONSET}"/icon_512x512@2x.png
+# This makes us match the Safari icon, which seems to be 832x832 centered on a
+# 1024x1024 canvas.
+ICON832=/tmp/loadviz-icon-832.webp
+convert "${ICON1024}" -resize 832x832 -gravity center -background transparent -extent 1024x1024 "${ICON832}"
+
+sips -s format png -z 16 16 "${ICON832}" --out "${ICONSET}"/icon_16x16.png
+sips -s format png -z 32 32 "${ICON832}" --out "${ICONSET}"/icon_16x16@2x.png
+sips -s format png -z 32 32 "${ICON832}" --out "${ICONSET}"/icon_32x32.png
+sips -s format png -z 64 64 "${ICON832}" --out "${ICONSET}"/icon_32x32@2x.png
+sips -s format png -z 128 128 "${ICON832}" --out "${ICONSET}"/icon_128x128.png
+sips -s format png -z 256 256 "${ICON832}" --out "${ICONSET}"/icon_128x128@2x.png
+sips -s format png -z 256 256 "${ICON832}" --out "${ICONSET}"/icon_256x256.png
+sips -s format png -z 512 512 "${ICON832}" --out "${ICONSET}"/icon_256x256@2x.png
+sips -s format png -z 512 512 "${ICON832}" --out "${ICONSET}"/icon_512x512.png
+cp "${ICON832}" "${ICONSET}"/icon_512x512@2x.png
 
 iconutil -c icns -o loadviz.icns "${ICONSET}"
 

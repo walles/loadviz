@@ -74,8 +74,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make icon follow Apple's HIG:
-  https://developer.apple.com/design/human-interface-guidelines/app-icons
 - Make Activity Monitor show "LoadViz" as a name, now it's empty
 - Try increasing the fire distortion radius when flames are higher
 - Try distorting the fire more vertically than horizontally
@@ -155,5 +153,9 @@ How would you visualize this?
 - Make sure the icon is visible in the About dialog
 - Make sure the icon is visible in the Finder
 - Make an icon
+- Make icon follow Apple's HIG:
+  https://developer.apple.com/design/human-interface-guidelines/app-icons
+  - We didn't really, but at least we matched our size and corner radius with
+    the Safari icon's size / corner radius.
 
 [create new release]: https://github.com/walles/loadviz/releases/new
