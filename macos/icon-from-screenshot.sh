@@ -26,6 +26,6 @@ sips -s format png -z 512 512   "${SCREENSHOT}" --out "${ICONSET}"/icon_256x256@
 sips -s format png -z 512 512   "${SCREENSHOT}" --out "${ICONSET}"/icon_512x512.png
 cp "${SCREENSHOT}" "${ICONSET}"/icon_512x512@2x.png
 
-iconutil -c icns -o loadviz.icns "${ICONSET}"
+iconutil -c icns -o LoadViz/Assets.xcassets/loadviz.dataset/loadviz.icns "${ICONSET}"
 
 rm -R "${ICONSET}"
