@@ -149,6 +149,10 @@ impl Renderer {
         // Higher number = more details.
         let detail = 10.0 / width as f32;
 
+        // Starting at this fraction of each flame pillar's height, the color will
+        // start fading towards the background color.
+        let fadeout_fraction = 0.8;
+
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
         // Check whether we should even try to do flames maths. This improves
@@ -161,13 +165,11 @@ impl Renderer {
         let highest_possible_flame_height_pixels =
             highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
-            // We're above the flames, no need for any (costly) noise maths
+            // We're above all flames, no need for any (costly) noise maths
+            //
+            // This check improves our idle-system benchmark by 63%.
             return None;
         }
-
-        // Starting at this fraction of each flame pillar's height, the color will
-        // start fading towards the background color.
-        let fadeout_fraction = 0.8;
 
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
@@ -176,17 +178,28 @@ impl Renderer {
             detail * pixel_y_from_bottom as f32,
             dt_seconds,
         );
-        let noise2_m1_to_1 = self.noise.get_noise3d(
-            detail * pixel_x as f32,
-            detail * pixel_y_from_bottom as f32,
-            -dt_seconds - 1.0,
-        );
 
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
         let distorted_x = pixel_x as f32 + dx_pixels;
         let x_fraction_0_to_1 = distorted_x / (width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+
+        let highest_possible_flame_height_pixels =
+            cpu_load.user_0_to_1 * height as f32 + distortion_pixel_radius;
+        if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
+            // We're above the flames at this particular column, no need for any
+            // more (costly) noise maths.
+            //
+            // This check improves our busy benchmark by 5%.
+            return None;
+        }
+
+        let noise2_m1_to_1 = self.noise.get_noise3d(
+            detail * pixel_x as f32,
+            detail * pixel_y_from_bottom as f32,
+            -dt_seconds - 1.0,
+        );
 
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
