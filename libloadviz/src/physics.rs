@@ -2,11 +2,14 @@ use std::time::{Duration, Instant};
 
 use crate::LoadViz;
 
-// Maybe keep this higher than SECONDS_BETWEEN_MEASUREMENTS in load_reader.rs?
-// By moving both values around until we're happy!
+// Maybe keep these higher than SECONDS_BETWEEN_MEASUREMENTS in load_reader.rs?
+// By moving the values around until we're happy!
 //
-// FIXME: I think the maths is wrong, I don't think it takes 20 seconds.
-static SECONDS_0_TO_100: f32 = 20.0;
+// The idea with moving up fast is that we want to react when something happens.
+//
+// The idea with moving down slow is that we want to have some brief history.
+static SECONDS_0_TO_100_UP: f32 = 5.0;
+static SECONDS_0_TO_100_DOWN: f32 = 20.0;
 
 impl LoadViz {
     pub(crate) fn update_currently_displayed_loads(&mut self) {
@@ -45,10 +48,16 @@ impl LoadViz {
 ///
 /// `dt` is the time since the last update
 fn compute_step(dt: Duration, current: f32, goal: f32) -> f32 {
-    let how_far_we_can_go = dt.as_secs_f32() / SECONDS_0_TO_100;
+    let direction = if goal > current { 1.0 } else { -1.0 };
+
+    let how_far_we_can_go = dt.as_secs_f32()
+        / (if direction > 0.0 {
+            SECONDS_0_TO_100_UP
+        } else {
+            SECONDS_0_TO_100_DOWN
+        });
 
     let how_far_we_are_allowed_to_go = (goal - current).abs();
-    let direction = if goal > current { 1.0 } else { -1.0 };
 
     return how_far_we_can_go.min(how_far_we_are_allowed_to_go) * direction;
 }
@@ -59,11 +68,11 @@ mod tests {
 
     #[test]
     fn test_compute_step() {
-        let dt = Duration::from_secs_f32(SECONDS_0_TO_100 / 2.0);
-
+        let dt = Duration::from_secs_f32(SECONDS_0_TO_100_UP / 2.0);
         assert_eq!(compute_step(dt, 0.0, 1.0), 0.5);
         assert_eq!(compute_step(dt, 0.0, 0.1), 0.1);
 
+        let dt = Duration::from_secs_f32(SECONDS_0_TO_100_DOWN / 2.0);
         assert_eq!(compute_step(dt, 1.0, 0.0), -0.5);
         assert_eq!(compute_step(dt, 1.0, 0.7), -0.3);
     }
