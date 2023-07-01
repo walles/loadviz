@@ -120,12 +120,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let bundle = Bundle(for: AppDelegate.self)
     let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String
     let gitHash = bundle.infoDictionary?["GitHash"] as? String
-    // FIXME: let icon = bundle.image(forResource: "icon.png.icns")
+    let icon = bundle.image(forResource: "loadviz.icns")
     let aboutOptions: [NSApplication.AboutPanelOptionKey: Any] = [
       NSApplication.AboutPanelOptionKey.applicationName: "LoadViz",
       NSApplication.AboutPanelOptionKey.applicationVersion: version!,
       NSApplication.AboutPanelOptionKey.version: gitHash!,
-      // FIXME: NSApplication.AboutPanelOptionKey.applicationIcon: icon!,
+      NSApplication.AboutPanelOptionKey.applicationIcon: icon!,
       NSApplication.AboutPanelOptionKey.credits: credits,
     ]
     NSApplication.shared.activate(ignoringOtherApps: true)

@@ -12,6 +12,7 @@
 		041918742A382ED600B45E9C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041918732A382ED600B45E9C /* main.swift */; };
 		0420FB262A35B199002528DD /* LoadVizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614332A2465710027E03A /* LoadVizView.swift */; };
 		0420FB272A35B1CB002528DD /* demoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B614312A2465710027E03A /* demoApp.swift */; };
+		0434B3662A5039750024B44D /* loadviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0434B3652A50395B0024B44D /* loadviz.icns */; };
 		043EEF9B2A382D3200766C43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043EEF9A2A382D3200766C43 /* AppDelegate.swift */; };
 		043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 043EEF9E2A382D3300766C43 /* Assets.xcassets */; };
 		0447DF402A397CF50043CEC3 /* liblibloadviz_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040181492A2468E1005D9D0D /* liblibloadviz_static.a */; };
@@ -75,6 +76,7 @@
 		0401814C2A246968005D9D0D /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		041918732A382ED600B45E9C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0420FB232A34D2F8002528DD /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		0434B3652A50395B0024B44D /* loadviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = loadviz.icns; sourceTree = "<group>"; };
 		043EEF982A382D3200766C43 /* LoadViz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoadViz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		043EEF9A2A382D3200766C43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		043EEF9E2A382D3300766C43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 		04B614332A2465710027E03A /* LoadVizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadVizView.swift; sourceTree = "<group>"; };
 		04B614352A2465730027E03A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B614382A2465730027E03A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		04BBF66D2A4FFE38008770BC /* icon-from-screenshot.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "icon-from-screenshot.sh"; sourceTree = "<group>"; };
 		04F487932A42269A00DF8FAE /* set-plist-metadata.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "set-plist-metadata.sh"; sourceTree = "<group>"; };
 		04F487992A43F0D800DF8FAE /* install.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
 		04F4879C2A43F4CE00DF8FAE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -171,7 +174,9 @@
 		04B614252A2465710027E03A = {
 			isa = PBXGroup;
 			children = (
+				0434B3652A50395B0024B44D /* loadviz.icns */,
 				04F487932A42269A00DF8FAE /* set-plist-metadata.sh */,
+				04BBF66D2A4FFE38008770BC /* icon-from-screenshot.sh */,
 				04F487992A43F0D800DF8FAE /* install.sh */,
 				04F4879C2A43F4CE00DF8FAE /* README.md */,
 				04B614332A2465710027E03A /* LoadVizView.swift */,
@@ -335,6 +340,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0434B3662A5039750024B44D /* loadviz.icns in Resources */,
 				043EEF9F2A382D3300766C43 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,6 +469,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LoadViz/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
@@ -493,6 +500,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LoadViz/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = "";
