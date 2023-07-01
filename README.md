@@ -74,8 +74,6 @@ How would you visualize this?
 
 ## TODO
 
-- Make the macOS About dialog show the latest `macos-` version number rather
-  than a date
 - Make an icon
 - Make sure the icon is visible in the Finder
 - Make sure the icon is visible in the About dialog
@@ -89,10 +87,6 @@ How would you visualize this?
 - Enable resizing the demo app. Resizing should scale the image so we can see it
   pixel by pixel. Nearest-neighbor scaling preferred.
 - Find a _good_ way of getting the demo image to update at 10 FPS
-- Figure out whether `cargo build` should be done in the `libloadviz` project
-  instead. What we want is for the Rust build to run every time we press the
-  Play button in Xcode, and for Xcode to understand whether either the bridging
-  header or the static library have changed.
 
 ### Done
 
@@ -154,5 +148,9 @@ How would you visualize this?
   - Animate the clouds slower
 - Improve idle-system performance by only trying to render clouds where they
   could be, and the same thing for the flames.
+- Figure out whether `cargo build` should be done in the `libloadviz` project
+  instead. Well, it shouldn't. No problems related to this seen in a long time.
+- Make the macOS About dialog show the latest `macos-` version number rather
+  than a date
 
 [create new release]: https://github.com/walles/loadviz/releases/new

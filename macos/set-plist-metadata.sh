@@ -16,8 +16,8 @@ COPYRIGHT="Copyright 2023-${YEAR} johan.walles@gmail.com"
 /usr/libexec/PlistBuddy -c "Add :NSHumanReadableCopyright string \"$COPYRIGHT\"" "${INFO_PLIST}" ||
 /usr/libexec/PlistBuddy -c "Set :NSHumanReadableCopyright \"$COPYRIGHT\"" "${INFO_PLIST}"
 
-# Example: 2021.02.05
-VERSION=$(git log -1 --format='%cd' --date=format:'%Y.%m.%d')
+# Example: 0.3.0
+VERSION=$(git describe --tags --match='macos-*' --dirty | cut -d- -f2)
 
 # I don't know the difference between CFBundleShortVersionString and CFBundleVersion.
 # We do both here to be on the safe side.
@@ -28,7 +28,7 @@ VERSION=$(git log -1 --format='%cd' --date=format:'%Y.%m.%d')
 
 # Example: aaf83526
 GITHASH=$(git rev-parse --verify --short=8 HEAD)
-if [[ $(git diff --stat) != '' ]]; then
+if [[ $(git diff HEAD --stat) != '' ]]; then
   GITHASH="$GITHASH-dirty"
 fi
 /usr/libexec/PlistBuddy -c "Add :GitHash string $GITHASH" "$INFO_PLIST" ||

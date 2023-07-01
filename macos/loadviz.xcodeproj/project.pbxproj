@@ -381,6 +381,7 @@
 		};
 		04F487922A4225DE00DF8FAE /* Set Info.plist Metadata */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
