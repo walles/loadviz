@@ -17,7 +17,7 @@ static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
 /// height of the cloud.
 ///
 /// Lower values make the cloud edge sharper.
-static CLOUD_TRANSPARENT_FRACTION: f32 = 0.25;
+static CLOUD_TRANSPARENT_FRACTION: f32 = 0.4;
 
 pub struct Renderer {
     noise: FastNoise,
