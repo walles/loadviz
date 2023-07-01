@@ -75,8 +75,6 @@ How would you visualize this?
 ## TODO
 
 - Make an icon
-- Make sure the icon is visible in the Finder
-- Make sure the icon is visible in the About dialog
 - Try increasing the fire distortion radius when flames are higher
 - Try distorting the fire more vertically than horizontally
 - Animate the screenshot in a cross faded loop. Try 10s first and see if that's
@@ -152,5 +150,7 @@ How would you visualize this?
   instead. Well, it shouldn't. No problems related to this seen in a long time.
 - Make the macOS About dialog show the latest `macos-` version number rather
   than a date
+- Make sure the icon is visible in the About dialog
+- Make sure the icon is visible in the Finder
 
 [create new release]: https://github.com/walles/loadviz/releases/new
