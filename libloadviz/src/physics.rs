@@ -31,8 +31,20 @@ pub(crate) fn update_currently_displayed_loads(
 
     for (current, actual) in current.iter_mut().zip(cpu_loads.iter_mut()) {
         current.user_0_to_1 += compute_step(dt, current.user_0_to_1, actual.user_0_to_1);
-
         current.system_0_to_1 += compute_step(dt, current.system_0_to_1, actual.system_0_to_1);
+
+        if current.user_0_to_1 + current.system_0_to_1 <= 1.0 {
+            continue;
+        }
+
+        // Load > 100%, fix it!
+        if current.user_0_to_1 > actual.user_0_to_1 {
+            // User load is above target, take it down
+            current.user_0_to_1 = 1.0 - current.system_0_to_1;
+        } else {
+            // System load is above target, take it down
+            current.system_0_to_1 = 1.0 - current.user_0_to_1;
+        }
     }
 }
 
@@ -67,5 +79,35 @@ mod tests {
         let dt = Duration::from_secs_f32(SECONDS_0_TO_100_DOWN / 2.0);
         assert_eq!(compute_step(dt, 1.0, 0.0), -0.5);
         assert_eq!(compute_step(dt, 1.0, 0.7), -0.3);
+    }
+
+    #[test]
+    fn test_clashing_loads() {
+        let mut current = vec![CpuLoad {
+            user_0_to_1: 0.0,
+            system_0_to_1: 1.0,
+        }];
+        let target = vec![CpuLoad {
+            user_0_to_1: 1.0,
+            system_0_to_1: 0.0,
+        }];
+
+        // Move numbers so we get all the way up
+        update_currently_displayed_loads(
+            &mut current,
+            &target,
+            Duration::from_secs(SECONDS_0_TO_100_UP as u64),
+        );
+
+        assert_eq!(
+            current[0],
+            CpuLoad {
+                // We should have gotten all the way up...
+                user_0_to_1: 1.0,
+
+                // ... and also all the way down.
+                system_0_to_1: 0.0,
+            }
+        );
     }
 }
