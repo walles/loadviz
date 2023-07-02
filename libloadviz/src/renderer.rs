@@ -41,7 +41,7 @@ impl Renderer {
         width: usize,
         height: usize,
         dt_seconds: f32,
-        pixels: &mut Vec<u8>,
+        pixels: &mut [u8],
     ) {
         if currently_displayed_loads.is_empty() {
             // FIXME: Draw something nice?
@@ -49,36 +49,37 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        for i in (0..pixels.len()).step_by(3) {
-            let pixel_x = (i / 3) % width;
-            let pixel_y_from_top = (i / 3) / width;
-            let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
+        for pixel_y_from_top in 0..height {
+            for pixel_x in 0..width {
+                let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
-            let color = if let Some(cloud_color) = self.get_cloud_pixel(
-                &viz_loads,
-                dt_seconds,
-                pixel_x,
-                pixel_y_from_top,
-                width,
-                height,
-            ) {
-                cloud_color
-            } else if let Some(flame_color) = self.get_flame_pixel(
-                &viz_loads,
-                dt_seconds,
-                pixel_x,
-                pixel_y_from_bottom,
-                width,
-                height,
-            ) {
-                flame_color
-            } else {
-                *BG_COLOR_RGB
-            };
+                let color = if let Some(cloud_color) = self.get_cloud_pixel(
+                    &viz_loads,
+                    dt_seconds,
+                    pixel_x,
+                    pixel_y_from_top,
+                    width,
+                    height,
+                ) {
+                    cloud_color
+                } else if let Some(flame_color) = self.get_flame_pixel(
+                    &viz_loads,
+                    dt_seconds,
+                    pixel_x,
+                    pixel_y_from_bottom,
+                    width,
+                    height,
+                ) {
+                    flame_color
+                } else {
+                    *BG_COLOR_RGB
+                };
 
-            pixels[i] = color[0];
-            pixels[i + 1] = color[1];
-            pixels[i + 2] = color[2];
+                let i = 3 * (pixel_y_from_top * width + pixel_x);
+                pixels[i] = color[0];
+                pixels[i + 1] = color[1];
+                pixels[i + 2] = color[2];
+            }
         }
     }
 
