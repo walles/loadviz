@@ -1,6 +1,6 @@
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
-use crate::LoadViz;
+use crate::cpuload::CpuLoad;
 
 // Maybe keep these higher than SECONDS_BETWEEN_MEASUREMENTS in load_reader.rs?
 // By moving the values around until we're happy!
@@ -11,36 +11,28 @@ use crate::LoadViz;
 static SECONDS_0_TO_100_UP: f32 = 5.0;
 static SECONDS_0_TO_100_DOWN: f32 = 20.0;
 
-impl LoadViz {
-    pub(crate) fn update_currently_displayed_loads(&mut self) {
-        self.update_currently_displayed_loads_internal();
-        self.currently_displayed_loads_updated = Instant::now();
+pub(crate) fn update_currently_displayed_loads(
+    current: &mut Vec<CpuLoad>,
+    target: &Vec<CpuLoad>,
+    dt: Duration,
+) {
+    if current.len() != target.len() {
+        // current = target;
+        current.clone_from(target);
+        return;
     }
 
-    fn update_currently_displayed_loads_internal(&mut self) {
-        if self.currently_displayed_loads.len() != self.load_reader.get_loads().len() {
-            self.currently_displayed_loads = self.load_reader.get_loads();
-            return;
-        }
+    // Sort both arrays so we compare the right heights with each other
+    //
+    // Sorts are the same as in mirror_sort() in renderer.rs
+    current.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let mut cpu_loads = target.clone();
+    cpu_loads.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-        // Sort both arrays so we compare the right heights with each other
-        //
-        // Sorts are the same as in mirror_sort() in renderer.rs
-        self.currently_displayed_loads
-            .sort_by(|a, b| a.partial_cmp(b).unwrap());
-        let mut cpu_loads = self.load_reader.get_loads();
-        cpu_loads.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    for (current, actual) in current.iter_mut().zip(cpu_loads.iter_mut()) {
+        current.user_0_to_1 += compute_step(dt, current.user_0_to_1, actual.user_0_to_1);
 
-        let dt = Instant::now().duration_since(self.currently_displayed_loads_updated);
-        for (current, actual) in self
-            .currently_displayed_loads
-            .iter_mut()
-            .zip(cpu_loads.iter_mut())
-        {
-            current.user_0_to_1 += compute_step(dt, current.user_0_to_1, actual.user_0_to_1);
-
-            current.system_0_to_1 += compute_step(dt, current.system_0_to_1, actual.system_0_to_1);
-        }
+        current.system_0_to_1 += compute_step(dt, current.system_0_to_1, actual.system_0_to_1);
     }
 }
 

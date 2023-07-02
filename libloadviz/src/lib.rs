@@ -2,6 +2,7 @@
 
 use std::time::Instant;
 
+use physics::update_currently_displayed_loads;
 use system_load::get_load_counters;
 
 pub mod cpuload;
@@ -46,7 +47,12 @@ impl LoadViz {
             return &self.pixels[0];
         }
 
-        self.update_currently_displayed_loads();
+        update_currently_displayed_loads(
+            &mut self.currently_displayed_loads,
+            &self.load_reader.get_loads(),
+            Instant::now().duration_since(self.currently_displayed_loads_updated),
+        );
+        self.currently_displayed_loads_updated = Instant::now();
 
         self.renderer.render_image(
             &self.currently_displayed_loads,
