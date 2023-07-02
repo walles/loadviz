@@ -49,8 +49,8 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        for pixel_y_from_top in 0..height {
-            for pixel_x in 0..width {
+        for pixel_x in 0..width {
+            for pixel_y_from_top in 0..height {
                 let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
                 let color = if let Some(cloud_color) = self.get_cloud_pixel(
