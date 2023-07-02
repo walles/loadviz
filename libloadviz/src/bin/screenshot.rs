@@ -91,6 +91,7 @@ fn main() {
     );
     let frames_per_second = 10;
     let seconds = 10;
+    let xfade_seconds = 2;
 
     let loads = vec![
         libloadviz::cpuload::CpuLoad {
@@ -113,13 +114,48 @@ fn main() {
     for i in 0..(frames_per_second * seconds) {
         let dt_seconds = i as f32 / frames_per_second as f32;
 
-        renderer.render_image(
-            &loads,
-            anim_writer.width,
-            anim_writer.height,
-            dt_seconds,
-            &mut pixels,
-        );
+        if (dt_seconds as i32) < seconds - xfade_seconds {
+            // No crossfade yet, just render one image
+            renderer.render_image(
+                &loads,
+                anim_writer.width,
+                anim_writer.height,
+                dt_seconds,
+                &mut pixels,
+            );
+        } else {
+            // Render image 1
+            let mut pixels1 = vec![0u8; anim_writer.width * anim_writer.height * 3];
+            renderer.render_image(
+                &loads,
+                anim_writer.width,
+                anim_writer.height,
+                dt_seconds,
+                &mut pixels1,
+            );
+
+            // Render image 2
+            let mut pixels2 = vec![0u8; anim_writer.width * anim_writer.height * 3];
+            renderer.render_image(
+                &loads,
+                anim_writer.width,
+                anim_writer.height,
+                // Render image before the first frame of the whole animation
+                dt_seconds - (seconds as f32),
+                &mut pixels2,
+            );
+
+            // Crossfade the two images into pixels
+            for i in 0..(anim_writer.width * anim_writer.height * 3) {
+                let p1 = pixels1[i];
+                let p2 = pixels2[i];
+                let seconds_into_crossfade = dt_seconds - (seconds as f32 - xfade_seconds as f32);
+                let crossfade_0_to_1 = seconds_into_crossfade / xfade_seconds as f32;
+                let weight1 = 1.0 - crossfade_0_to_1;
+                let weight2 = crossfade_0_to_1;
+                pixels[i] = (weight1 * p1 as f32 + weight2 * p2 as f32) as u8;
+            }
+        }
 
         let dt_milliseconds = (dt_seconds * 1000.0) as i32;
         anim_writer.add_frame(dt_milliseconds, &pixels);

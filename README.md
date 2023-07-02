@@ -74,8 +74,6 @@ How would you visualize this?
 
 ## TODO
 
-- Animate the screenshot in a cross faded loop. Try 10s first and see if that's
-  enough.
 - Try increasing the fire distortion radius when flames are higher
 - Try distorting the fire more vertically than horizontally
 - Make a Dock icon visualization
@@ -157,5 +155,6 @@ How would you visualize this?
   - We didn't really, but at least we matched our size and corner radius with
     the Safari icon's size / corner radius.
 - Make Activity Monitor show "LoadViz" as a name, now it's empty
+- Animate the screenshot in a cross faded loop
 
 [create new release]: https://github.com/walles/loadviz/releases/new
