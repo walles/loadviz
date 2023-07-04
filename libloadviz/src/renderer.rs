@@ -154,7 +154,8 @@ impl Renderer {
         // start fading towards the background color.
         let fadeout_fraction = 0.8;
 
-        let distortion_pixel_radius = width.min(height) as f32 / 10.0;
+        // FIXME: Disabled while we experiment with the base pattern
+        let distortion_pixel_radius = 0.01; // FIXME: Used to be width.min(height) as f32 / 10.0;
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.

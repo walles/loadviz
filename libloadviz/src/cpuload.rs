@@ -60,42 +60,9 @@ pub fn diff(older: &[LoadCounters], newer: &[LoadCounters]) -> Vec<CpuLoad> {
 /// Hard code load in debug builds to simplify testing the visualization
 #[cfg(all(debug_assertions, not(test)))]
 pub fn diff(_: &[LoadCounters], _: &[LoadCounters]) -> Vec<CpuLoad> {
-    use std::time::{SystemTime, UNIX_EPOCH};
-
-    let secs = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
-    if secs % 20 < 7 {
-        // High user load
-        return vec![
-            CpuLoad {
-                user_0_to_1: 0.7,
-                system_0_to_1: 0.2,
-            },
-            CpuLoad {
-                user_0_to_1: 0.0,
-                system_0_to_1: 0.1,
-            },
-        ];
-    } else if secs % 20 < 14 {
-        // High system load
-        return vec![
-            CpuLoad {
-                user_0_to_1: 0.2,
-                system_0_to_1: 0.7,
-            },
-            CpuLoad {
-                user_0_to_1: 0.1,
-                system_0_to_1: 0.0,
-            },
-        ];
-    }
-
-    // Idle
     return vec![
         CpuLoad {
-            user_0_to_1: 0.0,
+            user_0_to_1: 0.8,
             system_0_to_1: 0.0,
         },
         CpuLoad {
