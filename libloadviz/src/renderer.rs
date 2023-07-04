@@ -151,8 +151,8 @@ impl Renderer {
         let distortion_detail = 10.0 / width as f32;
         let internal_detail = 4.0 / width as f32;
 
-        // How large part of the frames fade towards transparent?
-        let transparent_fraction = 0.5;
+        // What fraction of the fire fades towards transparent?
+        let transparent_fraction = 0.3;
 
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
@@ -218,7 +218,7 @@ impl Renderer {
         // time.
         let noise3_0_to_1 = (self.noise.get_noise(
             internal_detail * distorted_pixel_x,
-            internal_detail * distorted_pixel_y - dt_seconds * 1.5,
+            internal_detail * distorted_pixel_y - dt_seconds * 2.0,
         ) + 1.0)
             / 2.0;
 
