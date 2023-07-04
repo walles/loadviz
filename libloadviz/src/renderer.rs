@@ -154,8 +154,7 @@ impl Renderer {
         // How large part of the frames fade towards transparent?
         let transparent_fraction = 0.5;
 
-        // FIXME: Disabled while we experiment with the base pattern
-        let distortion_pixel_radius = 0.01; // FIXME: Used to be width.min(height) as f32 / 10.0;
+        let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
@@ -183,8 +182,8 @@ impl Renderer {
 
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
-        let distorted_x = pixel_x as f32 + dx_pixels;
-        let x_fraction_0_to_1 = distorted_x / (width as f32 - 1.0);
+        let distorted_pixel_x = pixel_x as f32 + dx_pixels;
+        let x_fraction_0_to_1 = distorted_pixel_x / (width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         let highest_possible_flame_height_pixels =
@@ -205,8 +204,8 @@ impl Renderer {
 
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
-        let distorted_y = pixel_y_from_bottom as f32 + dy_pixels;
-        let y_height_0_to_1 = distorted_y / height as f32;
+        let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
+        let y_height_0_to_1 = distorted_pixel_y / height as f32;
         if y_height_0_to_1 > cpu_load.user_0_to_1 {
             return None;
         }
@@ -218,8 +217,8 @@ impl Renderer {
         // Let's get a 0-1 noise value for this coordinate, that scrolls up with
         // time.
         let noise3_0_to_1 = (self.noise.get_noise(
-            internal_detail * pixel_x as f32,
-            internal_detail * pixel_y_from_bottom as f32 - dt_seconds,
+            internal_detail * distorted_pixel_x,
+            internal_detail * distorted_pixel_y - dt_seconds * 1.5,
         ) + 1.0)
             / 2.0;
 
