@@ -6,7 +6,7 @@ static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
-static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
+static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0x89, 0x12]; // 2000K
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -148,11 +148,11 @@ impl Renderer {
         height: usize,
     ) -> Option<[u8; 3]> {
         // Higher number = more details.
-        let detail = 10.0 / width as f32;
+        let distortion_detail = 10.0 / width as f32;
+        let internal_detail = 4.0 / width as f32;
 
-        // Starting at this fraction of each flame pillar's height, the color will
-        // start fading towards the background color.
-        let fadeout_fraction = 0.8;
+        // How large part of the frames fade towards transparent?
+        let transparent_fraction = 0.5;
 
         // FIXME: Disabled while we experiment with the base pattern
         let distortion_pixel_radius = 0.01; // FIXME: Used to be width.min(height) as f32 / 10.0;
@@ -176,8 +176,8 @@ impl Renderer {
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
         let noise1_m1_to_1 = self.noise.get_noise3d(
-            detail * pixel_x as f32,
-            detail * pixel_y_from_bottom as f32,
+            distortion_detail * pixel_x as f32,
+            distortion_detail * pixel_y_from_bottom as f32,
             dt_seconds,
         );
 
@@ -198,8 +198,8 @@ impl Renderer {
         }
 
         let noise2_m1_to_1 = self.noise.get_noise3d(
-            detail * pixel_x as f32,
-            detail * pixel_y_from_bottom as f32,
+            distortion_detail * pixel_x as f32,
+            distortion_detail * pixel_y_from_bottom as f32,
             -dt_seconds - 1.0,
         );
 
@@ -211,25 +211,33 @@ impl Renderer {
             return None;
         }
 
-        // Get the base color
-        let fraction = y_height_0_to_1 / cpu_load.user_0_to_1;
-        let color = interpolate(
-            fraction,
-            USER_LOAD_COLOR_RGB_WARMER,
-            USER_LOAD_COLOR_RGB_COOLER,
-        );
+        // We now have:
+        // - x: x_fraction_0_to_1
+        // - y: distorted_y / (height - 1)
+        //
+        // Let's get a 0-1 noise value for this coordinate, that scrolls up with
+        // time.
+        let noise3_0_to_1 = (self.noise.get_noise(
+            internal_detail * pixel_x as f32,
+            internal_detail * pixel_y_from_bottom as f32 - dt_seconds,
+        ) + 1.0)
+            / 2.0;
 
-        if fraction < fadeout_fraction {
-            // Too far from the tip, don't fade
-            return Some(color);
-        }
-
-        // Fade out
-        return Some(interpolate(
-            (fraction - fadeout_fraction) / (1.0 - fadeout_fraction),
-            &color,
-            BG_COLOR_RGB,
-        ));
+        // Colorize based on the noise value
+        let color = if noise3_0_to_1 < transparent_fraction {
+            interpolate(
+                noise3_0_to_1 / transparent_fraction,
+                BG_COLOR_RGB,
+                USER_LOAD_COLOR_RGB_COOLER,
+            )
+        } else {
+            interpolate(
+                (noise3_0_to_1 - transparent_fraction) / (1.0 - transparent_fraction),
+                USER_LOAD_COLOR_RGB_COOLER,
+                USER_LOAD_COLOR_RGB_WARMER,
+            )
+        };
+        return Some(color);
     }
 }
 
