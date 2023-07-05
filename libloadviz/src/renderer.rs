@@ -223,8 +223,19 @@ impl Renderer {
             / 2.0;
 
         // Make the fire cooler the closer the top of the flame we get
-        let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
-        let cooling_factor = 1.0 - fraction_of_current_height;
+        let bottom_cooling_layer_thickness_0_to_1 = 0.2;
+        let cooling_factor = if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
+            // Cool based on the percentage of the flame height. This looks better in general.
+            let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
+            1.0 - fraction_of_current_height
+        } else {
+            // Cool based on a fraction of the image height. This looks better
+            // for low CPU loads / flame heights.
+            let distance_from_top_0_to_1 = cpu_load.user_0_to_1 - y_from_bottom_0_to_1;
+            1.0 - ((bottom_cooling_layer_thickness_0_to_1 - distance_from_top_0_to_1)
+                .clamp(0.0, 1.0)
+                / bottom_cooling_layer_thickness_0_to_1)
+        };
         let temperature_0_to_1 = temperature_0_to_1 * cooling_factor;
 
         // Colorize based on the noise value
