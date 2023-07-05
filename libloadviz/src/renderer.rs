@@ -225,9 +225,7 @@ impl Renderer {
         // Make the fire cooler the closer the top of the flame we get
         let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
         let cooling_factor = 1.0 - fraction_of_current_height;
-
-        // Cooling the fire twice looks better than once
-        let temperature_0_to_1 = temperature_0_to_1 * cooling_factor * cooling_factor;
+        let temperature_0_to_1 = temperature_0_to_1 * cooling_factor;
 
         // Colorize based on the noise value
         let color = if temperature_0_to_1 < transparent_internal_0_to_1 {
