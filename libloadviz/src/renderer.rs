@@ -151,8 +151,12 @@ impl Renderer {
         let distortion_detail = 10.0 / width as f32;
         let internal_detail = 4.0 / width as f32;
 
-        // What fraction of the fire fades towards transparent?
-        let transparent_fraction = 0.3;
+        // What fraction of the inside of the fire fades towards transparent?
+        let transparent_fraction_internal = 0.3;
+
+        // What fraction of the height of the display antialiases towards
+        // transparent?
+        let transparent_fraction_edge = 0.2;
 
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
@@ -205,8 +209,8 @@ impl Renderer {
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
-        let y_height_0_to_1 = distorted_pixel_y / height as f32;
-        if y_height_0_to_1 > cpu_load.user_0_to_1 {
+        let y_from_bottom_0_to_1 = distorted_pixel_y / height as f32;
+        if y_from_bottom_0_to_1 > cpu_load.user_0_to_1 {
             return None;
         }
 
@@ -223,20 +227,28 @@ impl Renderer {
             / 2.0;
 
         // Colorize based on the noise value
-        let color = if noise3_0_to_1 < transparent_fraction {
+        let color = if noise3_0_to_1 < transparent_fraction_internal {
             interpolate(
-                noise3_0_to_1 / transparent_fraction,
+                noise3_0_to_1 / transparent_fraction_internal,
                 BG_COLOR_RGB,
                 USER_LOAD_COLOR_RGB_COOLER,
             )
         } else {
             interpolate(
-                (noise3_0_to_1 - transparent_fraction) / (1.0 - transparent_fraction),
+                (noise3_0_to_1 - transparent_fraction_internal)
+                    / (1.0 - transparent_fraction_internal),
                 USER_LOAD_COLOR_RGB_COOLER,
                 USER_LOAD_COLOR_RGB_WARMER,
             )
         };
-        return Some(color);
+
+        if cpu_load.user_0_to_1 - y_from_bottom_0_to_1 > transparent_fraction_edge {
+            return Some(color);
+        }
+
+        let opacity = (cpu_load.user_0_to_1 - y_from_bottom_0_to_1) / transparent_fraction_edge;
+
+        return Some(interpolate(opacity, BG_COLOR_RGB, &color));
     }
 }
 
