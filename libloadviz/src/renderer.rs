@@ -5,8 +5,8 @@ use crate::cpuload::CpuLoad;
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
-static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
+static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -147,12 +147,17 @@ impl Renderer {
         width: usize,
         height: usize,
     ) -> Option<[u8; 3]> {
-        // Higher number = more details.
-        let detail = 10.0 / width as f32;
+        // This number determines how uneven the edge of the fire is. Also, it
+        // decides how much warping happens to the internal base image.
+        let distortion_detail = 7.0 / width as f32;
 
-        // Starting at this fraction of each flame pillar's height, the color will
-        // start fading towards the background color.
-        let fadeout_fraction = 0.8;
+        // This number decides how warped the internal base image is. Try
+        // setting distortion_detail ^ to almost zero to see the effect of
+        // changing this number.
+        let internal_detail = 6.0 / width as f32;
+
+        // What fraction of the inside of the fire fades towards transparent?
+        let transparent_internal_0_to_1 = 0.3;
 
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
@@ -175,15 +180,15 @@ impl Renderer {
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
         let noise1_m1_to_1 = self.noise.get_noise3d(
-            detail * pixel_x as f32,
-            detail * pixel_y_from_bottom as f32,
+            distortion_detail * pixel_x as f32,
+            distortion_detail * pixel_y_from_bottom as f32,
             dt_seconds,
         );
 
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
-        let distorted_x = pixel_x as f32 + dx_pixels;
-        let x_fraction_0_to_1 = distorted_x / (width as f32 - 1.0);
+        let distorted_pixel_x = pixel_x as f32 + dx_pixels;
+        let x_fraction_0_to_1 = distorted_pixel_x / (width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         let highest_possible_flame_height_pixels =
@@ -197,38 +202,59 @@ impl Renderer {
         }
 
         let noise2_m1_to_1 = self.noise.get_noise3d(
-            detail * pixel_x as f32,
-            detail * pixel_y_from_bottom as f32,
+            distortion_detail * pixel_x as f32,
+            distortion_detail * pixel_y_from_bottom as f32,
             -dt_seconds - 1.0,
         );
 
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
-        let distorted_y = pixel_y_from_bottom as f32 + dy_pixels;
-        let y_height_0_to_1 = distorted_y / height as f32;
-        if y_height_0_to_1 > cpu_load.user_0_to_1 {
+        let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
+        let y_from_bottom_0_to_1 = distorted_pixel_y / height as f32;
+        if y_from_bottom_0_to_1 > cpu_load.user_0_to_1 {
             return None;
         }
 
-        // Get the base color
-        let fraction = y_height_0_to_1 / cpu_load.user_0_to_1;
-        let color = interpolate(
-            fraction,
-            USER_LOAD_COLOR_RGB_WARMER,
-            USER_LOAD_COLOR_RGB_COOLER,
-        );
+        // Get a 0-1 noise value for this coordinate, that scrolls up with time
+        let temperature_0_to_1 = (self.noise.get_noise(
+            internal_detail * distorted_pixel_x,
+            internal_detail * distorted_pixel_y - dt_seconds * 2.0,
+        ) + 1.0)
+            / 2.0;
 
-        if fraction < fadeout_fraction {
-            // Too far from the tip, don't fade
-            return Some(color);
-        }
+        // Make the fire cooler the closer the top of the flame we get
+        let bottom_cooling_layer_thickness_0_to_1 = 0.2;
+        let cooling_factor = if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
+            // Cool based on the percentage of the flame height. This looks better in general.
+            let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
+            1.0 - fraction_of_current_height
+        } else {
+            // Cool based on a fraction of the image height. This looks better
+            // for low CPU loads / flame heights.
+            let distance_from_top_0_to_1 = cpu_load.user_0_to_1 - y_from_bottom_0_to_1;
+            1.0 - ((bottom_cooling_layer_thickness_0_to_1 - distance_from_top_0_to_1)
+                .clamp(0.0, 1.0)
+                / bottom_cooling_layer_thickness_0_to_1)
+        };
+        let temperature_0_to_1 = temperature_0_to_1 * cooling_factor;
 
-        // Fade out
-        return Some(interpolate(
-            (fraction - fadeout_fraction) / (1.0 - fadeout_fraction),
-            &color,
-            BG_COLOR_RGB,
-        ));
+        // Colorize based on the noise value
+        let color = if temperature_0_to_1 < transparent_internal_0_to_1 {
+            interpolate(
+                temperature_0_to_1 / transparent_internal_0_to_1,
+                BG_COLOR_RGB,
+                USER_LOAD_COLOR_RGB_COOLER,
+            )
+        } else {
+            interpolate(
+                (temperature_0_to_1 - transparent_internal_0_to_1)
+                    / (1.0 - transparent_internal_0_to_1),
+                USER_LOAD_COLOR_RGB_COOLER,
+                USER_LOAD_COLOR_RGB_WARMER,
+            )
+        };
+
+        return Some(color);
     }
 }
 
