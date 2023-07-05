@@ -7,7 +7,7 @@ static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x65, 0x00]; // 1400K
-static USER_LOAD_COLOR_RGB_COOLEST: &[u8; 3] = &[0x98, 0x34, 0x48]; // Between 1000K and BG_COLOR
+static USER_LOAD_COLOR_RGB_COOLEST: &[u8; 3] = &[0x98, 0x4c, 0x48]; // Between 1400K and BG_COLOR
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -150,7 +150,7 @@ impl Renderer {
     ) -> Option<[u8; 3]> {
         // This number determines how uneven the edge of the fire is. Also, it
         // decides how much warping happens to the internal base image.
-        let distortion_detail = 12.0 / width as f32;
+        let distortion_detail = 6.0 / width as f32;
 
         // This number decides how warped the internal base image is. Try
         // setting distortion_detail ^ to almost zero to see the effect of
