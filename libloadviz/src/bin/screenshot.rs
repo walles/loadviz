@@ -85,7 +85,7 @@ fn main() {
     let mut anim_writer = AnimWriter::new(
         // FIXME: Put this file in the same directory as Cargo.toml
         "screenshot.webp",
-        80.0, // 0-100, pick a number...
+        90.0, // 0-100, pick a number...
         100,
         75,
     );
