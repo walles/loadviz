@@ -95,12 +95,12 @@ fn main() {
 
     let loads = vec![
         libloadviz::cpuload::CpuLoad {
-            user_0_to_1: 0.3,
-            system_0_to_1: 0.25,
+            user_0_to_1: 0.4,
+            system_0_to_1: 0.4,
         },
         libloadviz::cpuload::CpuLoad {
             user_0_to_1: 0.2,
-            system_0_to_1: 0.20,
+            system_0_to_1: 0.3,
         },
         libloadviz::cpuload::CpuLoad {
             user_0_to_1: 0.1,
