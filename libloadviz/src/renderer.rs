@@ -5,8 +5,9 @@ use crate::cpuload::CpuLoad;
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
-static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
-static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0x89, 0x12]; // 2000K
+static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
+static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x65, 0x00]; // 1400K
+static USER_LOAD_COLOR_RGB_COOLEST: &[u8; 3] = &[0x98, 0x34, 0x48]; // Between 1000K and BG_COLOR
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -147,9 +148,14 @@ impl Renderer {
         width: usize,
         height: usize,
     ) -> Option<[u8; 3]> {
-        // Higher number = more details.
-        let distortion_detail = 10.0 / width as f32;
-        let internal_detail = 4.0 / width as f32;
+        // This number determines how uneven the edge of the fire is. Also, it
+        // decides how much warping happens to the internal base image.
+        let distortion_detail = 12.0 / width as f32;
+
+        // This number decides how warped the internal base image is. Try
+        // setting distortion_detail ^ to almost zero to see the effect of
+        // changing this number.
+        let internal_detail = 6.0 / width as f32;
 
         // What fraction of the inside of the fire fades towards transparent?
         let transparent_fraction_internal = 0.3;
@@ -230,7 +236,7 @@ impl Renderer {
         let color = if noise3_0_to_1 < transparent_fraction_internal {
             interpolate(
                 noise3_0_to_1 / transparent_fraction_internal,
-                BG_COLOR_RGB,
+                USER_LOAD_COLOR_RGB_COOLEST,
                 USER_LOAD_COLOR_RGB_COOLER,
             )
         } else {
