@@ -159,10 +159,6 @@ impl Renderer {
         // What fraction of the inside of the fire fades towards transparent?
         let transparent_internal_0_to_1 = 0.3;
 
-        // What fraction of the height of the display antialiases towards
-        // transparent?
-        let transparent_fraction_edge = 0.2;
-
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
         // Check whether we should even try to do flames maths. This improves
@@ -249,13 +245,7 @@ impl Renderer {
             )
         };
 
-        if cpu_load.user_0_to_1 - y_from_bottom_0_to_1 > transparent_fraction_edge {
-            return Some(color);
-        }
-
-        let opacity = (cpu_load.user_0_to_1 - y_from_bottom_0_to_1) / transparent_fraction_edge;
-
-        return Some(interpolate(opacity, BG_COLOR_RGB, &color));
+        return Some(color);
     }
 }
 
