@@ -6,8 +6,7 @@ static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
-static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x65, 0x00]; // 1400K
-static USER_LOAD_COLOR_RGB_COOLEST: &[u8; 3] = &[0x98, 0x4c, 0x48]; // Between 1400K and BG_COLOR
+static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -150,7 +149,7 @@ impl Renderer {
     ) -> Option<[u8; 3]> {
         // This number determines how uneven the edge of the fire is. Also, it
         // decides how much warping happens to the internal base image.
-        let distortion_detail = 6.0 / width as f32;
+        let distortion_detail = 7.0 / width as f32;
 
         // This number decides how warped the internal base image is. Try
         // setting distortion_detail ^ to almost zero to see the effect of
@@ -158,7 +157,7 @@ impl Renderer {
         let internal_detail = 6.0 / width as f32;
 
         // What fraction of the inside of the fire fades towards transparent?
-        let transparent_fraction_internal = 0.3;
+        let transparent_internal_0_to_1 = 0.3;
 
         // What fraction of the height of the display antialiases towards
         // transparent?
@@ -220,29 +219,31 @@ impl Renderer {
             return None;
         }
 
-        // We now have:
-        // - x: x_fraction_0_to_1
-        // - y: distorted_y / (height - 1)
-        //
-        // Let's get a 0-1 noise value for this coordinate, that scrolls up with
-        // time.
-        let noise3_0_to_1 = (self.noise.get_noise(
+        // Get a 0-1 noise value for this coordinate, that scrolls up with time
+        let temperature_0_to_1 = (self.noise.get_noise(
             internal_detail * distorted_pixel_x,
             internal_detail * distorted_pixel_y - dt_seconds * 2.0,
         ) + 1.0)
             / 2.0;
 
+        // Make the fire cooler the closer the top of the flame we get
+        let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
+        let cooling_factor = 1.0 - fraction_of_current_height;
+
+        // Cooling the fire twice looks better than once
+        let temperature_0_to_1 = temperature_0_to_1 * cooling_factor * cooling_factor;
+
         // Colorize based on the noise value
-        let color = if noise3_0_to_1 < transparent_fraction_internal {
+        let color = if temperature_0_to_1 < transparent_internal_0_to_1 {
             interpolate(
-                noise3_0_to_1 / transparent_fraction_internal,
-                USER_LOAD_COLOR_RGB_COOLEST,
+                temperature_0_to_1 / transparent_internal_0_to_1,
+                BG_COLOR_RGB,
                 USER_LOAD_COLOR_RGB_COOLER,
             )
         } else {
             interpolate(
-                (noise3_0_to_1 - transparent_fraction_internal)
-                    / (1.0 - transparent_fraction_internal),
+                (temperature_0_to_1 - transparent_internal_0_to_1)
+                    / (1.0 - transparent_internal_0_to_1),
                 USER_LOAD_COLOR_RGB_COOLER,
                 USER_LOAD_COLOR_RGB_WARMER,
             )
