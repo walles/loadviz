@@ -25,8 +25,9 @@ cbindgen = "0.24.3"
 criterion = "0.5"
 
 # See: https://doc.rust-lang.org/cargo/reference/profiles.html
-[profile.release]
-debug = 1  # 1 = Line number information only
+[profile.bench]
+# "true" = everything, so we can see source code in Instruments when profiling
+debug = true
 
 # Ref:
 # https://github.com/walles/riff/blob/432c0b08523818e461eded0407a009db2e795996/Cargo.toml#L48-L54
