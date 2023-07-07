@@ -29,9 +29,8 @@ pressure has to be inferred:
 
 ## Installation
 
-```
-brew install walles/johan/loadviz
-```
+- In a terminal: `brew install walles/johan/loadviz && open /Applications`
+- Right click LoadViz in the new Finder window to open it
 
 ## Parts
 
@@ -74,14 +73,9 @@ How would you visualize this?
 
 ## TODO
 
-- Try increasing the fire distortion radius when flames are higher
-- Try distorting the fire more vertically than horizontally
-- Make a Dock icon visualization
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
-- Enable resizing the demo app. Resizing should scale the image so we can see it
-  pixel by pixel. Nearest-neighbor scaling preferred.
-- Find a _good_ way of getting the demo image to update at 10 FPS
+- Make a Dock icon visualization
 
 ### Done
 
