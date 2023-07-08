@@ -227,7 +227,10 @@ impl Renderer {
         let cooling_factor = if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
             // Cool based on the percentage of the flame height. This looks better in general.
             let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
-            1.0 - fraction_of_current_height
+
+            // "0.7" makes 100% load look like 100% flame height. Without that
+            // factor, 100% load looked like maybe 80% flame height.
+            1.0 - fraction_of_current_height * 0.7
         } else {
             // Cool based on a fraction of the image height. This looks better
             // for low CPU loads / flame heights.
