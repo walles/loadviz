@@ -33,8 +33,8 @@ fn main() -> ExitCode {
     ];
 
     let mut pixels = vec![0u8; width * height * 3];
-    let renderer: Renderer = Default::default();
-    renderer.render_image(&loads, width, height, 0.0, &mut pixels);
+    let renderer: Renderer = Renderer::new(width, height);
+    renderer.render_image(&loads, 0.0, &mut pixels);
 
     let mut data: *mut u8 = std::ptr::null_mut();
     let size = unsafe {

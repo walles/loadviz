@@ -21,25 +21,25 @@ static CLOUD_TRANSPARENT_FRACTION: f32 = 0.4;
 
 pub struct Renderer {
     noise: FastNoise,
-}
-
-impl Default for Renderer {
-    fn default() -> Self {
-        return Self {
-            noise: FastNoise::new(),
-        };
-    }
+    width: usize,
+    height: usize,
 }
 
 impl Renderer {
+    pub fn new(width: usize, height: usize) -> Self {
+        return Self {
+            noise: FastNoise::new(),
+            width,
+            height,
+        };
+    }
+
     /// Don't call this! It's public for benchmarking purposes only.
     ///
     /// You should call `LoadViz::render_image()` instead.
     pub fn render_image(
         &self,
         currently_displayed_loads: &Vec<CpuLoad>,
-        width: usize,
-        height: usize,
         dt_seconds: f32,
         pixels: &mut [u8],
     ) {
@@ -49,33 +49,23 @@ impl Renderer {
         }
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        for pixel_x in 0..width {
-            for pixel_y_from_top in 0..height {
-                let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
+        for pixel_x in 0..self.width {
+            for pixel_y_from_top in 0..self.height {
+                let pixel_y_from_bottom = self.height - 1 - pixel_y_from_top;
 
-                let color = if let Some(cloud_color) = self.get_cloud_pixel(
-                    &viz_loads,
-                    dt_seconds,
-                    pixel_x,
-                    pixel_y_from_top,
-                    width,
-                    height,
-                ) {
+                let color = if let Some(cloud_color) =
+                    self.get_cloud_pixel(&viz_loads, dt_seconds, pixel_x, pixel_y_from_top)
+                {
                     cloud_color
-                } else if let Some(flame_color) = self.get_flame_pixel(
-                    &viz_loads,
-                    dt_seconds,
-                    pixel_x,
-                    pixel_y_from_bottom,
-                    width,
-                    height,
-                ) {
+                } else if let Some(flame_color) =
+                    self.get_flame_pixel(&viz_loads, dt_seconds, pixel_x, pixel_y_from_bottom)
+                {
                     flame_color
                 } else {
                     *BG_COLOR_RGB
                 };
 
-                let i = 3 * (pixel_y_from_top * width + pixel_x);
+                let i = 3 * (pixel_y_from_top * self.width + pixel_x);
                 pixels[i] = color[0];
                 pixels[i + 1] = color[1];
                 pixels[i + 2] = color[2];
@@ -89,20 +79,18 @@ impl Renderer {
         dt_seconds: f32,
         pixel_x: usize,
         pixel_y_from_top: usize,
-        width: usize,
-        height: usize,
     ) -> Option<[u8; 3]> {
         // Higher number = more details.
-        let detail = 5.0 / width as f32;
+        let detail = 5.0 / self.width as f32;
 
         // Higher speed number = faster cloud turbulence.
         let speed = 0.3;
 
-        let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
+        let x_fraction_0_to_1 = pixel_x as f32 / (self.width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         // Compute the sysload height for this load
-        let cloud_height_pixels = cpu_load.system_0_to_1 * height as f32;
+        let cloud_height_pixels = cpu_load.system_0_to_1 * self.height as f32;
         if pixel_y_from_top as f32 > cloud_height_pixels {
             return None;
         }
@@ -118,7 +106,7 @@ impl Renderer {
         let brightness_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
         let color = interpolate(brightness_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
 
-        let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * height as f32;
+        let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * self.height as f32;
         let opaque_height_pixels = cloud_height_pixels - transparency_height_pixels;
         if (pixel_y_from_top as f32) < opaque_height_pixels {
             // Cloud interior
@@ -144,22 +132,20 @@ impl Renderer {
         dt_seconds: f32,
         pixel_x: usize,
         pixel_y_from_bottom: usize,
-        width: usize,
-        height: usize,
     ) -> Option<[u8; 3]> {
         // This number determines how uneven the edge of the fire is. Also, it
         // decides how much warping happens to the internal base image.
-        let distortion_detail = 7.0 / width as f32;
+        let distortion_detail = 7.0 / self.width as f32;
 
         // This number decides how warped the internal base image is. Try
         // setting distortion_detail ^ to almost zero to see the effect of
         // changing this number.
-        let internal_detail = 6.0 / width as f32;
+        let internal_detail = 6.0 / self.width as f32;
 
         // What fraction of the inside of the fire fades towards transparent?
         let transparent_internal_0_to_1 = 0.3;
 
-        let distortion_pixel_radius = width.min(height) as f32 / 10.0;
+        let distortion_pixel_radius = self.width.min(self.height) as f32 / 10.0;
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
@@ -169,7 +155,7 @@ impl Renderer {
             .max_by(|a, b| a.partial_cmp(b).unwrap())
             .unwrap();
         let highest_possible_flame_height_pixels =
-            highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
+            highest_load_0_to_1 * self.height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
             // We're above all flames, no need for any (costly) noise maths
             //
@@ -188,11 +174,11 @@ impl Renderer {
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
-        let x_fraction_0_to_1 = distorted_pixel_x / (width as f32 - 1.0);
+        let x_fraction_0_to_1 = distorted_pixel_x / (self.width as f32 - 1.0);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         let highest_possible_flame_height_pixels =
-            cpu_load.user_0_to_1 * height as f32 + distortion_pixel_radius;
+            cpu_load.user_0_to_1 * self.height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
             // We're above the flames at this particular column, no need for any
             // more (costly) noise maths.
@@ -210,7 +196,7 @@ impl Renderer {
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
-        let y_from_bottom_0_to_1 = distorted_pixel_y / height as f32;
+        let y_from_bottom_0_to_1 = distorted_pixel_y / self.height as f32;
         if y_from_bottom_0_to_1 > cpu_load.user_0_to_1 {
             return None;
         }
@@ -325,9 +311,9 @@ mod tests {
         let width = 10;
         let height = 10;
         let mut pixels = vec![0; width * height * 3];
-        let renderer: Renderer = Default::default();
+        let renderer = Renderer::new(width, height);
 
-        renderer.render_image(&Vec::new(), width, height, 42.0, &mut pixels);
+        renderer.render_image(&Vec::new(), 42.0, &mut pixels);
     }
 
     #[test]

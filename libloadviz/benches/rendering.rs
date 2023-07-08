@@ -5,7 +5,7 @@ fn rendering_busy(c: &mut Criterion) {
     let width = 100;
     let height = 100;
     let mut pixels = vec![0; width * height * 3];
-    let renderer: Renderer = Default::default();
+    let renderer: Renderer = Renderer::new(width, height);
 
     let cpu_loads = vec![
         libloadviz::cpuload::CpuLoad {
@@ -19,7 +19,7 @@ fn rendering_busy(c: &mut Criterion) {
     ];
 
     c.bench_function("render 100x100 image", |b| {
-        b.iter(|| renderer.render_image(black_box(&cpu_loads), width, height, 0.0, &mut pixels));
+        b.iter(|| renderer.render_image(black_box(&cpu_loads), 0.0, &mut pixels));
     });
 }
 
@@ -27,7 +27,7 @@ fn rendering_idle(c: &mut Criterion) {
     let width = 100;
     let height = 100;
     let mut pixels = vec![0; width * height * 3];
-    let renderer: Renderer = Default::default();
+    let renderer: Renderer = Renderer::new(width, height);
 
     let cpu_loads = vec![
         libloadviz::cpuload::CpuLoad {
@@ -41,7 +41,7 @@ fn rendering_idle(c: &mut Criterion) {
     ];
 
     c.bench_function("render 100x100 image on an idle system", |b| {
-        b.iter(|| renderer.render_image(black_box(&cpu_loads), width, height, 0.0, &mut pixels));
+        b.iter(|| renderer.render_image(black_box(&cpu_loads), 0.0, &mut pixels));
     });
 }
 

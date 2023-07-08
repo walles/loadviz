@@ -3,6 +3,7 @@
 use std::time::Instant;
 
 use physics::update_currently_displayed_loads;
+use renderer::Renderer;
 use system_load::get_load_counters;
 
 pub mod cpuload;
@@ -40,6 +41,7 @@ impl LoadViz {
             self.width = width;
             self.height = height;
             self.pixels = vec![0; width * height * 3];
+            self.renderer = Renderer::new(width, height);
         }
 
         if self.load_reader.get_loads().is_empty() {
@@ -56,8 +58,6 @@ impl LoadViz {
 
         self.renderer.render_image(
             &self.currently_displayed_loads,
-            self.width,
-            self.height,
             self.t0.elapsed().as_secs_f32(),
             &mut self.pixels,
         );
@@ -76,7 +76,7 @@ pub extern "C" fn new_loadviz() -> *mut LoadViz {
         currently_displayed_loads_updated: std::time::Instant::now(),
         t0: Instant::now(),
         load_reader: load_reader::LoadReader::new(get_load_counters),
-        renderer: Default::default(),
+        renderer: Renderer::new(0, 0),
     });
 }
 

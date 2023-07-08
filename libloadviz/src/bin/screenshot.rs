@@ -109,37 +109,23 @@ fn main() {
     ];
 
     let mut pixels = vec![0u8; anim_writer.width * anim_writer.height * 3];
-    let renderer: Renderer = Default::default();
+    let renderer: Renderer = Renderer::new(anim_writer.width, anim_writer.height);
 
     for i in 0..(frames_per_second * seconds) {
         let dt_seconds = i as f32 / frames_per_second as f32;
 
         if (dt_seconds as i32) < seconds - xfade_seconds {
             // No crossfade yet, just render one image
-            renderer.render_image(
-                &loads,
-                anim_writer.width,
-                anim_writer.height,
-                dt_seconds,
-                &mut pixels,
-            );
+            renderer.render_image(&loads, dt_seconds, &mut pixels);
         } else {
             // Render image 1
             let mut pixels1 = vec![0u8; anim_writer.width * anim_writer.height * 3];
-            renderer.render_image(
-                &loads,
-                anim_writer.width,
-                anim_writer.height,
-                dt_seconds,
-                &mut pixels1,
-            );
+            renderer.render_image(&loads, dt_seconds, &mut pixels1);
 
             // Render image 2
             let mut pixels2 = vec![0u8; anim_writer.width * anim_writer.height * 3];
             renderer.render_image(
                 &loads,
-                anim_writer.width,
-                anim_writer.height,
                 // Render image before the first frame of the whole animation
                 dt_seconds - (seconds as f32),
                 &mut pixels2,
