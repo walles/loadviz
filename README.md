@@ -29,6 +29,8 @@ pressure has to be inferred:
 
 ## Installation
 
+Easiest way is by using [Homebrew](https://brew.sh/):
+
 - In a terminal: `brew install walles/johan/loadviz && open /Applications`
 - Right click LoadViz in the new Finder window to open it
 
