@@ -3,12 +3,31 @@ use crate::cpuload::CpuLoad;
 use super::Renderer;
 
 impl Renderer {
+    fn is_middle_pixel(&self, pixel_x: usize) -> bool {
+        if self.width % 2 == 0 {
+            return pixel_x == self.width / 2 || pixel_x == self.width / 2 - 1;
+        } else {
+            return pixel_x == self.width / 2;
+        }
+    }
+
     pub(super) fn get_load(&self, viz_loads: &Vec<CpuLoad>, pixel_x: f32) -> CpuLoad {
         let flen = viz_loads.len() as f32;
         let x_fraction_0_to_1 = pixel_x / (self.width as f32 - 1.0);
         let float_part_index = (flen * x_fraction_0_to_1 - 0.5).clamp(0.0, flen - 1.0);
+
         let i0 = float_part_index.floor() as usize;
+        if self.is_middle_pixel(i0) {
+            // Make sure we always show the highest load in the middle
+            return viz_loads[viz_loads.len() / 2];
+        }
+
         let i1 = float_part_index.ceil() as usize;
+        if self.is_middle_pixel(i1) {
+            // Make sure we always show the highest load in the middle
+            return viz_loads[viz_loads.len() / 2];
+        }
+
         if i0 == i1 {
             return viz_loads[i0];
         }
