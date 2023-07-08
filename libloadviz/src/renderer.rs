@@ -86,8 +86,7 @@ impl Renderer {
         // Higher speed number = faster cloud turbulence.
         let speed = 0.3;
 
-        let x_fraction_0_to_1 = pixel_x as f32 / (self.width as f32 - 1.0);
-        let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+        let cpu_load = self.get_load(viz_loads, pixel_x as f32);
 
         // Compute the sysload height for this load
         let cloud_height_pixels = cpu_load.system_0_to_1 * self.height as f32;
@@ -174,8 +173,7 @@ impl Renderer {
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
-        let x_fraction_0_to_1 = distorted_pixel_x / (self.width as f32 - 1.0);
-        let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+        let cpu_load = self.get_load(viz_loads, distorted_pixel_x);
 
         let highest_possible_flame_height_pixels =
             cpu_load.user_0_to_1 * self.height as f32 + distortion_pixel_radius;
@@ -242,24 +240,25 @@ impl Renderer {
 
         return Some(color);
     }
-}
 
-fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
-    let flen = viz_loads.len() as f32;
-    let float_part_index = (flen * x_fraction_0_to_1 - 0.5).clamp(0.0, flen - 1.0);
-    let i0 = float_part_index.floor() as usize;
-    let i1 = float_part_index.ceil() as usize;
-    if i0 == i1 {
-        return viz_loads[i0];
+    fn get_load(&self, viz_loads: &Vec<CpuLoad>, pixel_x: f32) -> CpuLoad {
+        let flen = viz_loads.len() as f32;
+        let x_fraction_0_to_1 = pixel_x / (self.width as f32 - 1.0);
+        let float_part_index = (flen * x_fraction_0_to_1 - 0.5).clamp(0.0, flen - 1.0);
+        let i0 = float_part_index.floor() as usize;
+        let i1 = float_part_index.ceil() as usize;
+        if i0 == i1 {
+            return viz_loads[i0];
+        }
+
+        let weight1 = 1.0 - (float_part_index - i0 as f32);
+        let weight2 = 1.0 - (i1 as f32 - float_part_index);
+        return CpuLoad {
+            user_0_to_1: viz_loads[i0].user_0_to_1 * weight1 + viz_loads[i1].user_0_to_1 * weight2,
+            system_0_to_1: viz_loads[i0].system_0_to_1 * weight1
+                + viz_loads[i1].system_0_to_1 * weight2,
+        };
     }
-
-    let weight1 = 1.0 - (float_part_index - i0 as f32);
-    let weight2 = 1.0 - (i1 as f32 - float_part_index);
-    return CpuLoad {
-        user_0_to_1: viz_loads[i0].user_0_to_1 * weight1 + viz_loads[i1].user_0_to_1 * weight2,
-        system_0_to_1: viz_loads[i0].system_0_to_1 * weight1
-            + viz_loads[i1].system_0_to_1 * weight2,
-    };
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
@@ -375,36 +374,38 @@ mod tests {
                 system_0_to_1: 0.8,
             },
         ];
+
+        let renderer = Renderer::new(101, 100);
         assert_eq!(
-            get_load(&example_loads, 0.0),
+            renderer.get_load(&example_loads, 0.0),
             CpuLoad {
                 user_0_to_1: 0.0,
                 system_0_to_1: 0.0,
             }
         );
         assert_eq!(
-            get_load(&example_loads, 0.25),
+            renderer.get_load(&example_loads, 25.0),
             CpuLoad {
                 user_0_to_1: 0.0,
                 system_0_to_1: 0.0,
             }
         );
         assert_eq!(
-            get_load(&example_loads, 0.5),
+            renderer.get_load(&example_loads, 50.0),
             CpuLoad {
                 user_0_to_1: 0.5,
                 system_0_to_1: 0.4,
             }
         );
         assert_eq!(
-            get_load(&example_loads, 0.75),
+            renderer.get_load(&example_loads, 75.0),
             CpuLoad {
                 user_0_to_1: 1.0,
                 system_0_to_1: 0.8,
             }
         );
         assert_eq!(
-            get_load(&example_loads, 1.0),
+            renderer.get_load(&example_loads, 100.0),
             CpuLoad {
                 user_0_to_1: 1.0,
                 system_0_to_1: 0.8,
