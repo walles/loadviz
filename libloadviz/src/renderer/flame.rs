@@ -129,3 +129,20 @@ impl Renderer {
         return Some(color);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_flame_reaches_the_top() {
+        let viz_loads = vec![CpuLoad {
+            user_0_to_1: 1.0,
+            system_0_to_1: 0.0,
+        }];
+        let renderer: Renderer = Default::default();
+        let height = 100;
+        let pixel = renderer.get_flame_pixel(&viz_loads, 0.0, 0, height - 1, 1, height);
+        assert!(pixel.is_some());
+    }
+}
