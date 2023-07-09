@@ -33,8 +33,9 @@ impl Renderer {
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         // Compute the sysload height for this load
-        let cloud_height_pixels = cpu_load.system_0_to_1 * height as f32;
-        if pixel_y_from_top as f32 > cloud_height_pixels {
+        let cloud_height_0_to_1 = cpu_load.system_0_to_1;
+        let y_from_top_0_to_1 = pixel_y_from_top as f32 / (height as f32 - 1.0);
+        if y_from_top_0_to_1 > cloud_height_0_to_1 {
             return None;
         }
 
@@ -49,9 +50,8 @@ impl Renderer {
         let brightness_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
         let color = interpolate(brightness_0_to_1, CLOUD_COLOR_DARK, CLOUD_COLOR_BRIGHT);
 
-        let transparency_height_pixels = CLOUD_TRANSPARENT_FRACTION * height as f32;
-        let opaque_height_pixels = cloud_height_pixels - transparency_height_pixels;
-        if (pixel_y_from_top as f32) < opaque_height_pixels {
+        let opaque_height_0_to_1 = cloud_height_0_to_1 - CLOUD_TRANSPARENT_FRACTION;
+        if y_from_top_0_to_1 < opaque_height_0_to_1 {
             // Cloud interior
             return Some(color);
         }
@@ -59,7 +59,7 @@ impl Renderer {
         // When we get here, we're closer to the edge of the cloud
 
         // 0-1, higher means more transparent
-        let alpha = (pixel_y_from_top as f32 - opaque_height_pixels) / transparency_height_pixels;
+        let alpha = (y_from_top_0_to_1 - opaque_height_0_to_1) / CLOUD_TRANSPARENT_FRACTION;
 
         // Replace dark with transparent. Towards the edge of the cloud, we won't
         // see as many dark colors since the sun won't be blocked by thick cloud
