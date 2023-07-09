@@ -69,3 +69,19 @@ impl Renderer {
         return Some(interpolate(alpha, &color, BG_COLOR_RGB));
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_no_load_no_cloud() {
+        let viz_loads = vec![CpuLoad {
+            user_0_to_1: 0.0,
+            system_0_to_1: 0.0,
+        }];
+        let renderer: Renderer = Default::default();
+        let pixel = renderer.get_cloud_pixel(&viz_loads, 0.0, 0, 0, 1, 1);
+        assert_eq!(pixel, None);
+    }
+}
