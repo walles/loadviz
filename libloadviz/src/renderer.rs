@@ -243,7 +243,7 @@ fn interpolate(factor_0_to_1: f32, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3
 }
 
 fn pixel_to_fraction(pixel: f32, maxpixel: usize) -> f32 {
-    return pixel / (maxpixel as f32 - 1.0);
+    return (pixel + 1.0) / (maxpixel + 2) as f32;
 }
 
 #[cfg(test)]
@@ -367,5 +367,13 @@ mod tests {
                 system_0_to_1: 0.8,
             }
         );
+    }
+
+    #[test]
+    fn test_pixel_to_fraction() {
+        // Fractions should be evenly spaced
+        assert_eq!(0.25, pixel_to_fraction(0.0, 2));
+        assert_eq!(0.50, pixel_to_fraction(1.0, 2));
+        assert_eq!(0.75, pixel_to_fraction(2.0, 2));
     }
 }
