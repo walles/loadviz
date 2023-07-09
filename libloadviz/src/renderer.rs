@@ -41,16 +41,7 @@ impl Renderer {
             for pixel_y_from_top in 0..height {
                 let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
-                let color = if let Some(cloud_color) = self.get_cloud_pixel(
-                    &viz_loads,
-                    dt_seconds,
-                    pixel_x,
-                    pixel_y_from_top,
-                    width,
-                    height,
-                ) {
-                    cloud_color
-                } else if let Some(flame_color) = self.get_flame_pixel(
+                let color = if let Some(flame_color) = self.get_flame_pixel(
                     &viz_loads,
                     dt_seconds,
                     pixel_x,
@@ -59,6 +50,15 @@ impl Renderer {
                     height,
                 ) {
                     flame_color
+                } else if let Some(cloud_color) = self.get_cloud_pixel(
+                    &viz_loads,
+                    dt_seconds,
+                    pixel_x,
+                    pixel_y_from_top,
+                    width,
+                    height,
+                ) {
+                    cloud_color
                 } else {
                     *BG_COLOR_RGB
                 };
