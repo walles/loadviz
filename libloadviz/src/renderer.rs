@@ -124,7 +124,7 @@ impl Renderer {
         // Pick the load to show
         let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
-        let x_fraction_0_to_1 = distorted_pixel_x / (width as f32 - 1.0);
+        let x_fraction_0_to_1 = pixel_to_fraction(distorted_pixel_x, width);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         let highest_possible_flame_height_pixels =
@@ -146,7 +146,7 @@ impl Renderer {
         // Figure out how to color the current pixel
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
-        let y_from_bottom_0_to_1 = distorted_pixel_y / height as f32;
+        let y_from_bottom_0_to_1 = pixel_to_fraction(distorted_pixel_y, height);
         if y_from_bottom_0_to_1 > cpu_load.user_0_to_1 {
             return None;
         }
@@ -240,6 +240,10 @@ fn interpolate(factor_0_to_1: f32, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3
     }
 
     return result;
+}
+
+fn pixel_to_fraction(pixel: f32, maxpixel: usize) -> f32 {
+    return pixel / (maxpixel as f32 - 1.0);
 }
 
 #[cfg(test)]

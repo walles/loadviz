@@ -1,6 +1,6 @@
 use crate::cpuload::CpuLoad;
 
-use super::{get_load, interpolate, Renderer, BG_COLOR_RGB};
+use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -29,12 +29,12 @@ impl Renderer {
         // Higher speed number = faster cloud turbulence.
         let speed = 0.3;
 
-        let x_fraction_0_to_1 = pixel_x as f32 / (width as f32 - 1.0);
+        let x_fraction_0_to_1 = pixel_to_fraction(pixel_x as f32, width);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
 
         // Compute the sysload height for this load
         let cloud_height_0_to_1 = cpu_load.system_0_to_1;
-        let y_from_top_0_to_1 = pixel_y_from_top as f32 / (height as f32 - 1.0);
+        let y_from_top_0_to_1 = pixel_to_fraction(pixel_y_from_top as f32, height);
         if y_from_top_0_to_1 > cloud_height_0_to_1 {
             return None;
         }
