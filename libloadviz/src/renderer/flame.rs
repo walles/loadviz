@@ -6,6 +6,9 @@ use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
+// What fraction of the inside of the fire fades towards transparent?
+static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
+
 impl Renderer {
     pub(super) fn get_flame_pixel(
         &self,
@@ -24,9 +27,6 @@ impl Renderer {
         // setting distortion_detail ^ to almost zero to see the effect of
         // changing this number.
         let internal_detail = 6.0 / width as f32;
-
-        // What fraction of the inside of the fire fades towards transparent?
-        let transparent_internal_0_to_1 = 0.3;
 
         let distortion_pixel_radius = width.min(height) as f32 / 10.0;
 
@@ -110,24 +110,24 @@ impl Renderer {
         };
         let temperature_0_to_1 = temperature_0_to_1 * cooling_factor;
 
-        // Colorize based on the noise value
-        let color = if temperature_0_to_1 < transparent_internal_0_to_1 {
-            interpolate(
-                temperature_0_to_1 / transparent_internal_0_to_1,
-                BG_COLOR_RGB,
-                USER_LOAD_COLOR_RGB_COOLER,
-            )
-        } else {
-            interpolate(
-                (temperature_0_to_1 - transparent_internal_0_to_1)
-                    / (1.0 - transparent_internal_0_to_1),
-                USER_LOAD_COLOR_RGB_COOLER,
-                USER_LOAD_COLOR_RGB_WARMER,
-            )
-        };
-
-        return Some(color);
+        return Some(get_color_by_temperature(temperature_0_to_1));
     }
+}
+
+fn get_color_by_temperature(temperature_0_to_1: f32) -> [u8; 3] {
+    if temperature_0_to_1 < TRANSPARENT_INTERNAL_0_TO_1 {
+        return interpolate(
+            temperature_0_to_1 / TRANSPARENT_INTERNAL_0_TO_1,
+            BG_COLOR_RGB,
+            USER_LOAD_COLOR_RGB_COOLER,
+        );
+    }
+
+    return interpolate(
+        (temperature_0_to_1 - TRANSPARENT_INTERNAL_0_TO_1) / (1.0 - TRANSPARENT_INTERNAL_0_TO_1),
+        USER_LOAD_COLOR_RGB_COOLER,
+        USER_LOAD_COLOR_RGB_WARMER,
+    );
 }
 
 #[cfg(test)]
