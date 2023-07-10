@@ -92,25 +92,29 @@ impl Renderer {
             / 2.0;
 
         // Make the fire cooler the closer the top of the flame we get
-        let bottom_cooling_layer_thickness_0_to_1 = 0.2;
-        let cooling_factor = if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
-            // Cool based on the percentage of the flame height. This looks better in general.
-            let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
-
-            // "0.7" makes 100% load look like 100% flame height. Without that
-            // factor, 100% load looked like maybe 80% flame height.
-            1.0 - fraction_of_current_height * 0.7
-        } else {
-            // Cool based on a fraction of the image height. This looks better
-            // for low CPU loads / flame heights.
-            let distance_from_top_0_to_1 = cpu_load.user_0_to_1 - y_from_bottom_0_to_1;
-            1.0 - ((bottom_cooling_layer_thickness_0_to_1 - distance_from_top_0_to_1)
-                .clamp(0.0, 1.0)
-                / bottom_cooling_layer_thickness_0_to_1)
-        };
-        let temperature_0_to_1 = temperature_0_to_1 * cooling_factor;
+        let temperature_0_to_1 =
+            temperature_0_to_1 * get_cooling_factor(y_from_bottom_0_to_1, cpu_load);
 
         return Some(get_color_by_temperature(temperature_0_to_1));
+    }
+}
+
+/// Lower values mean lower temperatures
+fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
+    let bottom_cooling_layer_thickness_0_to_1 = 0.2;
+    if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
+        // Cool based on the percentage of the flame height. This looks better in general.
+        let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
+
+        // "0.7" makes 100% load look like 100% flame height. Without that
+        // factor, 100% load looked like maybe 80% flame height.
+        1.0 - fraction_of_current_height * 0.7
+    } else {
+        // Cool based on a fraction of the image height. This looks better
+        // for low CPU loads / flame heights.
+        let distance_from_top_0_to_1 = cpu_load.user_0_to_1 - y_from_bottom_0_to_1;
+        1.0 - ((bottom_cooling_layer_thickness_0_to_1 - distance_from_top_0_to_1).clamp(0.0, 1.0)
+            / bottom_cooling_layer_thickness_0_to_1)
     }
 }
 
