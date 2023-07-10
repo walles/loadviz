@@ -5,9 +5,15 @@ use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
+static USER_LOAD_COLOR_RGB_DARK: &[u8; 3] = &[0x80, 0x00, 0x00];
 
-// What fraction of the inside of the fire fades towards transparent?
-static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
+/// Above this temperature we will interpolate between cooler and warmer
+static COOL_TEMPERATURE_0_TO_1: f32 = 0.45;
+
+/// Below this temperature we will interpolate between transparent and black.
+///
+/// Above this temperature we will interpolate between black and cooler.
+static DARK_TEMPERATURE_0_TO_1: f32 = 0.20;
 
 impl Renderer {
     pub(super) fn get_flame_pixel(
@@ -115,18 +121,27 @@ impl Renderer {
 }
 
 fn get_color_by_temperature(temperature_0_to_1: f32) -> [u8; 3] {
-    if temperature_0_to_1 < TRANSPARENT_INTERNAL_0_TO_1 {
+    if temperature_0_to_1 > COOL_TEMPERATURE_0_TO_1 {
         return interpolate(
-            temperature_0_to_1 / TRANSPARENT_INTERNAL_0_TO_1,
-            BG_COLOR_RGB,
+            (temperature_0_to_1 - COOL_TEMPERATURE_0_TO_1) / (1.0 - COOL_TEMPERATURE_0_TO_1),
+            USER_LOAD_COLOR_RGB_COOLER,
+            USER_LOAD_COLOR_RGB_WARMER,
+        );
+    }
+
+    if temperature_0_to_1 > DARK_TEMPERATURE_0_TO_1 {
+        return interpolate(
+            (temperature_0_to_1 - DARK_TEMPERATURE_0_TO_1)
+                / (COOL_TEMPERATURE_0_TO_1 - DARK_TEMPERATURE_0_TO_1),
+            USER_LOAD_COLOR_RGB_DARK,
             USER_LOAD_COLOR_RGB_COOLER,
         );
     }
 
     return interpolate(
-        (temperature_0_to_1 - TRANSPARENT_INTERNAL_0_TO_1) / (1.0 - TRANSPARENT_INTERNAL_0_TO_1),
-        USER_LOAD_COLOR_RGB_COOLER,
-        USER_LOAD_COLOR_RGB_WARMER,
+        temperature_0_to_1 / DARK_TEMPERATURE_0_TO_1,
+        BG_COLOR_RGB,
+        USER_LOAD_COLOR_RGB_DARK,
     );
 }
 
