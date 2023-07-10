@@ -2,7 +2,8 @@ use bracket_noise::prelude::FastNoise;
 
 use crate::cpuload::CpuLoad;
 
-static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
+static BG_COLOR_SKY: &[u8; 3] = &[0x31, 0x74, 0xc5];
+static BG_COLOR_HORIZON: &[u8; 3] = &[0xf5, 0xf8, 0xfd];
 
 pub struct Renderer {
     noise: FastNoise,
@@ -60,7 +61,7 @@ impl Renderer {
                 ) {
                     cloud_color
                 } else {
-                    *BG_COLOR_RGB
+                    get_sky_color(pixel_to_fraction(pixel_y_from_top as f32, height))
                 };
 
                 let i = 3 * (pixel_y_from_top * width + pixel_x);
@@ -102,6 +103,10 @@ fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
     }
 
     return result;
+}
+
+fn get_sky_color(from_top_0_to_1: f32) -> [u8; 3] {
+    return interpolate(from_top_0_to_1, BG_COLOR_SKY, BG_COLOR_HORIZON);
 }
 
 fn interpolate(factor_0_to_1: f32, color1: &[u8; 3], color2: &[u8; 3]) -> [u8; 3] {

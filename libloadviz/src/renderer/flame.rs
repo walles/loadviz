@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use crate::cpuload::CpuLoad;
 
-use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
+use super::{get_load, get_sky_color, interpolate, pixel_to_fraction, Renderer};
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
@@ -100,7 +100,10 @@ impl Renderer {
         let temperature_0_to_1 =
             temperature_0_to_1 * get_cooling_factor(y_from_bottom_0_to_1, cpu_load);
 
-        return Some(get_color_by_temperature(temperature_0_to_1));
+        return Some(get_color_by_temperature(
+            temperature_0_to_1,
+            &get_sky_color(1.0 - y_from_bottom_0_to_1),
+        ));
     }
 }
 
@@ -127,15 +130,16 @@ fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
     }
 }
 
-fn get_color_by_temperature(temperature_0_to_1: f32) -> [u8; 3] {
+fn get_color_by_temperature(temperature_0_to_1: f32, bg_color: &[u8; 3]) -> [u8; 3] {
     if temperature_0_to_1 < TRANSPARENT_INTERNAL_0_TO_1 {
         return interpolate(
             temperature_0_to_1 / TRANSPARENT_INTERNAL_0_TO_1,
-            BG_COLOR_RGB,
+            bg_color,
             USER_LOAD_COLOR_RGB_COOLER,
         );
     }
 
+    // Transparent to dark
     return interpolate(
         (temperature_0_to_1 - TRANSPARENT_INTERNAL_0_TO_1) / (1.0 - TRANSPARENT_INTERNAL_0_TO_1),
         USER_LOAD_COLOR_RGB_COOLER,

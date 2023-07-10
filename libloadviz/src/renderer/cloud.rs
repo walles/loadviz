@@ -1,6 +1,6 @@
 use crate::cpuload::CpuLoad;
 
-use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
+use super::{get_load, get_sky_color, interpolate, pixel_to_fraction, Renderer};
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -64,9 +64,17 @@ impl Renderer {
         // Replace dark with transparent. Towards the edge of the cloud, we won't
         // see as many dark colors since the sun won't be blocked by thick cloud
         // parts.
-        let color = interpolate(alpha * (1.0 - brightness_0_to_1), &color, BG_COLOR_RGB);
+        let color = interpolate(
+            alpha * (1.0 - brightness_0_to_1),
+            &color,
+            &get_sky_color(pixel_to_fraction(pixel_y_from_top as f32, height)),
+        );
 
-        return Some(interpolate(alpha, &color, BG_COLOR_RGB));
+        return Some(interpolate(
+            alpha,
+            &color,
+            &get_sky_color(pixel_to_fraction(pixel_y_from_top as f32, height)),
+        ));
     }
 }
 
