@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 use crate::cpuload::CpuLoad;
 
 use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
@@ -85,11 +87,14 @@ impl Renderer {
         }
 
         // Get a 0-1 noise value for this coordinate, that scrolls up with time
-        let temperature_0_to_1 = (self.noise.get_noise(
-            internal_detail * distorted_pixel_x,
-            internal_detail * distorted_pixel_y - dt_seconds * 2.0,
-        ) + 1.0)
-            / 2.0;
+        let temperature_0_to_1 = map_range(
+            self.noise.get_noise(
+                internal_detail * distorted_pixel_x,
+                internal_detail * distorted_pixel_y - dt_seconds * 2.0,
+            ),
+            -1.0..1.0,
+            0.0..1.0,
+        );
 
         // Make the fire cooler the closer the top of the flame we get
         let temperature_0_to_1 =
@@ -97,6 +102,10 @@ impl Renderer {
 
         return Some(get_color_by_temperature(temperature_0_to_1));
     }
+}
+
+fn map_range(value: f32, from: Range<f32>, to: Range<f32>) -> f32 {
+    return (value - from.start) * (to.end - to.start) / (from.end - from.start) + to.start;
 }
 
 /// Lower values mean lower temperatures
