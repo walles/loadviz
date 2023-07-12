@@ -113,6 +113,8 @@ fn map_range(value: f32, from: Range<f32>, to: Range<f32>) -> f32 {
 
 /// Lower values mean lower temperatures
 fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
+    FIXME: Chill the outermost 4 pixels rather than a percentage of the height
+
     let bottom_cooling_layer_thickness_0_to_1 = 0.2;
     if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
         // Cool based on the percentage of the flame height. This looks better in general.
