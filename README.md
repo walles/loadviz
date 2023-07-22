@@ -75,6 +75,11 @@ How would you visualize this?
 
 ## TODO
 
+- Measure GPU load and visualize it as if it was yet another CPU
+  - Inspiration for macOS: https://stackoverflow.com/a/22440235/473672
+  - `ioreg -r -d 1 -w 0 -c "IOAccelerator"` (from ^)
+  - Or find some Rust package that can give us the numbers. Should work on both
+    M1 and Intel Macs, don't know how I'd verify that.
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Make a Dock icon visualization
