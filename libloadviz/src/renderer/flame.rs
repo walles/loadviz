@@ -26,6 +26,9 @@ static DISTORTION_DETAIL: f32 = 2.0;
 /// shortest image dimension.
 static DISTORTION_PIXEL_PERCENT: f32 = 10.0;
 
+/// 0.0-1.0, higher values make the fire's edges softer
+static EDGE_SOFTNESS: f32 = 0.25;
+
 impl Renderer {
     pub(super) fn get_flame_pixel(
         &self,
@@ -118,7 +121,7 @@ fn map_range(value: f32, from: Range<f32>, to: Range<f32>) -> f32 {
 
 /// Lower values mean lower temperatures
 fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
-    let bottom_cooling_layer_thickness_0_to_1 = 0.2;
+    let bottom_cooling_layer_thickness_0_to_1 = EDGE_SOFTNESS;
     if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
         // Cool based on the percentage of the flame height. This looks better in general.
         let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
