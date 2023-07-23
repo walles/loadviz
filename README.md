@@ -75,6 +75,7 @@ How would you visualize this?
 
 ## TODO
 
+- Overlay the screenshot animation on top of an actual screenshot from macOS
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Make a Dock icon visualization
