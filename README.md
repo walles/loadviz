@@ -75,6 +75,7 @@ How would you visualize this?
 
 ## TODO
 
+- Overlay the screenshot animation on top of an actual screenshot from macOS
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Make a Dock icon visualization
@@ -152,5 +153,7 @@ How would you visualize this?
     the Safari icon's size / corner radius.
 - Make Activity Monitor show "LoadViz" as a name, now it's empty
 - Animate the screenshot in a cross faded loop
+- The fire in the icon has some weird corner-like artifact, also visible in the
+  screenshot, make that go away
 
 [create new release]: https://github.com/walles/loadviz/releases/new
