@@ -12,12 +12,15 @@ static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
 
 /// How warped is the internal base image? Try setting `DISTORTION_DETAIL` to
-/// almost zero to see the effect of changing this number.
-static INTERNAL_DETAIL: f32 = 6.0;
+/// zero to see the effect of changing this number.
+static INTERNAL_DETAIL: f32 = 2.0;
 
 /// How uneven are the fire's edges? Also, how much warping happens to the
 /// internal base image?
-static DISTORTION_DETAIL: f32 = 7.0;
+///
+/// Note that even if this is set to zero, the internal base image will still
+/// move around, since time is one basis for the noise.
+static DISTORTION_DETAIL: f32 = 2.0;
 
 /// How many pixels wide is the distortion effect? This is in percent of the
 /// shortest image dimension.
