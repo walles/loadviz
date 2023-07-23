@@ -75,6 +75,8 @@ How would you visualize this?
 
 ## TODO
 
+- The fire in the icon has some weird corner-like artifact, also visible in the
+  screenshot, make that go away
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Make a Dock icon visualization

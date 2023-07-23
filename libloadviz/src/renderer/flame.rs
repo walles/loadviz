@@ -8,8 +8,26 @@ use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
-// What fraction of the inside of the fire fades towards transparent?
+/// What fraction of the inside of the fire fades towards transparent?
 static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
+
+/// How warped is the internal base image? Try setting `DISTORTION_DETAIL` to
+/// zero to see the effect of changing this number.
+static INTERNAL_DETAIL: f32 = 2.0;
+
+/// How uneven are the fire's edges? Also, how much warping happens to the
+/// internal base image?
+///
+/// Note that even if this is set to zero, the internal base image will still
+/// move around, since time is one basis for the noise.
+static DISTORTION_DETAIL: f32 = 2.0;
+
+/// How many pixels wide is the distortion effect? This is in percent of the
+/// shortest image dimension.
+static DISTORTION_PIXEL_PERCENT: f32 = 10.0;
+
+/// 0.0-1.0, higher values make the fire's edges softer
+static EDGE_SOFTNESS: f32 = 0.25;
 
 impl Renderer {
     pub(super) fn get_flame_pixel(
@@ -21,16 +39,9 @@ impl Renderer {
         width: usize,
         height: usize,
     ) -> Option<[u8; 3]> {
-        // This number determines how uneven the edge of the fire is. Also, it
-        // decides how much warping happens to the internal base image.
-        let distortion_detail = 7.0 / width as f32;
-
-        // This number decides how warped the internal base image is. Try
-        // setting distortion_detail ^ to almost zero to see the effect of
-        // changing this number.
-        let internal_detail = 6.0 / width as f32;
-
-        let distortion_pixel_radius = width.min(height) as f32 / 10.0;
+        let internal_detail = INTERNAL_DETAIL / width as f32;
+        let distortion_detail = DISTORTION_DETAIL / width as f32;
+        let distortion_pixel_radius = width.min(height) as f32 * DISTORTION_PIXEL_PERCENT / 100.0;
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
@@ -110,7 +121,7 @@ fn map_range(value: f32, from: Range<f32>, to: Range<f32>) -> f32 {
 
 /// Lower values mean lower temperatures
 fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
-    let bottom_cooling_layer_thickness_0_to_1 = 0.2;
+    let bottom_cooling_layer_thickness_0_to_1 = EDGE_SOFTNESS;
     if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
         // Cool based on the percentage of the flame height. This looks better in general.
         let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
