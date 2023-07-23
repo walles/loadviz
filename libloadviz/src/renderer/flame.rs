@@ -26,8 +26,11 @@ static DISTORTION_DETAIL: f32 = 2.0;
 /// shortest image dimension.
 static DISTORTION_PIXEL_PERCENT: f32 = 10.0;
 
-/// 0.0-1.0, higher values make the fire's edges softer
-static EDGE_SOFTNESS: f32 = 0.25;
+/// Higher values make the fire's edges softer
+static ANTIALIAS_HEIGHT_0_TO_1: f32 = 0.1;
+
+/// Without scaling the flames, 50% actual load looks more like 40% to the user
+static HEIGHT_SCALE: f32 = 1.3;
 
 impl Renderer {
     pub(super) fn get_flame_pixel(
@@ -45,11 +48,12 @@ impl Renderer {
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
-        let highest_load_0_to_1 = viz_loads
-            .iter()
-            .map(|load| load.user_0_to_1)
-            .max_by(|a, b| a.partial_cmp(b).unwrap())
-            .unwrap();
+        let highest_load_0_to_1 = HEIGHT_SCALE
+            * viz_loads
+                .iter()
+                .map(|load| load.user_0_to_1)
+                .max_by(|a, b| a.partial_cmp(b).unwrap())
+                .unwrap();
         let highest_possible_flame_height_pixels =
             highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
@@ -72,9 +76,10 @@ impl Renderer {
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
         let x_fraction_0_to_1 = pixel_to_fraction(distorted_pixel_x, width);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+        let load_0_to_1 = cpu_load.user_0_to_1 * HEIGHT_SCALE;
 
         let highest_possible_flame_height_pixels =
-            cpu_load.user_0_to_1 * height as f32 + distortion_pixel_radius;
+            load_0_to_1 * height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
             // We're above the flames at this particular column, no need for any
             // more (costly) noise maths.
@@ -93,7 +98,7 @@ impl Renderer {
         let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
         let y_from_bottom_0_to_1 = pixel_to_fraction(distorted_pixel_y, height);
-        if y_from_bottom_0_to_1 > cpu_load.user_0_to_1 {
+        if y_from_bottom_0_to_1 > load_0_to_1 {
             return None;
         }
 
@@ -109,7 +114,7 @@ impl Renderer {
 
         // Make the fire cooler the closer the top of the flame we get
         let temperature_0_to_1 =
-            temperature_0_to_1 * get_cooling_factor(y_from_bottom_0_to_1, cpu_load);
+            temperature_0_to_1 * get_cooling_factor(y_from_bottom_0_to_1, load_0_to_1);
 
         return Some(get_color_by_temperature(temperature_0_to_1));
     }
@@ -120,22 +125,18 @@ fn map_range(value: f32, from: Range<f32>, to: Range<f32>) -> f32 {
 }
 
 /// Lower values mean lower temperatures
-fn get_cooling_factor(y_from_bottom_0_to_1: f32, cpu_load: CpuLoad) -> f32 {
-    let bottom_cooling_layer_thickness_0_to_1 = EDGE_SOFTNESS;
-    if y_from_bottom_0_to_1 > bottom_cooling_layer_thickness_0_to_1 {
-        // Cool based on the percentage of the flame height. This looks better in general.
-        let fraction_of_current_height = y_from_bottom_0_to_1 / cpu_load.user_0_to_1;
+fn get_cooling_factor(y_from_bottom_0_to_1: f32, load_0_to_1: f32) -> f32 {
+    let edge_cooling_factor = map_range(
+        y_from_bottom_0_to_1,
+        (load_0_to_1 - ANTIALIAS_HEIGHT_0_TO_1)..load_0_to_1,
+        1.0..0.0,
+    )
+    .clamp(0.0, 1.0);
 
-        // "0.7" makes 100% load look like 100% flame height. Without that
-        // factor, 100% load looked like maybe 80% flame height.
-        1.0 - fraction_of_current_height * 0.7
-    } else {
-        // Cool based on a fraction of the image height. This looks better
-        // for low CPU loads / flame heights.
-        let distance_from_top_0_to_1 = cpu_load.user_0_to_1 - y_from_bottom_0_to_1;
-        1.0 - ((bottom_cooling_layer_thickness_0_to_1 - distance_from_top_0_to_1).clamp(0.0, 1.0)
-            / bottom_cooling_layer_thickness_0_to_1)
-    }
+    let fraction_of_current_height = y_from_bottom_0_to_1 / load_0_to_1;
+    let fraction_cooling_factor = 1.0 - fraction_of_current_height;
+
+    return edge_cooling_factor.min(fraction_cooling_factor);
 }
 
 fn get_color_by_temperature(temperature_0_to_1: f32) -> [u8; 3] {
