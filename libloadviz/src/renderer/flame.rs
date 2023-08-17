@@ -68,10 +68,9 @@ impl Renderer {
 
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
-        let noise1_m1_to_1 = self.noise.get_noise3d(
+        let noise1_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
-            dt_seconds / SCALE,
         );
 
         // Pick the load to show
@@ -91,10 +90,9 @@ impl Renderer {
             return None;
         }
 
-        let noise2_m1_to_1 = self.noise.get_noise3d(
+        let noise2_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
-            -dt_seconds / SCALE - 1.0,
         );
 
         // Figure out how to color the current pixel
