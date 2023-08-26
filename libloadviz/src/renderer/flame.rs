@@ -8,23 +8,26 @@ use super::{get_load, get_sky_color, interpolate, pixel_to_fraction, Renderer};
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
+/// Higher numbers => more detail
+static SCALE: f32 = 2.0;
+
 /// What fraction of the inside of the fire fades towards transparent?
 static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
 
 /// How warped is the internal base image? Try setting `DISTORTION_DETAIL` to
 /// zero to see the effect of changing this number.
-static INTERNAL_DETAIL: f32 = 2.0;
+static INTERNAL_DETAIL: f32 = 2.0 * SCALE;
 
 /// How uneven are the fire's edges? Also, how much warping happens to the
 /// internal base image?
 ///
 /// Note that even if this is set to zero, the internal base image will still
 /// move around, since time is one basis for the noise.
-static DISTORTION_DETAIL: f32 = 2.0;
+static DISTORTION_DETAIL: f32 = 3.0 * SCALE;
 
 /// How many pixels wide is the distortion effect? This is in percent of the
 /// shortest image dimension.
-static DISTORTION_PIXEL_PERCENT: f32 = 10.0;
+static DISTORTION_PIXEL_PERCENT: f32 = 10.0 / SCALE;
 
 /// Higher values make the fire's edges softer
 static ANTIALIAS_HEIGHT_0_TO_1: f32 = 0.1;
@@ -65,10 +68,9 @@ impl Renderer {
 
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
-        let noise1_m1_to_1 = self.noise.get_noise3d(
+        let noise1_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
-            dt_seconds,
         );
 
         // Pick the load to show
@@ -88,10 +90,9 @@ impl Renderer {
             return None;
         }
 
-        let noise2_m1_to_1 = self.noise.get_noise3d(
+        let noise2_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
-            -dt_seconds - 1.0,
         );
 
         // Figure out how to color the current pixel

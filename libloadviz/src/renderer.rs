@@ -36,6 +36,14 @@ impl Renderer {
             // FIXME: Draw something nice?
             return;
         }
+
+        // Too high values make the flames look like they have JPEG artifacts.
+        //
+        // Experiments showed that 14 days was really bad. 7 days was not bad.
+        // So let's cap it at somewhere around 70% of one day so that the cut
+        // comes at different times every day.
+        let dt_seconds = dt_seconds % (3600.0 * 17.3);
+
         let viz_loads = mirror_sort(currently_displayed_loads);
 
         for pixel_x in 0..width {
