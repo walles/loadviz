@@ -68,13 +68,17 @@ impl Renderer {
 
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
-        let noise1_m1_to_1 = self.noise.get_noise(
+        let noise_x_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
-            distortion_detail * pixel_y_from_bottom as f32,
+            //
+            // Note that the time animation constant is by design different from
+            // the one we use for temperature. This is supposed to help make the
+            // flames look more organic.
+            distortion_detail * pixel_y_from_bottom as f32 - dt_seconds * 2.5,
         );
 
         // Pick the load to show
-        let dx_pixels = noise1_m1_to_1 * distortion_pixel_radius;
+        let dx_pixels = noise_x_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
         let x_fraction_0_to_1 = pixel_to_fraction(distorted_pixel_x, width);
         let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
@@ -90,13 +94,13 @@ impl Renderer {
             return None;
         }
 
-        let noise2_m1_to_1 = self.noise.get_noise(
+        let noise_y_m1_to_1 = self.noise.get_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
         );
 
         // Figure out how to color the current pixel
-        let dy_pixels = noise2_m1_to_1 * distortion_pixel_radius;
+        let dy_pixels = noise_y_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_y = pixel_y_from_bottom as f32 + dy_pixels;
         let y_from_bottom_0_to_1 = pixel_to_fraction(distorted_pixel_y, height);
         if y_from_bottom_0_to_1 > load_0_to_1 {
@@ -107,6 +111,10 @@ impl Renderer {
         let temperature_0_to_1 = map_range(
             self.noise.get_noise(
                 internal_detail * distorted_pixel_x,
+                //
+                // Note that the time animation constant is by design different
+                // from the one we use for noise_x. This is supposed to help
+                // make the flames look more organic.
                 internal_detail * distorted_pixel_y - dt_seconds * 2.0,
             ),
             -1.0..1.0,
