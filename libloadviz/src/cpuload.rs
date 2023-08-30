@@ -66,43 +66,84 @@ pub fn diff(_: &[LoadCounters], _: &[LoadCounters]) -> Vec<CpuLoad> {
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_secs();
-    if secs % 20 < 7 {
-        // High user load
-        return vec![
+    return match secs % 35 {
+        // One core maxed out
+        0..=9 => vec![
             CpuLoad {
-                user_0_to_1: 0.7,
-                system_0_to_1: 0.2,
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.0,
             },
             CpuLoad {
                 user_0_to_1: 0.0,
-                system_0_to_1: 0.1,
-            },
-        ];
-    } else if secs % 20 < 14 {
-        // High system load
-        return vec![
-            CpuLoad {
-                user_0_to_1: 0.2,
-                system_0_to_1: 0.7,
-            },
-            CpuLoad {
-                user_0_to_1: 0.1,
                 system_0_to_1: 0.0,
             },
-        ];
-    }
-
-    // Idle
-    return vec![
-        CpuLoad {
-            user_0_to_1: 0.0,
-            system_0_to_1: 0.0,
-        },
-        CpuLoad {
-            user_0_to_1: 0.0,
-            system_0_to_1: 0.0,
-        },
-    ];
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+        ],
+        // All maxed out
+        10..=15 => vec![
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 1.0,
+                system_0_to_1: 0.0,
+            },
+        ],
+        // Docker starting on my mac
+        16..=24 => vec![
+            CpuLoad {
+                user_0_to_1: 0.2,
+                system_0_to_1: 0.8,
+            },
+            CpuLoad {
+                user_0_to_1: 0.2,
+                system_0_to_1: 0.8,
+            },
+            CpuLoad {
+                user_0_to_1: 0.2,
+                system_0_to_1: 0.8,
+            },
+            CpuLoad {
+                user_0_to_1: 0.2,
+                system_0_to_1: 0.8,
+            },
+        ],
+        // Mostly idle
+        _ => vec![
+            CpuLoad {
+                user_0_to_1: 0.2,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+            CpuLoad {
+                user_0_to_1: 0.0,
+                system_0_to_1: 0.0,
+            },
+        ],
+    };
 }
 
 #[cfg(test)]
