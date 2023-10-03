@@ -35,6 +35,14 @@ pub fn get_load_counters() -> Vec<LoadCounters> {
         });
     }
 
+    unsafe {
+        libc::vm_deallocate(
+            libc::mach_task_self(),
+            cpu_info as libc::vm_address_t,
+            num_cpu_info.try_into().unwrap(),
+        );
+    }
+
     return load_counters;
 }
 
