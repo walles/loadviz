@@ -75,7 +75,11 @@ How would you visualize this?
 
 ## TODO
 
+- Animation sometimes looks choppy on macOS, ensure that we actually do 10FPS
+- On macOS, ensure that we actually auto start on login. Seems like it used to
+  work but doesn't any more in newer LoadViz versions.
 - Overlay the screenshot animation on top of an actual screenshot from macOS
+- Make a Touch Bar visualization
 - Poll battery charge state as well
 - Visualize battery charge as a blue sky (full) or a starry night (empty)
 - Make a Dock icon visualization
