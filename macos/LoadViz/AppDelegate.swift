@@ -38,7 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     if let button = statusItem.button {
-      Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [self] _ in
+      let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [self] _ in
         if !(button.window?.occlusionState.contains(.visible))! {
           // Menu bar is hidden
           // Ref: https://developer.apple.com/forums/thread/71171
@@ -56,6 +56,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         button.image = getNewButtonImage()
       }
+
+      // Let macOS coalesce our 10 Hz wakeups with other timers to save battery.
+      // Allowing slack up to the full interval means a fire may slip anywhere
+      // within its 0.1s window, which can make the animation slightly less even.
+      timer.tolerance = 0.1
+
       button.image = getNewButtonImage()
     }
 
