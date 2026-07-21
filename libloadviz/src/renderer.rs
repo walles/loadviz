@@ -45,12 +45,21 @@ impl Renderer {
 
         let viz_loads = mirror_sort(currently_displayed_loads);
 
+        // The tallest flame is the same for the whole frame, so find the peak
+        // user load once up front.
+        let max_user_load_0_to_1 = viz_loads
+            .iter()
+            .map(|load| load.user_0_to_1)
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
+            .unwrap();
+
         for pixel_x in 0..width {
             for pixel_y_from_top in 0..height {
                 let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
                 let color = if let Some(flame_color) = self.get_flame_pixel(
                     &viz_loads,
+                    max_user_load_0_to_1,
                     dt_seconds,
                     pixel_x,
                     pixel_y_from_bottom,

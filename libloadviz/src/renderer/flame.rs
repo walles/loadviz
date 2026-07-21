@@ -39,6 +39,7 @@ impl Renderer {
     pub(super) fn get_flame_pixel(
         &self,
         viz_loads: &Vec<CpuLoad>,
+        max_user_load_0_to_1: f32,
         dt_seconds: f32,
         pixel_x: usize,
         pixel_y_from_bottom: usize,
@@ -51,12 +52,7 @@ impl Renderer {
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
-        let highest_load_0_to_1 = HEIGHT_SCALE
-            * viz_loads
-                .iter()
-                .map(|load| load.user_0_to_1)
-                .max_by(|a, b| a.partial_cmp(b).unwrap())
-                .unwrap();
+        let highest_load_0_to_1 = HEIGHT_SCALE * max_user_load_0_to_1;
         let highest_possible_flame_height_pixels =
             highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
@@ -176,7 +172,7 @@ mod tests {
         }];
         let renderer: Renderer = Default::default();
         let height = 100;
-        let pixel = renderer.get_flame_pixel(&viz_loads, 0.0, 0, height - 1, 1, height);
+        let pixel = renderer.get_flame_pixel(&viz_loads, 1.0, 0.0, 0, height - 1, 1, height);
         assert!(pixel.is_some());
     }
 }
