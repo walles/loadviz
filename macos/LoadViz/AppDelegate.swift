@@ -3,7 +3,13 @@ import LibLoadViz
 import ServiceManagement
 
 // From: https://stackoverflow.com/a/38596649/473672
-func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> NSImage {
+//
+// `width` and `height` are the bitmap's pixel dimensions, while `pointSize` is
+// the size the resulting image should occupy on screen (in points). Rendering
+// the bitmap at the display's native pixel density and then labelling it with
+// the smaller point size lets AppKit draw it 1:1, so CoreGraphics never has to
+// upscale the bitmap every frame.
+func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int, pointSize: NSSize) -> NSImage {
   let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 
   let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
@@ -29,7 +35,7 @@ func imageFromPixels(pixels: UnsafePointer<UInt8>, width: Int, height: Int) -> N
     intent: .defaultIntent
   )
 
-  return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
+  return NSImage(cgImage: cgim!, size: pointSize)
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -70,15 +76,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   private func getNewButtonImage() -> NSImage {
-    // FIXME: These are just some random numbers I got from
-    // the Internet, what dimensions should we really use?
-    let width = 40
-    let height = 22
+    // Height matches the menu bar exactly:
+    // https://developer.apple.com/documentation/appkit/nsstatusbar/thickness
+    let pointHeight = NSStatusBar.system.thickness
+
+    let pointWidth = pointHeight * 2
+
+    // Render at the display's native pixel density. On a 2x Retina screen this
+    // makes the bitmap 88x44 px so AppKit can draw it 1:1 instead of upscaling
+    // a 44x22 px bitmap every frame. Upscaling and rendering properly to begin
+    // with both have roughly the same cost, but rendering correctly looks nicer.
+    let scale = statusItem.button?.window?.backingScaleFactor
+      ?? NSScreen.main?.backingScaleFactor
+      ?? 2.0
+    let pixelWidth = Int((pointWidth * scale).rounded())
+    let pixelHeight = Int((pointHeight * scale).rounded())
 
     return imageFromPixels(
-      pixels: LibLoadViz.get_image(libLoadViz, UInt(width), UInt(height)),
-      width: width,
-      height: height
+      pixels: LibLoadViz.get_image(libLoadViz, UInt(pixelWidth), UInt(pixelHeight)),
+      width: pixelWidth,
+      height: pixelHeight,
+      pointSize: NSSize(width: pointWidth, height: pointHeight)
     )
   }
 
