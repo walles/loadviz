@@ -73,6 +73,9 @@ time xcrun xcodebuild \
     -project loadviz.xcodeproj \
     -configuration Release \
     -target "LoadViz" \
+    CODE_SIGN_IDENTITY="-" \
+    CODE_SIGN_STYLE=Manual \
+    DEVELOPMENT_TEAM="" \
     CONFIGURATION_BUILD_DIR="${TARGET_BUILD_DIR}"
 
 echo "INFO: Build done, now installing..."
