@@ -47,17 +47,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     if let button = statusItem.button {
       let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [self] _ in
         if !(button.window?.occlusionState.contains(.visible))! {
-          // Menu bar is hidden
+          // Nobody can see our icon: the menu bar is auto-hidden, the screen is
+          // locked, or another user is switched in via fast user switching.
+          // Measurements confirmed occlusionState reports our button as not
+          // visible in all three cases.
           // Ref: https://developer.apple.com/forums/thread/71171
-          return
-        }
-
-        let sessionInfo: NSDictionary? = CGSessionCopyCurrentDictionary()
-        let onConsole = sessionInfo?[kCGSessionOnConsoleKey] as? Bool ?? false
-        if !onConsole {
-          // Screen is locked or somebody else is logged in instead of us:
-          // https://stackoverflow.com/a/8790102/473672
-          // https://github.com/sqcubes/EyeDrop/blob/01daf39eb/EyeDrop/EyeDropController.swift#L154
           return
         }
 
