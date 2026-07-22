@@ -33,16 +33,30 @@ LOADVIZ_FORCE_MAX=1 path/to/LoadViz.app/Contents/MacOS/LoadViz
 
 ### Rust renderer, in isolation
 
-Pixel rendering lives in the Rust crate and is best measured there, free of
-machine noise, with [Criterion](https://github.com/criterion-rs/criterion.rs):
+Pixel rendering lives in the Rust crate, where you can profile it directly —
+free of machine noise and the rest of the app. `sample` needs a running process
+to attach to, so start the bench binary in a profiling loop and sample it:
 
 ```sh
-cd ../libloadviz && cargo bench
+cd ../libloadviz
+cargo bench --no-run          # prints the bench binary's path
 ```
 
-The renderer is the bulk of the app's on-CPU time under load (see above).
-Within a frame, roughly half of that is simplex noise (mostly the flames) and
-half is the rest of the pixel loop.
+Grab the `rendering-<hash>` path it reports under `target/release/deps/`, then
+run one benchmark in a long loop and sample it while it churns:
+
+```sh
+target/release/deps/rendering-<hash> --bench --profile-time 30 "render 100x100 image" &
+sample $! 20 -file out.txt
+```
+
+`--profile-time` tells Criterion to skip its warmup and analysis and just run
+the render loop, so the samples are almost all the pixel work. Read the leaf
+histogram under "Sort by top of stack", same as for the app.
+
+To measure whether a change actually paid off,
+[Criterion](https://github.com/criterion-rs/criterion.rs)'s `cargo bench` times
+the same renderer.
 
 ### On-CPU hotspots in the app
 
