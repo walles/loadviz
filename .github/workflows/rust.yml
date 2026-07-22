@@ -32,5 +32,12 @@ jobs:
           libloadviz/target/
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-    - run: cargo build --verbose
-    - run: cargo test --verbose
+    # The screenshot/stillimage helper bins are gated behind the `webp`
+    # feature, which links the system libwebp. Install it so CI can
+    # compile-check those bins too.
+    - run: sudo apt-get update && sudo apt-get install -y libwebp-dev
+
+    # --all-targets --all-features compile-checks everything: lib, both
+    # helper bins, tests, and benches.
+    - run: cargo build --all-targets --all-features --verbose
+    - run: cargo test --all-features --verbose
