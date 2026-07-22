@@ -1,6 +1,8 @@
 #![allow(clippy::needless_return)]
 
-/// Writes a still image screenshot to a file
+/// Renders a single high-res still frame to the file named on the command line.
+/// Used as the source image for the macOS app icon; see
+/// `macos/icon-from-screenshot.sh`.
 use std::{env, fs, process::ExitCode, slice};
 
 use libloadviz::renderer::Renderer;

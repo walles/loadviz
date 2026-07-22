@@ -16,8 +16,8 @@ features = ["1_2", "mux"]
 optional = true
 
 [features]
-# libwebp-sys2 links the system libwebp, and only the screenshot and stillimage
-# helper bins need it. Keeping it behind an off-by-default feature lets
+# libwebp-sys2 links the system libwebp, and only the animated-webp and
+# still-webp helper bins need it. Keeping it behind an off-by-default feature lets
 # `cargo test` and `cargo bench` build without libwebp installed.
 webp = ["dep:libwebp-sys2"]
 
@@ -47,11 +47,11 @@ harness = false
 # The webp helper bins link the system libwebp; gate them so ordinary builds,
 # tests, and benchmarks don't need it.
 [[bin]]
-name = "screenshot"
-path = "src/bin/screenshot.rs"
+name = "animated-webp"
+path = "src/bin/animated_webp.rs"
 required-features = ["webp"]
 
 [[bin]]
-name = "stillimage"
-path = "src/bin/stillimage.rs"
+name = "still-webp"
+path = "src/bin/still_webp.rs"
 required-features = ["webp"]

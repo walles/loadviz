@@ -78,9 +78,10 @@ impl Drop for AnimWriter {
     }
 }
 
-/// Writes a screenshot to a file
+/// Renders the looping demo animation embedded in the READMEs and writes it to
+/// `screenshot.webp`.
 ///
-/// See also `stillimage.rs`.
+/// See also `still_webp.rs`.
 fn main() {
     let mut anim_writer = AnimWriter::new(
         // FIXME: Put this file in the same directory as Cargo.toml

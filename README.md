@@ -1,7 +1,7 @@
 # Load Visualizer
 
-![Screenshot generated using "cargo run --bin=screenshot" in the "libloadviz"
-folder](libloadviz/screenshot.webp)
+![Screenshot generated using "cargo run --features webp --bin=animated-webp" in
+the "libloadviz" folder](libloadviz/screenshot.webp)
 
 Flames from the bottom show user load. Clouds descending from the top show
 system load. The most loaded cores show in the middle.

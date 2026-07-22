@@ -22,7 +22,7 @@ MYDIR="$(
 cd "${MYDIR}"
 
 RAWIMAGE=/tmp/loadviz-still.webp
-(cd ../libloadviz && cargo run --bin=stillimage "${RAWIMAGE}")
+(cd ../libloadviz && cargo run --features webp --bin=still-webp "${RAWIMAGE}")
 
 MASK=/tmp/loadviz-mask.webp
 convert -size 1024x1024 xc:none -draw "roundrectangle 0,0,1024,1024,${CORNER_RADIUS},${CORNER_RADIUS}" "${MASK}"
