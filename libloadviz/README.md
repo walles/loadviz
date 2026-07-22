@@ -20,8 +20,8 @@ logical cores. Polling is done about once per second.
 
 ## Output
 
-![Screenshot generated using "cargo run --bin=screenshot" in the "libloadviz"
-folder](screenshot.webp)
+![Screenshot generated using "cargo run --features webp --bin=screenshot" in the
+"libloadviz" folder](screenshot.webp)
 
 `libloadviz` exposes a `getImage()` function. `getImage()` takes `width` and
 `height` as parameters, and returns an image.

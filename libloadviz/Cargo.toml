@@ -13,6 +13,13 @@ bracket-noise = "~0.8"
 [dependencies.libwebp-sys2]
 version = "0.1.7"
 features = ["1_2", "mux"]
+optional = true
+
+[features]
+# libwebp-sys2 links the system libwebp, and only the screenshot and stillimage
+# helper bins need it. Keeping it behind an off-by-default feature lets
+# `cargo test` and `cargo bench` build without libwebp installed.
+webp = ["dep:libwebp-sys2"]
 
 [lib]
 # Ref: https://crates.io/crates/cargo-xcode
@@ -36,3 +43,15 @@ lto = "thin"
 [[bench]]
 name = "rendering"
 harness = false
+
+# The webp helper bins link the system libwebp; gate them so ordinary builds,
+# tests, and benchmarks don't need it.
+[[bin]]
+name = "screenshot"
+path = "src/bin/screenshot.rs"
+required-features = ["webp"]
+
+[[bin]]
+name = "stillimage"
+path = "src/bin/stillimage.rs"
+required-features = ["webp"]
