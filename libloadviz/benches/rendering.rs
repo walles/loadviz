@@ -29,13 +29,40 @@ fn rendering_idle(c: &mut Criterion) {
     let mut pixels = vec![0; width * height * 3];
     let renderer: Renderer = Default::default();
 
+    // A representative idle system: most cores quiet, a couple with light
+    // background activity, one busier thread. Non-zero and heterogeneous so
+    // this exercises the real per-pixel noise path, not the all-zero fast-out.
     let cpu_loads = vec![
         libloadviz::cpuload::CpuLoad {
-            user_0_to_1: 0.05,
-            system_0_to_1: 0.05,
+            user_0_to_1: 0.0,
+            system_0_to_1: 0.0,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.0,
+            system_0_to_1: 0.0,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.0,
+            system_0_to_1: 0.0,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.02,
+            system_0_to_1: 0.01,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.03,
+            system_0_to_1: 0.01,
         },
         libloadviz::cpuload::CpuLoad {
             user_0_to_1: 0.05,
+            system_0_to_1: 0.02,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.15,
+            system_0_to_1: 0.03,
+        },
+        libloadviz::cpuload::CpuLoad {
+            user_0_to_1: 0.20,
             system_0_to_1: 0.05,
         },
     ];
