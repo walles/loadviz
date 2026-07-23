@@ -22,13 +22,20 @@ impl AnimWriter {
             loop_count: 0, // 0 == infinite
         };
 
+        // Set WEBP_LOSSLESS=1 to encode without lossy compression. Handy for
+        // eyeballing renderer changes without webp's DCT artifacts muddying the
+        // picture.
+        let lossless = std::env::var("WEBP_LOSSLESS").is_ok();
+
         // Ref: https://github.com/webmproject/libwebp/blob/08d60d60066eb30ab8e0e3ccfa0cd0b68f8cccc6/src/webp/mux.h#L423-L442
         let enc_options = WebPAnimEncoderOptions {
             anim_params,
             minimize_size: false as i32,
             kmin: 0,
             kmax: 0, // Up this number if you want keyframes
-            allow_mixed: true as i32,
+            // Mixed lets the encoder fall back to lossy per frame, which would
+            // defeat a lossless comparison.
+            allow_mixed: !lossless as i32,
             verbose: false as i32,
             padding: [0, 0, 0, 0],
         };
@@ -36,6 +43,10 @@ impl AnimWriter {
 
         let mut config = unsafe { mem::zeroed::<WebPConfig>() };
         assert!(0 != unsafe { WebPConfigPreset(&mut config, WEBP_PRESET_DEFAULT, quality) });
+        if lossless {
+            config.lossless = 1;
+            config.quality = 100.0;
+        }
 
         AnimWriter {
             filename: filename.to_owned(),

@@ -68,7 +68,9 @@ How would you visualize this?
   and is here only to enable calling this code from the macOS Swift app
 - `cargo run --bin=printload` will print the current CPU load
 - `cargo run --features webp --bin=animated-webp` will write the looping demo
-  animation into `screenshot.webp`
+  animation into `screenshot.webp`. Set `WEBP_LOSSLESS=1` to skip lossy
+  compression when you want to eyeball renderer changes without webp's DCT
+  artifacts in the way.
 - `cargo run --features webp --bin=still-webp still.webp` will write a 1024x1024
   still image into `still.webp`, can be used for icon generation
 
