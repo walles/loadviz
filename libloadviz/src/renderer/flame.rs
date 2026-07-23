@@ -29,6 +29,13 @@ static DISTORTION_DETAIL: f32 = 3.0 * SCALE;
 /// shortest image dimension.
 static DISTORTION_PIXEL_PERCENT: f32 = 10.0 / SCALE;
 
+/// The maximum distance, in pixels, that the distortion can displace a flame
+/// horizontally. A flame can therefore appear this far from the column whose
+/// load it belongs to.
+pub(super) fn distortion_pixel_radius(width: usize, height: usize) -> f32 {
+    return width.min(height) as f32 * DISTORTION_PIXEL_PERCENT / 100.0;
+}
+
 /// Higher values make the fire's edges softer
 static ANTIALIAS_HEIGHT_0_TO_1: f32 = 0.1;
 
@@ -39,7 +46,7 @@ impl Renderer {
     pub(super) fn get_flame_pixel(
         &self,
         viz_loads: &Vec<CpuLoad>,
-        max_user_load_0_to_1: f32,
+        column_ceiling_load_0_to_1: f32,
         dt_seconds: f32,
         pixel_x: usize,
         pixel_y_from_bottom: usize,
@@ -48,15 +55,16 @@ impl Renderer {
     ) -> Option<[u8; 3]> {
         let internal_detail = INTERNAL_DETAIL / width as f32;
         let distortion_detail = DISTORTION_DETAIL / width as f32;
-        let distortion_pixel_radius = width.min(height) as f32 * DISTORTION_PIXEL_PERCENT / 100.0;
+        let distortion_pixel_radius = distortion_pixel_radius(width, height);
 
         // Check whether we should even try to do flames maths. This improves
         // our idle-system benchmark by 63%.
-        let highest_load_0_to_1 = HEIGHT_SCALE * max_user_load_0_to_1;
+        let highest_load_0_to_1 = HEIGHT_SCALE * column_ceiling_load_0_to_1;
         let highest_possible_flame_height_pixels =
             highest_load_0_to_1 * height as f32 + distortion_pixel_radius;
         if pixel_y_from_bottom as f32 > highest_possible_flame_height_pixels {
-            // We're above all flames, no need for any (costly) noise maths
+            // We're above every flame that can reach this column, no need for
+            // any (costly) noise maths.
             //
             // This check improves our idle-system benchmark by 63%.
             return None;

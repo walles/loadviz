@@ -45,13 +45,11 @@ impl Renderer {
 
         let viz_loads = mirror_sort(currently_displayed_loads);
 
-        // The tallest flame is the same for the whole frame, so find the peak
-        // user load once up front.
-        let max_user_load_0_to_1 = viz_loads
-            .iter()
-            .map(|load| load.user_0_to_1)
-            .max_by(|a, b| a.partial_cmp(b).unwrap())
-            .unwrap();
+        // A pixel column's flame can only be as tall as the loads the
+        // horizontal distortion can reach sideways into it. Precomputing that
+        // per-column ceiling lets `get_flame_pixel()` skip the noise maths for
+        // every pixel above it.
+        let column_ceiling_load_0_to_1 = max_reachable_user_load_by_column(&viz_loads, width, height);
 
         for pixel_x in 0..width {
             for pixel_y_from_top in 0..height {
@@ -59,7 +57,7 @@ impl Renderer {
 
                 let color = if let Some(flame_color) = self.get_flame_pixel(
                     &viz_loads,
-                    max_user_load_0_to_1,
+                    column_ceiling_load_0_to_1[pixel_x],
                     dt_seconds,
                     pixel_x,
                     pixel_y_from_bottom,
@@ -90,8 +88,7 @@ impl Renderer {
 }
 
 fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
-    let flen = viz_loads.len() as f32;
-    let float_part_index = (flen * x_fraction_0_to_1 - 0.5).clamp(0.0, flen - 1.0);
+    let float_part_index = load_index(x_fraction_0_to_1, viz_loads.len());
     let i0 = float_part_index.floor() as usize;
     let i1 = float_part_index.ceil() as usize;
     if i0 == i1 {
@@ -105,6 +102,52 @@ fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
         system_0_to_1: viz_loads[i0].system_0_to_1 * weight1
             + viz_loads[i1].system_0_to_1 * weight2,
     };
+}
+
+/// For each pixel column, the tallest user load whose flame can reach that
+/// column.
+///
+/// This is a safe over-estimate: culling a pixel against it never removes
+/// anything `get_flame_pixel()` would have drawn.
+fn max_reachable_user_load_by_column(viz_loads: &Vec<CpuLoad>, width: usize, height: usize) -> Vec<f32> {
+    // A column can show a flame sourced from any load within this reach.
+    let reach_pixels = flame::distortion_pixel_radius(width, height).ceil() as usize;
+
+    let mut result = Vec::with_capacity(width);
+    for pixel_x in 0..width {
+        // The distortion samples the load somewhere in this pixel range, which
+        // `get_load()` maps onto a range of load buckets. Take the peak over the
+        // raw buckets: a load peak that falls between two columns must still
+        // raise the ceiling, or the guard could cull a pixel the flame fills.
+        let leftmost_x = pixel_x as f32 - reach_pixels as f32;
+        let rightmost_x = pixel_x as f32 + reach_pixels as f32;
+        let first_bucket = load_bucket(leftmost_x, width, viz_loads.len()).floor() as usize;
+        let last_bucket = load_bucket(rightmost_x, width, viz_loads.len()).ceil() as usize;
+
+        let mut max_reachable_load_0_to_1 = 0.0f32;
+        for bucket in first_bucket..=last_bucket {
+            max_reachable_load_0_to_1 = max_reachable_load_0_to_1.max(viz_loads[bucket].user_0_to_1);
+        }
+
+        result.push(max_reachable_load_0_to_1);
+    }
+
+    return result;
+}
+
+/// Where pixel column `pixel_x` falls among `load_count` load buckets spread
+/// across a `width`-wide image, as a fractional index. Flooring and ceiling it
+/// gives the two buckets it lies between — both always valid in `0..load_count`,
+/// even for off-image columns.
+fn load_bucket(pixel_x: f32, width: usize, load_count: usize) -> f32 {
+    return load_index(pixel_to_fraction(pixel_x, width), load_count);
+}
+
+/// The (fractional) load-array index a column fraction maps to, clamped to a
+/// valid index in `0..load_count`. Flooring and ceiling it gives the two
+/// buckets it lies between.
+fn load_index(x_fraction_0_to_1: f32, load_count: usize) -> f32 {
+    return (load_count as f32 * x_fraction_0_to_1 - 0.5).clamp(0.0, load_count as f32 - 1.0);
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
