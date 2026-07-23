@@ -1,17 +1,27 @@
-use bracket_noise::prelude::FastNoise;
+use bracket_noise::prelude::{FastNoise, NoiseType};
 
 use crate::cpuload::CpuLoad;
 
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 pub struct Renderer {
+    /// Simplex noise for the flames, whose smooth gradients keep the fire's
+    /// moving edges clean.
     noise: FastNoise,
+
+    /// Value noise for the clouds: cheap to sample, and the clouds are soft
+    /// enough to carry it.
+    cloud_noise: FastNoise,
 }
 
 impl Default for Renderer {
     fn default() -> Self {
+        let mut cloud_noise = FastNoise::new();
+        cloud_noise.set_noise_type(NoiseType::Value);
+
         return Self {
             noise: FastNoise::new(),
+            cloud_noise,
         };
     }
 }
