@@ -1,6 +1,6 @@
 #![allow(clippy::needless_return)]
 
-use std::{ffi::c_int, fs, mem, slice};
+use std::{env, ffi::c_int, fs, mem, slice};
 
 use libloadviz::renderer::Renderer;
 use libwebp_sys::*;
@@ -89,14 +89,15 @@ impl Drop for AnimWriter {
     }
 }
 
-/// Renders the looping demo animation embedded in the READMEs and writes it to
-/// `screenshot.webp`.
+/// Renders the looping demo animation embedded in the READMEs. Writes it to the
+/// path named on the command line, or to `screenshot.webp` when none is given.
 ///
 /// See also `still_webp.rs`.
 fn main() {
+    let filename = env::args().nth(1).unwrap_or_else(|| "screenshot.webp".to_owned());
+
     let mut anim_writer = AnimWriter::new(
-        // FIXME: Put this file in the same directory as Cargo.toml
-        "screenshot.webp",
+        &filename,
         90.0, // 0-100, pick a number...
         100,
         75,
