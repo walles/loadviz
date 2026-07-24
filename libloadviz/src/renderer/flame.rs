@@ -9,7 +9,10 @@ static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
 static USER_LOAD_COLOR_RGB_COOLER: &[u8; 3] = &[0xff, 0x38, 0x00]; // 1000K
 
 /// Higher numbers => more detail
-static SCALE: f32 = 2.0;
+static SCALE: f32 = 4.0;
+
+/// Higher numbers => faster flame motion
+static SPEED: f32 = 2.0;
 
 /// What fraction of the inside of the fire fades towards transparent?
 static TRANSPARENT_INTERNAL_0_TO_1: f32 = 0.3;
@@ -24,6 +27,16 @@ static INTERNAL_DETAIL: f32 = 2.0 * SCALE;
 /// Note that even if this is set to zero, the internal base image will still
 /// move around, since time is one basis for the noise.
 static DISTORTION_DETAIL: f32 = 3.0 * SCALE;
+
+/// How fast the fire's wavering edges scroll through the noise field over time.
+///
+/// Deliberately different from `TEMPERATURE_SPEED` so the edges and the interior
+/// don't move in lockstep, which helps the flames look organic.
+static DISTORTION_SPEED: f32 = 2.5 * SPEED;
+
+/// How fast the internal temperature pattern scrolls upward through the noise
+/// field over time.
+static TEMPERATURE_SPEED: f32 = 2.0 * SPEED;
 
 /// How many pixels wide is the distortion effect? This is in percent of the
 /// shortest image dimension.
@@ -43,6 +56,14 @@ static ANTIALIAS_HEIGHT_0_TO_1: f32 = 0.1;
 static HEIGHT_SCALE: f32 = 1.3;
 
 impl Renderer {
+    /// Samples the flame noise at `(x, y)`, returning a value in -1..1.
+    fn flame_noise(&self, x: f32, y: f32) -> f32 {
+        // The raw noise clusters near the middle of its range; this gain spreads
+        // it back out to fill -1..1.
+        const GAIN: f32 = 1.766;
+        return (self.noise.get_noise(x, y) * GAIN).clamp(-1.0, 1.0);
+    }
+
     pub(super) fn get_flame_pixel(
         &self,
         viz_loads: &Vec<CpuLoad>,
@@ -72,13 +93,9 @@ impl Renderer {
 
         // Noise output is -1 to 1, deciphered from here:
         // https://github.com/amethyst/bracket-lib/blob/0d2d5e6a9a8e7c7ae3710cfef85be4cab0109a27/bracket-noise/examples/simplex_fractal.rs#L34-L39
-        let noise_x_m1_to_1 = self.noise.get_noise(
+        let noise_x_m1_to_1 = self.flame_noise(
             distortion_detail * pixel_x as f32,
-            //
-            // Note that the time animation constant is by design different from
-            // the one we use for temperature. This is supposed to help make the
-            // flames look more organic.
-            distortion_detail * pixel_y_from_bottom as f32 - dt_seconds * 2.5,
+            distortion_detail * pixel_y_from_bottom as f32 - dt_seconds * DISTORTION_SPEED,
         );
 
         // Pick the load to show
@@ -98,7 +115,7 @@ impl Renderer {
             return None;
         }
 
-        let noise_y_m1_to_1 = self.noise.get_noise(
+        let noise_y_m1_to_1 = self.flame_noise(
             distortion_detail * pixel_x as f32,
             distortion_detail * pixel_y_from_bottom as f32,
         );
@@ -113,13 +130,9 @@ impl Renderer {
 
         // Get a 0-1 noise value for this coordinate, that scrolls up with time
         let temperature_0_to_1 = map_range(
-            self.noise.get_noise(
+            self.flame_noise(
                 internal_detail * distorted_pixel_x,
-                //
-                // Note that the time animation constant is by design different
-                // from the one we use for noise_x. This is supposed to help
-                // make the flames look more organic.
-                internal_detail * distorted_pixel_y - dt_seconds * 2.0,
+                internal_detail * distorted_pixel_y - dt_seconds * TEMPERATURE_SPEED,
             ),
             -1.0..1.0,
             0.0..1.0,

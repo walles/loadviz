@@ -5,8 +5,7 @@ use crate::cpuload::CpuLoad;
 static BG_COLOR_RGB: &[u8; 3] = &[0x30, 0x30, 0x90];
 
 pub struct Renderer {
-    /// Simplex noise for the flames, whose smooth gradients keep the fire's
-    /// moving edges clean.
+    /// Perlin noise for the flames
     noise: FastNoise,
 
     /// Value noise for the clouds: cheap to sample, and the clouds are soft
@@ -16,11 +15,14 @@ pub struct Renderer {
 
 impl Default for Renderer {
     fn default() -> Self {
+        let mut noise = FastNoise::new();
+        noise.set_noise_type(NoiseType::Perlin);
+
         let mut cloud_noise = FastNoise::new();
         cloud_noise.set_noise_type(NoiseType::Value);
 
         return Self {
-            noise: FastNoise::new(),
+            noise,
             cloud_noise,
         };
     }
