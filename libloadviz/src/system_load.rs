@@ -84,11 +84,17 @@ fn parse_proc_stat(proc_stat: &str) -> Vec<LoadCounters> {
         let softirq = values[6];
         let steal = values[7];
 
-        // Guest time is already included in user time, so we don't add it here
+        // Guest time is already included in user time, so we don't add it here.
+        //
+        // iowait is idle time while some task waits for I/O. It would be nice
+        // to show it as system time, since swapping would show up there. But
+        // io_uring marks its waiting tasks as iowait even when no disk is
+        // involved, and some apps (Ghostty for one) always do that. Counting
+        // iowait as system would then show cores as busy on an idle machine.
         load_counters.push(LoadCounters {
             user: user + nice,
-            system: system + irq + softirq + steal + iowait,
-            idle,
+            system: system + irq + softirq + steal,
+            idle: idle + iowait,
         });
     }
 

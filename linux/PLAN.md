@@ -127,6 +127,26 @@ Verify:
 
 **Stop here** for Johan to check it visually.
 
+## DONE Step 4b: Count iowait as idle
+
+Added after Step 4. With iowait counted as system (Step 1), two cores showed
+100% system load on an idle machine. The cause: Ghostty's event loop (libxev
+on io_uring) keeps requests in flight, and io_uring marks tasks waiting for
+completions as iowait, even when no disk is involved. Quitting Ghostty made the
+load go away.
+
+Change the mapping to:
+
+- system = `system + irq + softirq + steal`
+- idle = `idle + iowait`
+
+Test first: change the expectations of the `parse_proc_stat()` test and commit
+it failing, then change the mapping.
+
+The cost: time spent waiting for swap-in reads from disk no longer shows. The
+CPU side of swapping (page faults, `kswapd` and direct reclaim, zram/zswap
+compression) is still system time. Step 6 documents this.
+
 ## Step 5: Quit menu item (Review)
 
 Add a context menu with a single "Quit" item that exits the process. Help and
@@ -141,6 +161,13 @@ Write `linux/README.md` with:
 - Prerequisites (rustup), how to build, and how to run from the build output
   (`cargo run --release`, or `target/release/loadviz`).
 - A note that GNOME needs the AppIndicator extension (Ubuntu ships it enabled).
+- An iowait section: iowait counts as idle, because io_uring marks tasks
+  waiting for completions as iowait even when no disk is involved. Ghostty's
+  event loop (libxev on io_uring) does that constantly, which showed up as
+  two cores at 100% system load on an idle machine. The cost: time spent
+  waiting for swap-in reads from disk no longer shows. The CPU side of
+  swapping (page faults, `kswapd` and direct reclaim, zram/zswap
+  compression) is still system time.
 - A Profiling section, the Linux counterpart of the one in
   `macos/README.md`, based on what we did in Step 4: `perf record` on
   `loadviz` and `gnome-shell`, `DEBUGINFOD_URLS`, `LOADVIZ_FORCE_MAX`, and
@@ -177,6 +204,9 @@ Write `linux/README.md` with:
   - `loadviz`'s own CPU usage (1.6% at 32x32) is mostly `ksni`/`zvariant`
     serializing the pixel data for D-Bus one byte at a time. Rendering is
     about 0.3% of the samples, and the RGB to ARGB conversion doesn't show up.
+  - Show memory stalls using PSI (`/proc/pressure/memory`), which measures
+    how much time tasks spend waiting for memory, swap-in included. This
+    would bring back the swap signal lost by counting iowait as idle.
   - A 2x1 icon like on macOS. GNOME's AppIndicator extension draws pixmaps
     in a square, but shows a wide icon if `IconName` is the path of an image
     file (at least 1.5x as wide as high) in a user writable directory; that
