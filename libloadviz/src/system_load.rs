@@ -48,13 +48,51 @@ pub fn get_load_counters() -> Vec<LoadCounters> {
 
 #[cfg(target_os = "linux")]
 pub fn get_load_counters() -> Vec<LoadCounters> {
-    todo!();
+    let proc_stat = std::fs::read_to_string("/proc/stat").expect("Reading /proc/stat failed");
+    return parse_proc_stat(&proc_stat);
 }
 
 /// Parse the contents of `/proc/stat` into one `LoadCounters` per CPU.
+///
+/// Ref: <https://man7.org/linux/man-pages/man5/proc_stat.5.html>
 #[cfg(target_os = "linux")]
-fn parse_proc_stat(_proc_stat: &str) -> Vec<LoadCounters> {
-    todo!();
+fn parse_proc_stat(proc_stat: &str) -> Vec<LoadCounters> {
+    let mut load_counters: Vec<LoadCounters> = vec![];
+    for line in proc_stat.lines() {
+        let mut columns = line.split_ascii_whitespace();
+        let Some(name) = columns.next() else {
+            continue;
+        };
+
+        // Skip the "cpu" line, which is the sum of all CPUs
+        let Some(cpu_number) = name.strip_prefix("cpu") else {
+            continue;
+        };
+        if cpu_number.is_empty() {
+            continue;
+        }
+
+        let values: Vec<usize> = columns
+            .map(|column| column.parse().expect("Parsing /proc/stat failed"))
+            .collect();
+        let user = values[0];
+        let nice = values[1];
+        let system = values[2];
+        let idle = values[3];
+        let iowait = values[4];
+        let irq = values[5];
+        let softirq = values[6];
+        let steal = values[7];
+
+        // Guest time is already included in user time, so we don't add it here
+        load_counters.push(LoadCounters {
+            user: user + nice,
+            system: system + irq + softirq + steal + iowait,
+            idle,
+        });
+    }
+
+    return load_counters;
 }
 
 #[cfg(test)]

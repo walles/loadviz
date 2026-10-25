@@ -31,7 +31,7 @@ that goes into the TODO list in `linux/README.md`.
   against it.
 - Commit: this plan file. Push, which creates `johan/linux` on GitHub.
 
-## Step 1: Read CPU load from `/proc/stat`
+## DONE Step 1: Read CPU load from `/proc/stat`
 
 Replace the `todo!()` in `libloadviz/src/system_load.rs` with a Linux
 implementation of `get_load_counters()`.
