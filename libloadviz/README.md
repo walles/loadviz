@@ -26,6 +26,13 @@ the "libloadviz" folder](screenshot.webp)
 `libloadviz` exposes a `getImage()` function. `getImage()` takes `width` and
 `height` as parameters, and returns an image.
 
+From Rust, create a `LoadViz` using `LoadViz::new()`, then call
+`get_image(width, height)` on it for every frame. It returns the image as
+`3 * width * height` bytes of RGB.
+
+From C or Swift, use `new_loadviz()` and `get_image()` from the generated
+`include/loadviz.h` instead.
+
 ## Why not measure RAM / swap usage?
 
 People commonly think measuring RAM / swap usage will help them decide...

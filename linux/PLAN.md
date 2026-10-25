@@ -58,7 +58,7 @@ Verify: tests pass, and `cargo run --bin printload` prints plausible loads,
 both while idle and while `cargo run --bin stressload` runs in another
 terminal.
 
-## Step 2: Safe Rust API for `libloadviz`
+## DONE Step 2: Safe Rust API for `libloadviz`
 
 So far the library is only used from Swift, through `extern "C"` functions
 that pass raw pointers around. Make it usable from Rust without `unsafe`:

@@ -36,15 +36,50 @@ pub struct LoadViz {
 
 impl LoadViz {
     pub fn new() -> LoadViz {
-        todo!();
+        return LoadViz {
+            width: 0,
+            height: 0,
+            pixels: vec![],
+            currently_displayed_loads: Vec::new(),
+            currently_displayed_loads_updated: std::time::Instant::now(),
+            t0: Instant::now(),
+            load_reader: load_reader::LoadReader::new(get_load_counters),
+            renderer: Default::default(),
+        };
     }
 
     /// Render the current system load into an image.
     ///
     /// Returns `3 * width * height` bytes. Format: RGBRGBRGB..., starting at
     /// the top left corner and going one row at a time.
-    pub fn get_image(&mut self, _width: usize, _height: usize) -> &[u8] {
-        todo!();
+    pub fn get_image(&mut self, width: usize, height: usize) -> &[u8] {
+        if width != self.width || height != self.height {
+            self.width = width;
+            self.height = height;
+            self.pixels = vec![0; width * height * 3];
+        }
+
+        if self.load_reader.get_loads().is_empty() {
+            // FIXME: Draw something nice?
+            return &self.pixels;
+        }
+
+        update_currently_displayed_loads(
+            &mut self.currently_displayed_loads,
+            &self.load_reader.get_loads(),
+            Instant::now().duration_since(self.currently_displayed_loads_updated),
+        );
+        self.currently_displayed_loads_updated = Instant::now();
+
+        self.renderer.render_image(
+            &self.currently_displayed_loads,
+            self.width,
+            self.height,
+            self.t0.elapsed().as_secs_f32(),
+            &mut self.pixels,
+        );
+
+        return &self.pixels;
     }
 }
 
