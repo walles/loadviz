@@ -79,7 +79,7 @@ copy saved in Step 0.
 Also update the Output section of `libloadviz/README.md`, which describes
 `getImage()` as the library's API, to mention the new Rust API.
 
-## Step 3: Tray icon showing one frame (Review)
+## DONE Step 3: Tray icon showing one frame (Review)
 
 Create a Rust crate in `linux/`:
 
