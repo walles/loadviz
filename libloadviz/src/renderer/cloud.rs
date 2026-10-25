@@ -1,6 +1,4 @@
-use crate::cpuload::CpuLoad;
-
-use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
+use super::{get_load, interpolate, pixel_to_fraction, Frame, Renderer, BG_COLOR_RGB};
 
 static CLOUD_COLOR_DARK: &[u8; 3] = &[0x88, 0x88, 0x88];
 static CLOUD_COLOR_BRIGHT: &[u8; 3] = &[0xff, 0xff, 0xff];
@@ -16,13 +14,13 @@ static CLOUD_TRANSPARENT_FRACTION: f32 = 0.4;
 impl Renderer {
     pub(super) fn get_cloud_pixel(
         &self,
-        viz_loads: &Vec<CpuLoad>,
-        dt_seconds: f32,
+        frame: &Frame,
         pixel_x: usize,
         pixel_y_from_top: usize,
-        width: usize,
-        height: usize,
     ) -> Option<[u8; 3]> {
+        let width = frame.width;
+        let height = frame.height;
+
         // Higher number = more details.
         let detail = 10.0 / width as f32;
 
@@ -30,7 +28,7 @@ impl Renderer {
         let speed = 0.3;
 
         let x_fraction_0_to_1 = pixel_to_fraction(pixel_x as f32, width);
-        let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+        let cpu_load = get_load(frame.viz_loads, x_fraction_0_to_1);
 
         // Compute the sysload height for this load
         let cloud_height_0_to_1 = cpu_load.system_0_to_1;
@@ -44,7 +42,7 @@ impl Renderer {
         let noise_m1_to_1 = self.cloud_noise.get_noise3d(
             detail * pixel_x as f32,
             detail * pixel_y_from_top as f32,
-            speed * dt_seconds,
+            speed * frame.dt_seconds,
         );
 
         let brightness_0_to_1 = (noise_m1_to_1 + 1.0) / 2.0;
@@ -72,6 +70,8 @@ impl Renderer {
 
 #[cfg(test)]
 mod tests {
+    use crate::cpuload::CpuLoad;
+
     use super::*;
 
     #[test]
@@ -81,7 +81,13 @@ mod tests {
             system_0_to_1: 0.0,
         }];
         let renderer: Renderer = Default::default();
-        let pixel = renderer.get_cloud_pixel(&viz_loads, 0.0, 0, 0, 1, 1);
+        let frame = Frame {
+            viz_loads: &viz_loads,
+            dt_seconds: 0.0,
+            width: 1,
+            height: 1,
+        };
+        let pixel = renderer.get_cloud_pixel(&frame, 0, 0);
         assert_eq!(pixel, None);
     }
 }

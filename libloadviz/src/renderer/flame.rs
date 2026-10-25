@@ -1,8 +1,6 @@
 use std::ops::Range;
 
-use crate::cpuload::CpuLoad;
-
-use super::{get_load, interpolate, pixel_to_fraction, Renderer, BG_COLOR_RGB};
+use super::{get_load, interpolate, pixel_to_fraction, Frame, Renderer, BG_COLOR_RGB};
 
 // Blackbody RGB values from: http://www.vendian.org/mncharity/dir3/blackbody/
 static USER_LOAD_COLOR_RGB_WARMER: &[u8; 3] = &[0xff, 0xb4, 0x6b]; // 3000K
@@ -66,14 +64,15 @@ impl Renderer {
 
     pub(super) fn get_flame_pixel(
         &self,
-        viz_loads: &Vec<CpuLoad>,
+        frame: &Frame,
         column_ceiling_load_0_to_1: f32,
-        dt_seconds: f32,
         pixel_x: usize,
         pixel_y_from_bottom: usize,
-        width: usize,
-        height: usize,
     ) -> Option<[u8; 3]> {
+        let width = frame.width;
+        let height = frame.height;
+        let dt_seconds = frame.dt_seconds;
+
         let internal_detail = INTERNAL_DETAIL / width as f32;
         let distortion_detail = DISTORTION_DETAIL / width as f32;
         let distortion_pixel_radius = distortion_pixel_radius(width, height);
@@ -102,7 +101,7 @@ impl Renderer {
         let dx_pixels = noise_x_m1_to_1 * distortion_pixel_radius;
         let distorted_pixel_x = pixel_x as f32 + dx_pixels;
         let x_fraction_0_to_1 = pixel_to_fraction(distorted_pixel_x, width);
-        let cpu_load = get_load(viz_loads, x_fraction_0_to_1);
+        let cpu_load = get_load(frame.viz_loads, x_fraction_0_to_1);
         let load_0_to_1 = cpu_load.user_0_to_1 * HEIGHT_SCALE;
 
         let highest_possible_flame_height_pixels =
@@ -183,6 +182,8 @@ fn get_color_by_temperature(temperature_0_to_1: f32) -> [u8; 3] {
 
 #[cfg(test)]
 mod tests {
+    use crate::cpuload::CpuLoad;
+
     use super::*;
 
     #[test]
@@ -193,7 +194,13 @@ mod tests {
         }];
         let renderer: Renderer = Default::default();
         let height = 100;
-        let pixel = renderer.get_flame_pixel(&viz_loads, 1.0, 0.0, 0, height - 1, 1, height);
+        let frame = Frame {
+            viz_loads: &viz_loads,
+            dt_seconds: 0.0,
+            width: 1,
+            height,
+        };
+        let pixel = renderer.get_flame_pixel(&frame, 1.0, 0, height - 1);
         assert!(pixel.is_some());
     }
 }

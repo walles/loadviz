@@ -28,6 +28,14 @@ impl Default for Renderer {
     }
 }
 
+/// What stays the same for every pixel of one rendered frame
+struct Frame<'a> {
+    viz_loads: &'a [CpuLoad],
+    dt_seconds: f32,
+    width: usize,
+    height: usize,
+}
+
 mod cloud;
 mod flame;
 
@@ -37,7 +45,7 @@ impl Renderer {
     /// You should call `LoadViz::render_image()` instead.
     pub fn render_image(
         &self,
-        currently_displayed_loads: &Vec<CpuLoad>,
+        currently_displayed_loads: &[CpuLoad],
         width: usize,
         height: usize,
         dt_seconds: f32,
@@ -63,28 +71,26 @@ impl Renderer {
         // every pixel above it.
         let column_ceiling_load_0_to_1 = max_reachable_user_load_by_column(&viz_loads, width, height);
 
+        let frame = Frame {
+            viz_loads: &viz_loads,
+            dt_seconds,
+            width,
+            height,
+        };
+
+        #[allow(clippy::needless_range_loop)]
         for pixel_x in 0..width {
             for pixel_y_from_top in 0..height {
                 let pixel_y_from_bottom = height - 1 - pixel_y_from_top;
 
                 let color = if let Some(flame_color) = self.get_flame_pixel(
-                    &viz_loads,
+                    &frame,
                     column_ceiling_load_0_to_1[pixel_x],
-                    dt_seconds,
                     pixel_x,
                     pixel_y_from_bottom,
-                    width,
-                    height,
                 ) {
                     flame_color
-                } else if let Some(cloud_color) = self.get_cloud_pixel(
-                    &viz_loads,
-                    dt_seconds,
-                    pixel_x,
-                    pixel_y_from_top,
-                    width,
-                    height,
-                ) {
+                } else if let Some(cloud_color) = self.get_cloud_pixel(&frame, pixel_x, pixel_y_from_top) {
                     cloud_color
                 } else {
                     *BG_COLOR_RGB
@@ -99,7 +105,7 @@ impl Renderer {
     }
 }
 
-fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
+fn get_load(viz_loads: &[CpuLoad], x_fraction_0_to_1: f32) -> CpuLoad {
     let float_part_index = load_index(x_fraction_0_to_1, viz_loads.len());
     let i0 = float_part_index.floor() as usize;
     let i1 = float_part_index.ceil() as usize;
@@ -121,7 +127,7 @@ fn get_load(viz_loads: &Vec<CpuLoad>, x_fraction_0_to_1: f32) -> CpuLoad {
 ///
 /// This is a safe over-estimate: culling a pixel against it never removes
 /// anything `get_flame_pixel()` would have drawn.
-fn max_reachable_user_load_by_column(viz_loads: &Vec<CpuLoad>, width: usize, height: usize) -> Vec<f32> {
+fn max_reachable_user_load_by_column(viz_loads: &[CpuLoad], width: usize, height: usize) -> Vec<f32> {
     // A column can show a flame sourced from any load within this reach.
     let reach_pixels = flame::distortion_pixel_radius(width, height).ceil() as usize;
 
@@ -136,10 +142,10 @@ fn max_reachable_user_load_by_column(viz_loads: &Vec<CpuLoad>, width: usize, hei
         let first_bucket = load_bucket(leftmost_x, width, viz_loads.len()).floor() as usize;
         let last_bucket = load_bucket(rightmost_x, width, viz_loads.len()).ceil() as usize;
 
-        let mut max_reachable_load_0_to_1 = 0.0f32;
-        for bucket in first_bucket..=last_bucket {
-            max_reachable_load_0_to_1 = max_reachable_load_0_to_1.max(viz_loads[bucket].user_0_to_1);
-        }
+        let max_reachable_load_0_to_1 = viz_loads[first_bucket..=last_bucket]
+            .iter()
+            .map(|load| load.user_0_to_1)
+            .fold(0.0f32, f32::max);
 
         result.push(max_reachable_load_0_to_1);
     }
@@ -163,8 +169,8 @@ fn load_index(x_fraction_0_to_1: f32, load_count: usize) -> f32 {
 }
 
 /// Turns `[3, 1, 2]` into `[1, 2, 3, 3, 2, 1]`
-fn mirror_sort(cpu_loads: &Vec<CpuLoad>) -> Vec<CpuLoad> {
-    let mut result = cpu_loads.clone();
+fn mirror_sort(cpu_loads: &[CpuLoad]) -> Vec<CpuLoad> {
+    let mut result = cpu_loads.to_vec();
 
     // Sort criteria is same as in `LoadViz::update_currently_displayed_loads()`
     result.sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -227,7 +233,7 @@ mod tests {
 
     #[test]
     fn test_mirror_sort_same() {
-        let mirror_sorted = mirror_sort(&vec![
+        let mirror_sorted = mirror_sort(&[
             // This one is identical to...
             CpuLoad {
                 user_0_to_1: 0.1,
