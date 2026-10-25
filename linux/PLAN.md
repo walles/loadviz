@@ -102,7 +102,7 @@ Verify: `cargo run` in `linux/` shows the icon in the GNOME top bar.
 **Stop here**: Johan checks it visually, and we talk about the chosen icon
 size before going on.
 
-## Step 4: Animate (Review)
+## DONE Step 4: Animate (Review)
 
 Update the icon at 10 Hz, like the macOS app does: render a new frame,
 convert it, and push it to the tray through the `ksni` handle, from a plain
@@ -167,6 +167,16 @@ Write `linux/README.md` with:
     Homebrew also runs on Linux; other options are .deb, Flatpak, AUR, ...)
   - Mention Linux in the top level `README.md`
   - Anything found during Steps 3 and 4 (icon size, frame rate, CPU usage)
+  - gnome-shell CPU usage. With LoadViz running at 10 Hz, gnome-shell uses
+    about 12.7% CPU, against 2.85% without it. The cost is per update, not
+    per pixel: it is the same for 16x16, 32x32 and 64x64 icons. The profile
+    is spread over the AppIndicator extension's JavaScript, GLib main loop
+    sources and GObject allocations, with no pixel copying hotspots. Options:
+    a lower frame rate, or finding out what the extension does per update and
+    whether a different way of updating the icon is cheaper.
+  - `loadviz`'s own CPU usage (1.6% at 32x32) is mostly `ksni`/`zvariant`
+    serializing the pixel data for D-Bus one byte at a time. Rendering is
+    about 0.3% of the samples, and the RGB to ARGB conversion doesn't show up.
   - A 2x1 icon like on macOS. GNOME's AppIndicator extension draws pixmaps
     in a square, but shows a wide icon if `IconName` is the path of an image
     file (at least 1.5x as wide as high) in a user writable directory; that

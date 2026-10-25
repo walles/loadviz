@@ -7,6 +7,9 @@ use libloadviz::LoadViz;
 /// pixels high, which is 32 physical pixels on a 2x display.
 const ICON_SIZE: usize = 32;
 
+/// 10 frames per second, like on macOS
+const FRAME_INTERVAL: std::time::Duration = std::time::Duration::from_millis(100);
+
 struct LoadVizTray {
     icon: ksni::Icon,
 }
@@ -27,21 +30,27 @@ impl ksni::Tray for LoadVizTray {
 
 fn main() {
     let mut loadviz = LoadViz::new();
-    let rgb = loadviz.get_image(ICON_SIZE, ICON_SIZE);
 
     let tray = LoadVizTray {
-        icon: ksni::Icon {
-            width: ICON_SIZE as i32,
-            height: ICON_SIZE as i32,
-            data: rgb_to_argb(rgb),
-        },
+        icon: render_icon(&mut loadviz),
     };
-    let _handle = tray.spawn().expect("Registering the tray icon failed");
+    let handle = tray.spawn().expect("Registering the tray icon failed");
 
-    // The tray service runs on its own thread, keep it alive
     loop {
-        std::thread::park();
+        std::thread::sleep(FRAME_INTERVAL);
+
+        let icon = render_icon(&mut loadviz);
+        handle.update(|tray| tray.icon = icon);
     }
+}
+
+fn render_icon(loadviz: &mut LoadViz) -> ksni::Icon {
+    let rgb = loadviz.get_image(ICON_SIZE, ICON_SIZE);
+    return ksni::Icon {
+        width: ICON_SIZE as i32,
+        height: ICON_SIZE as i32,
+        data: rgb_to_argb(rgb),
+    };
 }
 
 /// Convert an RGB image from `libloadviz` into the ARGB32 format, network byte
