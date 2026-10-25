@@ -138,11 +138,11 @@ softirq 1 2 3 4 5 6 7 8 9 10 11
         assert_eq!(2, counters.len());
 
         assert_eq!(1 + 2, counters[0].user);
-        assert_eq!(3 + 5 + 6 + 7 + 8, counters[0].system);
-        assert_eq!(4, counters[0].idle);
+        assert_eq!(3 + 6 + 7 + 8, counters[0].system);
+        assert_eq!(4 + 5, counters[0].idle);
 
         assert_eq!(100 + 200, counters[1].user);
-        assert_eq!(300 + 500 + 600 + 700 + 800, counters[1].system);
-        assert_eq!(400, counters[1].idle);
+        assert_eq!(300 + 600 + 700 + 800, counters[1].system);
+        assert_eq!(400 + 500, counters[1].idle);
     }
 }
