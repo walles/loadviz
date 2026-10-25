@@ -20,7 +20,7 @@ that goes into the TODO list in `linux/README.md`.
   stay unchanged, so the macOS app should not need any changes. Step 7
   verifies that.
 
-## Step 0: Baseline
+## DONE Step 0: Baseline
 
 - Rust is installed using rustup, with the `aarch64-apple-darwin` target added.
 - In `libloadviz`, verify that `cargo build --all-targets --all-features`,
