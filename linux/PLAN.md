@@ -167,6 +167,14 @@ Write `linux/README.md` with:
     Homebrew also runs on Linux; other options are .deb, Flatpak, AUR, ...)
   - Mention Linux in the top level `README.md`
   - Anything found during Steps 3 and 4 (icon size, frame rate, CPU usage)
+  - A 2x1 icon like on macOS. GNOME's AppIndicator extension draws pixmaps
+    in a square, but shows a wide icon if `IconName` is the path of an image
+    file (at least 1.5x as wide as high) in a user writable directory; that
+    special case exists for indicator-multiload. It would mean writing a PNG
+    10 times per second (to `$XDG_RUNTIME_DIR`, which is in RAM), probably
+    alternating file names to get past gnome-shell's texture cache, and
+    gnome-shell decoding a file per frame. It is GNOME specific; other tray
+    hosts (KDE) are believed to draw icons square anyway.
 
 ## Step 7: Build and run on macOS (Johan)
 
