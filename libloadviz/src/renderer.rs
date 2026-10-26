@@ -205,6 +205,30 @@ mod tests {
 
     use super::*;
 
+    /// Details should be sized relative to the image height, so that a square
+    /// icon gets the same detail size as a 2:1 one.
+    #[test]
+    fn test_details_follow_height() {
+        let load = CpuLoad {
+            user_0_to_1: 0.6,
+            system_0_to_1: 0.3,
+        };
+        let loads = vec![load; 4];
+        let renderer: Renderer = Default::default();
+
+        let mut square = vec![0u8; 32 * 32 * 3];
+        renderer.render_image(&loads, 32, 32, 1.5, &mut square);
+
+        let mut wide = vec![0u8; 64 * 32 * 3];
+        renderer.render_image(&loads, 64, 32, 1.5, &mut wide);
+
+        for y in 0..32 {
+            let square_row = &square[y * 32 * 3..(y + 1) * 32 * 3];
+            let wide_row_left_half = &wide[y * 64 * 3..y * 64 * 3 + 32 * 3];
+            assert_eq!(square_row, wide_row_left_half, "Row {y} differs");
+        }
+    }
+
     #[test]
     fn test_interpolate() {
         let black: [u8; 3] = [0x00, 0x00, 0x00];
