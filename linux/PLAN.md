@@ -210,7 +210,7 @@ About go into the TODO list.
 
 **Stop here** for Johan to check it visually.
 
-## Step 6: `linux/README.md`
+## DONE Step 6: `linux/README.md`
 
 Write `linux/README.md` with:
 
