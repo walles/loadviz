@@ -203,7 +203,7 @@ Verify: the Step 4c tests pass with unchanged reference images, `loadviz.h` is
 identical to the Step 0 copy, and Johan checks the tray icon visually with
 `LOADVIZ_FORCE_MAX=1`.
 
-## Step 5: Quit menu item (Review)
+## DONE Step 5: Quit menu item (Review)
 
 Add a context menu with a single "Quit" item that exits the process. Help and
 About go into the TODO list.

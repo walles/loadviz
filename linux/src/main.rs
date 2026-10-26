@@ -15,6 +15,9 @@ struct LoadVizTray {
 }
 
 impl ksni::Tray for LoadVizTray {
+    // Open the menu on left click as well, like on macOS
+    const MENU_ON_ACTIVATE: bool = true;
+
     fn id(&self) -> String {
         return "loadviz".into();
     }
@@ -25,6 +28,15 @@ impl ksni::Tray for LoadVizTray {
 
     fn icon_pixmap(&self) -> Vec<ksni::Icon> {
         return vec![self.icon.clone()];
+    }
+
+    fn menu(&self) -> Vec<ksni::MenuItem<Self>> {
+        return vec![ksni::menu::StandardItem {
+            label: "Quit".into(),
+            activate: Box::new(|_| std::process::exit(0)),
+            ..Default::default()
+        }
+        .into()];
     }
 }
 
