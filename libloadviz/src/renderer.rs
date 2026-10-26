@@ -11,6 +11,10 @@ pub struct Renderer {
     /// Value noise for the clouds: cheap to sample, and the clouds are soft
     /// enough to carry it.
     cloud_noise: FastNoise,
+
+    /// Size details relative to the image width rather than its height. See
+    /// [`Renderer::with_width_based_details()`].
+    width_based_details: bool,
 }
 
 impl Default for Renderer {
@@ -24,6 +28,22 @@ impl Default for Renderer {
         return Self {
             noise,
             cloud_noise,
+            width_based_details: false,
+        };
+    }
+}
+
+impl Renderer {
+    /// By default, details are sized relative to the image height, so that
+    /// they look the same in a square icon as in a 2:1 one.
+    ///
+    /// This renderer sizes them relative to the image width instead, which is
+    /// how the screenshot and the app icon were made. Use it for those, so they
+    /// don't change.
+    pub fn with_width_based_details() -> Self {
+        return Self {
+            width_based_details: true,
+            ..Default::default()
         };
     }
 }
@@ -34,6 +54,10 @@ struct Frame<'a> {
     dt_seconds: f32,
     width: usize,
     height: usize,
+
+    /// Details are sized relative to this many pixels. For 2:1 images it is
+    /// the same as the width.
+    detail_width: f32,
 }
 
 mod cloud;
@@ -76,6 +100,11 @@ impl Renderer {
             dt_seconds,
             width,
             height,
+            detail_width: if self.width_based_details {
+                width as f32
+            } else {
+                2.0 * height as f32
+            },
         };
 
         #[allow(clippy::needless_range_loop)]
@@ -207,6 +236,15 @@ mod tests {
 
     /// Details should be sized relative to the image height, so that a square
     /// icon gets the same detail size as a 2:1 one.
+    ///
+    /// This compares pixels exactly. Rendering is deterministic (fixed noise
+    /// seed, fixed time, fixed loads), but which load a column shows depends on
+    /// `pixel_x / width`, and `get_load()` blends neighboring loads using
+    /// weights that may not add up to exactly 1 in floating point. Different
+    /// rounding between the two widths could flip a pixel at a flame or cloud
+    /// edge. This passes on x86_64 but hasn't been tried on any other
+    /// architecture. If it fails somewhere, it will fail every time, not
+    /// randomly.
     #[test]
     fn test_details_follow_height() {
         let load = CpuLoad {

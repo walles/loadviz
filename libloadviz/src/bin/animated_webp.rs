@@ -122,7 +122,7 @@ fn main() {
     ];
 
     let mut pixels = vec![0u8; anim_writer.width * anim_writer.height * 3];
-    let renderer: Renderer = Default::default();
+    let renderer = Renderer::with_width_based_details();
 
     for i in 0..(frames_per_second * seconds) {
         let dt_seconds = i as f32 / frames_per_second as f32;

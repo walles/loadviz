@@ -73,8 +73,8 @@ impl Renderer {
         let height = frame.height;
         let dt_seconds = frame.dt_seconds;
 
-        let internal_detail = INTERNAL_DETAIL / width as f32;
-        let distortion_detail = DISTORTION_DETAIL / width as f32;
+        let internal_detail = INTERNAL_DETAIL / frame.detail_width;
+        let distortion_detail = DISTORTION_DETAIL / frame.detail_width;
         let distortion_pixel_radius = distortion_pixel_radius(width, height);
 
         // Check whether we should even try to do flames maths. This improves
@@ -199,6 +199,7 @@ mod tests {
             dt_seconds: 0.0,
             width: 1,
             height,
+            detail_width: 1.0,
         };
         let pixel = renderer.get_flame_pixel(&frame, 1.0, 0, height - 1);
         assert!(pixel.is_some());

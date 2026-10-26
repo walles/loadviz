@@ -22,7 +22,7 @@ impl Renderer {
         let height = frame.height;
 
         // Higher number = more details.
-        let detail = 10.0 / width as f32;
+        let detail = 10.0 / frame.detail_width;
 
         // Higher speed number = faster cloud turbulence.
         let speed = 0.3;
@@ -86,6 +86,7 @@ mod tests {
             dt_seconds: 0.0,
             width: 1,
             height: 1,
+            detail_width: 1.0,
         };
         let pixel = renderer.get_cloud_pixel(&frame, 0, 0);
         assert_eq!(pixel, None);

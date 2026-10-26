@@ -16,7 +16,7 @@ use libloadviz::{cpuload::CpuLoad, renderer::Renderer};
 /// Floating point results may differ slightly between CPU architectures
 const MAX_CHANNEL_DIFF: u8 = 2;
 
-fn render(width: usize, height: usize) -> Vec<u8> {
+fn render(renderer: &Renderer, width: usize, height: usize) -> Vec<u8> {
     let loads = vec![
         CpuLoad {
             user_0_to_1: 0.8,
@@ -33,13 +33,12 @@ fn render(width: usize, height: usize) -> Vec<u8> {
     ];
 
     let mut pixels = vec![0u8; width * height * 3];
-    let renderer: Renderer = Default::default();
     renderer.render_image(&loads, width, height, 1.5, &mut pixels);
     return pixels;
 }
 
-fn assert_matches_reference(name: &str, width: usize, height: usize) {
-    let pixels = render(width, height);
+fn assert_matches_reference(renderer: &Renderer, name: &str, width: usize, height: usize) {
+    let pixels = render(renderer, width, height);
 
     let path: PathBuf = [
         env!("CARGO_MANIFEST_DIR"),
@@ -72,24 +71,24 @@ fn assert_matches_reference(name: &str, width: usize, height: usize) {
 /// The macOS menu bar icon on a 2x Retina display
 #[test]
 fn test_macos_retina() {
-    assert_matches_reference("macos", 88, 44);
+    assert_matches_reference(&Default::default(), "macos", 88, 44);
 }
 
 /// The macOS menu bar icon on a 1x display
 #[test]
 fn test_macos_1x() {
-    assert_matches_reference("macos", 44, 22);
+    assert_matches_reference(&Default::default(), "macos", 44, 22);
 }
 
 /// `screenshot.webp`, from the `animated-webp` binary
 #[test]
 fn test_screenshot() {
-    assert_matches_reference("screenshot", 100, 75);
+    assert_matches_reference(&Renderer::with_width_based_details(), "screenshot", 100, 75);
 }
 
 /// A smaller version of the 1024x1024 app icon source image from the
 /// `still-webp` binary. Same aspect ratio, so it catches scaling changes.
 #[test]
 fn test_app_icon() {
-    assert_matches_reference("app-icon", 128, 128);
+    assert_matches_reference(&Renderer::with_width_based_details(), "app-icon", 128, 128);
 }

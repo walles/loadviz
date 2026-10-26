@@ -173,7 +173,7 @@ Floating point results could differ slightly between x86_64 and aarch64, so
 compare with a small per channel tolerance. Step 7 runs the tests on macOS,
 which will show whether the tolerance is enough.
 
-## Step 4d: Size details relative to the image height (Review)
+## DONE Step 4d: Size details relative to the image height (Review)
 
 Added together with Step 4c. The aspect ratio alone can't tell the square
 Linux tray icon (needs larger details) from the square app icon source image
