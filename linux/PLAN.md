@@ -147,7 +147,7 @@ The cost: time spent waiting for swap-in reads from disk no longer shows. The
 CPU side of swapping (page faults, `kswapd` and direct reclaim, zram/zswap
 compression) is still system time. Step 6 documents this.
 
-## Step 4c: Guard macOS, screenshot and still rendering
+## DONE Step 4c: Guard macOS, screenshot and still rendering
 
 Added after Step 4b. In a square icon the flame and cloud details look too
 small, since the renderer sizes details relative to the image width
