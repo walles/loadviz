@@ -173,22 +173,34 @@ Floating point results could differ slightly between x86_64 and aarch64, so
 compare with a small per channel tolerance. Step 7 runs the tests on macOS,
 which will show whether the tolerance is enough.
 
-## Step 4d: Size icon details like on macOS (Review)
+## Step 4d: Size details relative to the image height (Review)
 
-Added together with Step 4c. Add a Rust-only setting to `LoadViz`, for example
-`set_detail_aspect_ratio(2.0)`, that sizes details as if the image were that
-many times as wide as it is high. The default keeps today's behavior (details
-relative to the actual width), so macOS, `screenshot.webp` and `still-webp`
-don't change. The C API and `loadviz.h` stay unchanged. The Linux app sets it
-to 2.0, so its square icon gets the same detail size as the macOS icon.
+Added together with Step 4c. The aspect ratio alone can't tell the square
+Linux tray icon (needs larger details) from the square app icon source image
+(must not change), so something has to say which one is being rendered. Make
+the product default the natural rule for a status bar icon, and let the
+offline tools ask for the old behavior:
 
-Test first: a `todo!()` stub plus a test that a 32x32 image with
-`set_detail_aspect_ratio(2.0)` equals the left half of a 64x32 image rendered
-without it (if the noise coordinates line up that way; otherwise compare
-detail sizes some other way). Then implement.
+- Default: size flame and cloud details relative to the image height, as
+  `DETAIL / (2.0 * height)` where the code now says `DETAIL / width`. The
+  macOS icon is exactly 2:1, so its output doesn't change. The Linux icon gets
+  the macOS detail size with no new public API and no changes in `linux/`.
+- Add a `Renderer` constructor for the old width based details, for example
+  `Renderer::with_width_based_details()`. `animated-webp` (`screenshot.webp`)
+  and `still-webp` (app icon source image) use it, so their output doesn't
+  change. `Renderer::render_image()` is already only public for these tools
+  and the benchmarks, so `LoadViz` and the C API don't change.
+- The Step 4c screenshot and app icon tests render the way their tools do,
+  using the new constructor. The macOS tests keep using the default. No
+  reference image changes.
 
-Verify: the Step 4c tests still pass unchanged, `loadviz.h` is identical to
-the Step 0 copy, and Johan checks the tray icon visually with
+Test first: a test that, with the same load on every core, a 32x32 image
+equals the left 32x32 pixels of a 64x32 image. That holds when details follow
+the height, since all noise is sampled at `detail * pixel position`. It fails
+with today's width based details. Commit it failing, then implement.
+
+Verify: the Step 4c tests pass with unchanged reference images, `loadviz.h` is
+identical to the Step 0 copy, and Johan checks the tray icon visually with
 `LOADVIZ_FORCE_MAX=1`.
 
 ## Step 5: Quit menu item (Review)
