@@ -55,6 +55,11 @@ compression) is still system time.
 
 This is the same as on macOS, which has no iowait counter.
 
+The kernel lets programs opt out of this: `io_uring_enter()` takes an
+`IORING_ENTER_NO_IOWAIT` flag, and `IORING_FEAT_NO_IOWAIT` tells whether the
+kernel supports it. So the fix belongs in Ghostty's event loop library
+([libxev](https://github.com/mitchellh/libxev)) rather than in the kernel.
+
 [Ghostty]: https://ghostty.org/
 
 ## Profiling
@@ -114,8 +119,31 @@ perf report --no-children
 ## TODO
 
 - `gnome-shell` CPU usage, see [Profiling](#profiling). Options: a lower frame
-  rate, or finding out what the AppIndicator extension does per update and
-  whether some other way of updating the icon is cheaper.
+  rate, or making the AppIndicator extension
+  ([ubuntu/gnome-shell-extension-appindicator](https://github.com/ubuntu/gnome-shell-extension-appindicator))
+  cheaper per update. What is known so far:
+  - Painting is the smaller part. gnome-shell's own timing marks
+    (`sysprof-cli --gnome-shell`) put the compositor at about 1.7 ms per frame,
+    and `clutter_frame_clock_dispatch` covers only about 20% of gnome-shell's
+    `perf` samples. The rest is most likely the extension's JavaScript.
+  - Per frame, the extension receives our `NewIcon` signal, waits 30 ms to
+    batch signals, then fetches `IconName`, `IconPixmap` and
+    `IconAccessibleDesc` using three separate D-Bus `Get` calls.
+    `IconAccessibleDesc` fails every time since `ksni` doesn't implement it.
+    Then it builds a new `St.ImageContent` through a chain of promises,
+    cancellables and icon cache lookups.
+  - Next step: a JavaScript profile, to see which of these costs. `perf` can't
+    see JavaScript frames, and `sysprof-cli --gnome-shell` only records timing
+    marks. A nested gnome-shell (running in a window) with a copy of the
+    extension would allow both profiling and trying patches without logging
+    out.
+  - Moving the work out of JavaScript isn't realistic: extensions can't ship
+    compiled code, and GNOME doesn't want tray icons in gnome-shell itself.
+    The pixel work is already done in C (`St`, Clutter, Cogl); the JavaScript
+    cost is the glue around it (promises, async D-Bus calls, and the
+    JavaScript to C bridge, for example about 4% of gnome-shell's samples are
+    under `gi_callable_info_create_closure`). So the fix would be to make the
+    JavaScript do less per frame.
 - `loadviz`'s own D-Bus serialization cost, see [Profiling](#profiling).
 - Pick the icon size from the display scale, rather than always rendering
   32x32
@@ -130,6 +158,8 @@ perf report --no-children
 - Show memory stalls using PSI (`/proc/pressure/memory`), which measures how
   much time tasks spend waiting for memory, swap-in included. This would bring
   back the swap signal lost by [counting iowait as idle](#iowait-counts-as-idle).
+- Report the iowait problem to libxev, see
+  [iowait counts as idle](#iowait-counts-as-idle).
 - Pause rendering when the icon isn't visible (screen locked etc.)
 - Install script (macOS has `install.sh`)
 - Autostart through `~/.config/autostart/*.desktop`. Like on macOS, starting

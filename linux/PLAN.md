@@ -272,6 +272,18 @@ Write `linux/README.md` with:
     gnome-shell decoding a file per frame. It is GNOME specific; other tray
     hosts (KDE) are believed to draw icons square anyway.
 
+## DONE Step 6b: README follow-ups
+
+Added after Step 6. In `linux/README.md`:
+
+- The `gnome-shell` CPU usage TODO now includes what is known so far: painting
+  is the smaller part, the extension's per frame D-Bus and JavaScript work is
+  the likely cost, a JavaScript profile in a nested gnome-shell is the next
+  step, and moving the work out of JavaScript isn't realistic.
+- The iowait section mentions `IORING_ENTER_NO_IOWAIT`, which makes libxev
+  (Ghostty's event loop library) rather than the kernel the place to report
+  the iowait problem. Reporting it is a TODO.
+
 ## Step 7: Build and run on macOS (Johan)
 
 Done by Johan on macOS, on this branch, before merging to `main`:
